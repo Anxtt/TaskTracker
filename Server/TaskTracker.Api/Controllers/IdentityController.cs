@@ -33,6 +33,7 @@ namespace TaskTracker.Api.Controllers
         public async Task<IActionResult> Register([FromBody] IdentityRegisterModel model)
         {
             //Password && Name validation check
+            //
 
             ApplicationUser user = new ApplicationUser()
             {
