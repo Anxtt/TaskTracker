@@ -1,0 +1,17 @@
+form{
+    margin-top: 2rem;
+    text-align: center;
+    color: white;
+}
+
+form label{
+    display: block;
+}
+
+form label input{
+    display: block;
+}
+
+button{
+    display: block;
+}
