@@ -8,6 +8,10 @@ namespace TaskTracker.Api.Services.Contracts
     {
         Task<IdentityResponseModel> Authenticate(ApplicationUser user);
 
+        Task<bool> DoesExistById(string id);
+
+        Task<bool> DoesExistByUserName(string username);
+
         Task<ApplicationUser> GetById(string id);
 
         Task<string> GetUserNameById(string id);

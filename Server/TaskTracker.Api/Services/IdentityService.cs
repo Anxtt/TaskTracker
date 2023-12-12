@@ -30,17 +30,29 @@ namespace TaskTracker.Api.Services
             return authenticated;
         }
 
-        public async Task<ApplicationUser> GetById(string id)
-            => await this.db.Users
-                    .FirstOrDefaultAsync(x => x.Id == id);
+        public async Task<bool> DoesExistById(string id)
+            => await this.db
+            .Users
+            .AnyAsync(x => x.Id == id);
+
+        public async Task<bool> DoesExistByUserName(string username)
+            => await this.db
+            .Users
+            .AnyAsync(x => x.UserName == username);
+
+    public async Task<ApplicationUser> GetById(string id)
+            => await this.db
+            .Users
+            .FirstOrDefaultAsync(x => x.Id == id);
 
         public async Task<string> GetUserNameById(string id)
             => await GetQueryableUser(id)
-                    .Select(x => x.UserName)
-                    .FirstAsync();
+            .Select(x => x.UserName)
+            .FirstAsync();
 
         private IQueryable<ApplicationUser> GetQueryableUser(string id)
-            => this.db.Users
+            => this.db
+            .Users
             .Where(x => x.Id == id);
     }
 }
