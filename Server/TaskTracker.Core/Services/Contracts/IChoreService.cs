@@ -16,6 +16,6 @@ namespace TaskTracker.Core.Services.Contracts
 
         Task<bool> DoesExist(string name, string userId);
 
-        Task Edit(int id, string updatedOn, string userId);
+        Task Edit(int id, ChoreEditModel model, string userId);
     }
 }

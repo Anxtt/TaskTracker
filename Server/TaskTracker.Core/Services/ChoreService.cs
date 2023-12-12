@@ -24,6 +24,7 @@ namespace TaskTracker.Core.Services
                         CreatedOn = x.CreatedOn,
                         Name = x.Name,
                         UpdatedOn = x.UpdatedOn,
+                        IsCompleted = x.IsCompleted,
                         User = x.User.UserName
                     })
                     .ToListAsync();
@@ -33,6 +34,7 @@ namespace TaskTracker.Core.Services
             Chore chore = new Chore()
             {
                 Name = model.Name,
+                IsCompleted = model.IsCompleted,
                 UserId = userId
             };
 
@@ -59,6 +61,7 @@ namespace TaskTracker.Core.Services
                         CreatedOn = x.CreatedOn,
                         Name = x.Name,
                         UpdatedOn = x.UpdatedOn,
+                        IsCompleted = x.IsCompleted,
                         User = x.User.UserName
                     })
                     .FirstOrDefaultAsync();
@@ -71,11 +74,12 @@ namespace TaskTracker.Core.Services
             => await this.db.Chores
                .AnyAsync(x => x.UserId == userId && x.Id == id);
 
-        public async Task Edit(int id, string updatedOn, string userId)
+        public async Task Edit(int id, ChoreEditModel model, string userId)
         {
             Chore chore = await GetChoreByUser(id, userId);
 
-            chore.UpdatedOn = DateTime.Parse(updatedOn);
+            chore.UpdatedOn = DateTime.Parse(model.UpdatedOn);
+            chore.IsCompleted = model.IsCompleted;
 
             await this.db.SaveChangesAsync();
         }

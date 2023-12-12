@@ -19,6 +19,8 @@ namespace TaskTracker.Data.Models
         [Required]
         public DateTime UpdatedOn { get; set; } = DateTime.Now;
 
+        public bool IsCompleted { get; set; } = false;
+
         [ForeignKey(nameof(User))]
         [Required]
         public string UserId { get; set; }

@@ -10,6 +10,8 @@
 
         public DateTime UpdatedOn { get; set; }
 
+        public bool IsCompleted { get; set; }
+
         public string User { get; set; }
     }
 }

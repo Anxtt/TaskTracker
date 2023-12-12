@@ -97,7 +97,7 @@ namespace TaskTracker.Api.Controllers
                 return BadRequest();
             }
 
-            await this.choreService.Edit(id, model.UpdatedOn, userId);
+            await this.choreService.Edit(id, model, userId);
 
             return NoContent();
         }
