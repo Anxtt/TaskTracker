@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+
 using TaskTracker.Api.Extensions;
 using TaskTracker.Api.Services.Contracts;
 
@@ -32,8 +33,10 @@ namespace TaskTracker.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Register([FromBody] IdentityRegisterModel model)
         {
-            //Password && Name validation check
-            //
+            if (this.ModelState.IsValid == false)
+            {
+                return BadRequest(this.ModelState);
+            }
 
             ApplicationUser user = new ApplicationUser()
             {
@@ -45,7 +48,7 @@ namespace TaskTracker.Api.Controllers
 
             if (!result.Succeeded)
             {
-                return BadRequest();
+                return BadRequest(result.Errors);
             }
 
             return Created(nameof(Register), user.Id);

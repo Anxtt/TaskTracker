@@ -33,6 +33,7 @@ namespace TaskTracker.Api.Extensions
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
                 options.Password.RequiredLength = 6;
+                options.User.RequireUniqueEmail = true;
             })
             .AddEntityFrameworkStores<TaskTrackerDbContext>();
 
@@ -68,8 +69,8 @@ namespace TaskTracker.Api.Extensions
                     {
                         OnMessageReceived = ctx =>
                         {
-                            var request = ctx.HttpContext.Request;
-                            var cookies = request.Cookies;
+                            HttpRequest request = ctx.HttpContext.Request;
+                            IRequestCookieCollection cookies = request.Cookies;
 
                             if (cookies.TryGetValue(".AspNetCore.Application.Verified", out string token))
                             {
