@@ -13,9 +13,7 @@ function Login() {
     const [password, setPassword] = useState("");
 
     const navigate = useNavigate();
-
-    //"asdd"
-    //"Asdd1!"
+    
     async function HandleLogin(e) {
         e.preventDefault();
 

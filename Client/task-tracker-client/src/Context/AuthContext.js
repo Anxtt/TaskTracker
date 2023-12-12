@@ -17,10 +17,11 @@ export default function AuthProvider({ children }) {
         async function getData() {
             try {
                 const data = await verifyUser();
+                
                 console.log("UseEffect in AuthContext:")
                 console.log(data);
 
-                if (data !== null || data !== undefined) {
+                if (data.ok) {
                     setUser({
                         username: data.userName,
                         token: data.token

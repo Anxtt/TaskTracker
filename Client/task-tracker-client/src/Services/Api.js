@@ -75,7 +75,7 @@ async function login(username, password) {
       username: username,
       password: password,
     }),
-    credentials: "include", //важно, за да може да пратя бисквитките
+    credentials: "include", // важно, за да може да пратя бисквитките
     mode: "cors"
   };
 
@@ -126,7 +126,7 @@ async function logout() {
 async function allChores() {
   const response = await fetch("https://localhost:7219/api/chore/all", {
     method: "GET",
-    credentials: "include", //важно, за да мога да получавам бисквитки
+    credentials: "include", // важно, за да мога да получавам бисквитки
     mode: "cors"
   });
 

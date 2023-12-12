@@ -24,7 +24,7 @@ function AuthProvider({ children }) {
                 console.log(auth);
                 console.log(children);
                 
-                //need to make a request to get user data and pass it to setUser();
+                // need to make a request to get user data and pass it to setUser();
 
                 setUser(true);
 
