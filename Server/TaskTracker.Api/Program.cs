@@ -1,4 +1,5 @@
 using TaskTracker.Api.Extensions;
+using TaskTracker.Api.Middleware;
 
 namespace TaskTracker.Api
 {
@@ -45,33 +46,7 @@ namespace TaskTracker.Api
                .UseHttpsRedirection()
                .UseAuthentication()
                .UseAuthorization()
-               .Use(async (context, next) =>
-               {
-                   string verifiedCookie = context.Request.Cookies[".AspNetCore.Application.Verified"]!;
-                   string cookie = context.Request.Cookies[".AspNetCore.Application.Cookie"]!;
-
-                   if (verifiedCookie != null)
-                   {
-                       if (cookie != null)
-                       {
-                           if (cookie != "true" && context.Request.Path != "/api/Identity/Login")
-                           {
-                               //sort of works for now
-                               //gotta find a better way/improve this one to do this
-                               //implement log out and remove jwt cookie as a starter(?)
-
-                               //return 405 Not Allowed
-                               //see how/what you can do with that
-
-                               //redirect for log out needed
-                               context.Response.Redirect("/api/Identity/Login");
-                               return;
-                           }
-                       }
-                   }
-
-                   await next(context);
-               })
+               //.UseMiddleware<LoginRequiredMiddleware>()
                .UseEndpoints(endpoints => endpoints
                     .MapControllers());
 
