@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useRef } from "react"
 import { useNavigate } from 'react-router-dom'
 
 import { register } from "../Services/Api"
@@ -7,19 +7,49 @@ import { validateForm } from "../Helpers/ValidateForm"
 import '../Styles/Register.css'
 
 function Register() {
-    const [email, setEmail] = useState("");
     const [username, setUsername] = useState("");
+    const usernameRef = useRef(username);
+
+    const [email, setEmail] = useState("");
+    const emailRef = useRef(email);
+
     const [password, setPassword] = useState("");
+    const passwordRef = useRef(password);
+
     const [confirmPassword, setConfirmPassword] = useState("");
+    const confirmPasswordRef = useRef(password);
+
     const [formErrors, setFormErrors] = useState({});
+
 
     const navigate = useNavigate();
 
     async function HandleRegister(e) {
         e.preventDefault();
 
+        if (username === "") {
+            usernameRef.current.focus();
+            usernameRef.current.blur();
+            return;
+        }
+        else if (email === "") {
+            emailRef.current.focus();
+            emailRef.current.blur();
+            return;
+        }
+        else if (password === "") {
+            passwordRef.current.focus();
+            passwordRef.current.blur();
+            return;
+        }
+        else if (confirmPassword === "") {
+            confirmPasswordRef.current.focus();
+            confirmPasswordRef.current.blur();
+            return;
+        }
+
         return Object.entries(formErrors).some(([x, v]) => v !== undefined) === true
-            || Object.keys(formErrors).length === 0 // JSON.stringify(formErrors) === '{}'
+            || Object.values(formErrors).length === 0 // JSON.stringify(formErrors) === '{}'
             ? null
             : await register(email, username, password, confirmPassword)
                 ? navigate("/Login")
@@ -37,8 +67,9 @@ function Register() {
                             : "form-control-error"}
                         id="Username" name="Username"
                         placeholder="Your Username..."
+                        ref={usernameRef}
                         value={username} onChange={(e) => setUsername(e.target.value)}
-                        onBlur={(e) => validateForm(e.target, formErrors, setFormErrors, null, null)}
+                        onBlur={(e) => validateForm(e.target, formErrors, setFormErrors, password, confirmPassword)}
                     />
                     {
                         formErrors.Username !== undefined
@@ -55,8 +86,9 @@ function Register() {
                             : "form-control-error"}
                         id="Email" name="Email"
                         placeholder="Your Email..."
+                        ref={emailRef}
                         value={email} onChange={(e) => setEmail(e.target.value)}
-                        onBlur={(e) => validateForm(e.target, formErrors, setFormErrors, null, null)}
+                        onBlur={(e) => validateForm(e.target, formErrors, setFormErrors, password, confirmPassword)}
                     />
                     {
                         formErrors.Email !== undefined
@@ -72,6 +104,7 @@ function Register() {
                             ? "form-control"
                             : "form-control-error"}
                         id="Password" name="Password"
+                        ref={passwordRef}
                         placeholder="Your Password..."
                         value={password} onChange={(e) => setPassword(e.target.value)}
                         onBlur={(e) => validateForm(e.target, formErrors, setFormErrors, password, confirmPassword)}
@@ -91,6 +124,7 @@ function Register() {
                             : "form-control-error"}
                         id="ConfirmPassword" name="ConfirmPassword"
                         placeholder="Confirm Password..."
+                        ref={confirmPasswordRef}
                         value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}
                         onBlur={(e) => validateForm(e.target, formErrors, setFormErrors, password, confirmPassword)}
                     />
@@ -108,7 +142,7 @@ function Register() {
                         name="Submit"
                         onClick={(e) => HandleRegister(e)}
                         disabled={Object.entries(formErrors).some(([x, v]) => v !== undefined) === true
-                            || Object.keys(formErrors).length === 0} >
+                            || Object.values(formErrors).length === 0} >
                         Submit
                     </button>
                 </div>

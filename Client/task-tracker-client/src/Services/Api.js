@@ -123,8 +123,20 @@ async function logout() {
   return true;
 }
 
-async function doesUsernameExist() {
-  const response = await fetch("https://localhost:7219/api/identity/", {
+async function doesEmailExist(email) {
+  const response = await fetch(`https://localhost:7219/api/identity/doesExistByEmail/${email}`, {
+    method: "GET",
+    credentials: "include", // важно, за да мога да получавам бисквитки
+    mode: "cors"
+  });
+
+  const data = await response.json();
+
+  return data;
+}
+
+async function doesUsernameExist(username) {
+  const response = await fetch(`https://localhost:7219/api/identity/doesExistByUserName/${username}`, {
     method: "GET",
     credentials: "include", // важно, за да мога да получавам бисквитки
     mode: "cors"
@@ -163,4 +175,4 @@ async function verifyUser(){
 //   return JSON.parse(localStorage.getItem(key));
 // }
 
-export { allChores, register, login, logout, verifyUser };
+export { allChores, register, login, logout, verifyUser, doesUsernameExist, doesEmailExist };

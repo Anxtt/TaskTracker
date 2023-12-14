@@ -1,3 +1,5 @@
+import { doesUsernameExist, doesEmailExist } from "../Services/Api";
+
 async function validateForm(e, formErrors, setFormErrors, password, confirmPassword) {
     const { name, value } = e;
     const currentFormErrors = {};
@@ -7,8 +9,8 @@ async function validateForm(e, formErrors, setFormErrors, password, confirmPassw
         case "Username":
             value.length < 4 || value.length > 16
                 ? currentFormErrors[name] = "Username must be between 4 and 16 characters."
-                // : doesUsernameExist === true
-                    // ? formErrors[name] = "Username already exists."
+                : await doesUsernameExist(value) === true
+                    ? currentFormErrors[name] = "Username already exists."
                     : currentFormErrors[name] = undefined;
 
             merge = {
@@ -19,17 +21,19 @@ async function validateForm(e, formErrors, setFormErrors, password, confirmPassw
             setFormErrors(merge);
             break;
         case "Email":
-            value.length === 0
+            const rx = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+.\.[A-Z]{2,4}$/gim;
+
+            value.length === 0 || rx.test(value) === false
                 ? currentFormErrors[name] = "Invalid email address."
-                // : doesEmailExist === true
-                    // ? currentFormErrors[name] = "Email is already in use."
+                : await doesEmailExist(value) === true
+                    ? currentFormErrors[name] = "Email is already in use."
                     : currentFormErrors[name] = undefined;
-                
+
             merge = {
                 ...formErrors,
                 ...currentFormErrors
             }
-                
+
             setFormErrors(merge);
             break;
         case "Password":
@@ -38,30 +42,30 @@ async function validateForm(e, formErrors, setFormErrors, password, confirmPassw
                 : currentFormErrors[name] = undefined;
 
             confirmPassword.length === 0
-                ? formErrors["ConfirmPassword"] = "This field is required."
+                ? currentFormErrors["ConfirmPassword"] = "This field is required."
                 : confirmPassword !== password
                     ? currentFormErrors["ConfirmPassword"] = "Confirm Password does not match Password."
                     : currentFormErrors["ConfirmPassword"] = undefined;
-            
+
             merge = {
                 ...formErrors,
                 ...currentFormErrors
             }
-                
+
             setFormErrors(merge);
             break;
         case "ConfirmPassword":
             value.length === 0
-                ? formErrors[name] = "This field is required."
+                ? currentFormErrors[name] = "This field is required."
                 : value !== password
-                    ? formErrors[name] = "Confirm Password does not match Password."
-                    : formErrors[name] = undefined;
+                    ? currentFormErrors[name] = "Confirm Password does not match Password."
+                    : currentFormErrors[name] = undefined;
 
             merge = {
-               ...formErrors,
-               ...currentFormErrors
+                ...formErrors,
+                ...currentFormErrors
             }
-                
+
             setFormErrors(merge);
             break;
         default:
