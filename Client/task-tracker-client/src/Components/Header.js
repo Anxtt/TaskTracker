@@ -8,6 +8,7 @@ import { logout } from "../Services/Api"
 import "../Styles/Header.css"
 
 function Header() {
+  console.log("Header:");
   console.log(AuthContext);
 
   const { auth, setAuth, setUser } = useContext(AuthContext);

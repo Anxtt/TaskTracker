@@ -7,7 +7,8 @@ export const AuthContext = createContext();
 export default function AuthProvider({ children }) {
     const [auth, setAuth] = useState(false);
     const [user, setUser] = useState(null);
-
+    
+    console.log("AuthContext.js");
     console.log("Before:");
     console.log(children);
     console.log(auth);

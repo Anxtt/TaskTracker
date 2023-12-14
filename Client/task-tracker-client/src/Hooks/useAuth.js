@@ -15,6 +15,7 @@ function AuthProvider({ children }) {
     const [auth, setAuth] = useState(false);
     const [user, setUser] = useState(null);
 
+    console.log("useAuth.js");
     console.log(children);
 
     useEffect(() => {

@@ -25,7 +25,7 @@ async function register(email, username, password, confirmPassword) {
     settings
   );
 
-  if (!response.ok) {
+  if (response.ok === false) {
     const data = await response.json();
 
     console.log("Data object:");
@@ -87,7 +87,7 @@ async function login(username, password) {
   console.log("Response:");
   console.log(response);
 
-  if (!response.ok) {
+  if (response.ok === false) {
     alert('Invalid credentials.');
 
     return {
@@ -114,13 +114,25 @@ async function logout() {
     mode: "cors"
   });
 
-  if (!request.ok) {
+  if (request.ok === false) {
     alert('Error. Try again!');
 
     return false;
   }
 
   return true;
+}
+
+async function doesUsernameExist() {
+  const response = await fetch("https://localhost:7219/api/identity/", {
+    method: "GET",
+    credentials: "include", // важно, за да мога да получавам бисквитки
+    mode: "cors"
+  });
+
+  const data = await response.json();
+
+  return data;
 }
 
 async function allChores() {
