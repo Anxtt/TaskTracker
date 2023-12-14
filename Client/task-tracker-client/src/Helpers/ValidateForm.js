@@ -1,6 +1,6 @@
 import { doesUsernameExist, doesEmailExist } from "../Services/Api";
 
-async function validateForm(e, formErrors, setFormErrors, password, confirmPassword) {
+async function validateForm(e, formErrors, setFormErrors, password, confirmPassword, type) {
     const { name, value } = e;
     const currentFormErrors = {};
     let merge = {};
@@ -9,7 +9,7 @@ async function validateForm(e, formErrors, setFormErrors, password, confirmPassw
         case "Username":
             value.length < 4 || value.length > 16
                 ? currentFormErrors[name] = "Username must be between 4 and 16 characters."
-                : await doesUsernameExist(value) === true
+                : type === "register" && await doesUsernameExist(value) === true
                     ? currentFormErrors[name] = "Username already exists."
                     : currentFormErrors[name] = undefined;
 
@@ -41,9 +41,9 @@ async function validateForm(e, formErrors, setFormErrors, password, confirmPassw
                 ? currentFormErrors[name] = "Password must be between 6 and 18 characters."
                 : currentFormErrors[name] = undefined;
 
-            confirmPassword.length === 0
+                type === "register" && confirmPassword.length === 0
                 ? currentFormErrors["ConfirmPassword"] = "This field is required."
-                : confirmPassword !== password
+                : type === "register" && confirmPassword !== password
                     ? currentFormErrors["ConfirmPassword"] = "Confirm Password does not match Password."
                     : currentFormErrors["ConfirmPassword"] = undefined;
 
