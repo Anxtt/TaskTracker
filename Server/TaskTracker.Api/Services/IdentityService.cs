@@ -30,6 +30,11 @@ namespace TaskTracker.Api.Services
             return authenticated;
         }
 
+        public async Task<bool> DoesExistByEmail(string email)
+            => await this.db
+            .Users
+            .AnyAsync(x => x.Email == email);
+
         public async Task<bool> DoesExistById(string id)
             => await this.db
             .Users

@@ -12,6 +12,8 @@ namespace TaskTracker.Api.Services.Contracts
 
         Task<bool> DoesExistByUserName(string username);
 
+        Task<bool> DoesExistByEmail(string email);
+
         Task<ApplicationUser> GetById(string id);
 
         Task<string> GetUserNameById(string id);

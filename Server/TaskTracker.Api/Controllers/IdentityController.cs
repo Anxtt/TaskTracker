@@ -27,6 +27,25 @@ namespace TaskTracker.Api.Controllers
             this.identityService = identityService;
         }
 
+        // Add caching for this and ByEmail, because a request is sent on every input blur call
+        [HttpGet("{username}")]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> DoesExistByUserName([FromRoute] string username)
+            => await this.identityService.DoesExistByUserName(username) == false
+                ? this.Ok(false)
+                : this.BadRequest(true);
+
+        [HttpGet("{email}")]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> DoesExistByEmail([FromRoute] string email)
+            => await this.identityService.DoesExistByEmail(email) == false
+                ? this.Ok(false)
+                : this.BadRequest(true);
+
         [HttpPost]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status201Created)]
