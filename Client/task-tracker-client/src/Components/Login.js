@@ -32,17 +32,25 @@ function Login() {
             return null;
         }
 
-        return status === true ? navigate('/Tasks') : null;
+        return status === true
+        ? navigate('/Tasks')
+        : null;
     }
 
     return (
         <div>
             <form>
                 <label>Username</label>
-                <input type='text' value={username} onChange={(e) => setUsername(e.target.value)} />
+                <input type='text'
+                id="Username" name="Username"
+                placeholder="Your Username..."
+                value={username} onChange={(e) => setUsername(e.target.value)} />
 
                 <label>Password</label>
-                <input type='password' value={password} onChange={(e) => setPassword(e.target.value)} />
+                <input type='password'
+                id="Password" name="Password"
+                placeholder="Your Password..."
+                value={password} onChange={(e) => setPassword(e.target.value)} />
 
                 <button onClick={(e) => HandleLogin(e)}>Submit</button>
             </form>

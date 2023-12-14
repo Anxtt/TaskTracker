@@ -30,11 +30,10 @@ function Tasks() {
     <>
       { user
         ? <h1>Hello, {user.username}</h1>
-        : <h1>Hello, Taskmaster</h1>}
+        : <h1>Hello, Taskmaster</h1>
+      }
 
-      {tasks.map((task) => {
-        return <Task key={task.id} task={task} />
-      })}
+      {tasks.map((task) => <Task key={task.id} task={task} />)}
     </>
   );
 }
