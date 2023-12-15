@@ -1,9 +1,4 @@
 async function register(email, username, password, confirmPassword) {
-  if (password !== confirmPassword) {
-    alert('Passwords do not match');
-    return;
-  }
-
   const formData = JSON.stringify({
     email: email,
     username: username,
@@ -64,7 +59,7 @@ async function register(email, username, password, confirmPassword) {
   return true;
 }
 
-async function login(username, password) {  
+async function login(username, password) {
   const settings = {
     method: "POST",
     headers: {
@@ -83,7 +78,7 @@ async function login(username, password) {
     "https://localhost:7219/api/identity/login",
     settings
   );
-  
+
   console.log("Response:");
   console.log(response);
 
@@ -95,10 +90,10 @@ async function login(username, password) {
       user: null
     };
   }
-  
-  console.log("Response data:");
 
   const data = await response.json();
+
+  console.log("Response data:");
   console.log(data);
 
   return {
@@ -130,9 +125,7 @@ async function doesEmailExist(email) {
     mode: "cors"
   });
 
-  const data = await response.json();
-
-  return data;
+  return await response.json();
 }
 
 async function doesUsernameExist(username) {
@@ -142,9 +135,7 @@ async function doesUsernameExist(username) {
     mode: "cors"
   });
 
-  const data = await response.json();
-
-  return data;
+  return await response.json();
 }
 
 async function allChores() {
@@ -154,21 +145,19 @@ async function allChores() {
     mode: "cors"
   });
 
-  const data = await response.json();
-
-  return data;
+  return await response.json();
 }
 
-async function verifyUser(){
+async function verifyUser() {
   const response = await fetch("https://localhost:7219/api/identity/verifyuser", {
     method: "GET",
     credentials: "include",
     mode: "cors"
   });
 
-  const data = await response.json();
-
-  return data;
+  return response.ok === true
+    ? await response.json()
+    : undefined;
 }
 
 // function getToken(key) {
