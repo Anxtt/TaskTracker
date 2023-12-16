@@ -97,7 +97,7 @@ namespace TaskTracker.Api.Controllers
                 {
                     HttpOnly = true,
                     Secure = true,
-                    SameSite = SameSiteMode.Lax,
+                    SameSite = SameSiteMode.Strict,
                     Expires = DateTime.Now.AddDays(1),
                     Path = "/",
                     Domain = "localhost"
@@ -110,7 +110,7 @@ namespace TaskTracker.Api.Controllers
                 {
                     HttpOnly = false,
                     Secure = true,
-                    SameSite = SameSiteMode.Lax,
+                    SameSite = SameSiteMode.Strict,
                     Expires = DateTime.Now.AddDays(1),
                     Path = "/",
                     Domain = "localhost"
@@ -118,7 +118,7 @@ namespace TaskTracker.Api.Controllers
 
             return Ok(authenticated);
         }
-        
+
         [HttpPost]
         [Authorize]
         [ProducesDefaultResponseType]
@@ -148,6 +148,9 @@ namespace TaskTracker.Api.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> VerifyUser()
         {
+            // 1.
+            // maybe cache this, up to 10 minutes before token expiry
+            // will have to manage token on log out
             string username = await this.identityService.GetUserNameById(this.User.GetId());
 
             return Ok(new IdentityResponseModel()
