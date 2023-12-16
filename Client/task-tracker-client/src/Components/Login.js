@@ -103,7 +103,7 @@ function Login() {
                         onClick={(e) => HandleLogin(e)}
                         disabled={Object.entries(formErrors).some(([x, v]) => v !== undefined) === true
                             || Object.values(formErrors).length === 0} >
-                        Submit
+                        Login
                     </button>
                 </div>
             </form>

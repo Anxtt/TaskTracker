@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react"
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 
 import { register } from "../Services/Api"
 import { validateForm } from "../Helpers/ValidateForm"
@@ -58,7 +58,7 @@ function Register() {
 
     return (
         <div className="mx-auto container col-6">
-            <form>
+            <form className="mx-auto">
                 <div className='mx-auto col-md-6'>
                     <label className="form-label">Username</label>
                     <input type='text'
@@ -143,10 +143,12 @@ function Register() {
                         onClick={(e) => HandleRegister(e)}
                         disabled={Object.entries(formErrors).some(([x, v]) => v !== undefined) === true
                             || Object.values(formErrors).length === 0} >
-                        Submit
+                        Register
                     </button>
                 </div>
             </form>
+
+            <p>Already have an account? <Link to="/Login">Login</Link></p>
         </div>
     )
 }
