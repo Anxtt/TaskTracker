@@ -7,28 +7,31 @@ import Footer from "./Components/Footer";
 import Register from "./Components/Register";
 import Login from "./Components/Login";
 import Tasks from "./Components/Tasks";
+import About from "./Components/About";
+import Error from "./Components/Error";
 
 import "./Styles/App.css";
 
 function App() {
   return (
     <>
-      <Header />
+      <Header className="mx-auto" />
 
-      <div className="container">
+      <div className="container mx-auto">
         <Routes>
           <Route path="/" element={<Home /> } />
 
           <Route path="/Tasks" element={<Tasks />} />
+          <Route path="/About" element={<About />} />
 
           <Route path="/Login" element={<Login />} />
           <Route path="/Register" element={<Register />} />
 
-          {/* <Route path="*" element={<Error />} /> */}
+          <Route path="*" element={<Error />} />
         </Routes>
       </div>
 
-      <Footer />
+      <Footer className="mx-auto" />
     </>
   );
 }
