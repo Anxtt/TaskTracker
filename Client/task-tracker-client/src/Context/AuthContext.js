@@ -36,7 +36,9 @@ export default function AuthProvider({ children }) {
             }
         }
 
-        getData();
+        if (auth !== false) {
+            getData();
+        }
     }, [auth]);
 
     console.log("After:");

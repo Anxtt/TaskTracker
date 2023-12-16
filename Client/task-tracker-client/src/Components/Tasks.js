@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { AuthContext } from "../Context/AuthContext";
 
@@ -10,30 +10,43 @@ import Task from "./Task";
 import "../Styles/Tasks.css";
 
 function Tasks() {
-  const { auth, user } = useContext(AuthContext);
+  const { auth, setAuth, user, setUser } = useContext(AuthContext);
   const [tasks, setTasks] = useState([]);
-  const location = useLocation();
-
-  const urlCheck = location.pathname === '/Tasks';
+  const navigation = useNavigate();
 
   useEffect(() => {
     async function startFetching() {
-      setTasks(await allChores());
+      const data = await allChores();
+      console.log(data);
+      console.log(auth);
+      console.log(user);
+
+      if (data !== null) {
+        setTasks(await allChores());
+      }
+      else  {
+        setAuth(false);
+        setUser(null);
+        return navigation("/Login");
+      }
     }
 
-    if (auth !== false) {
-      startFetching();
-    }
+    startFetching();
   }, [auth]);
 
   return (
     <>
-      { user
-        ? <h1>Hello, {user.username}</h1>
-        : <h1>Hello, Taskmaster</h1>
-      }
+      <div className="container mx-auto">
+        {auth === true
+          ? <h1 className="mx-auto">Hello, {user.username}</h1>
+          : <h1 className="mx-auto">Hello, Taskmaster</h1>
+        }
 
-      {tasks.map((task) => <Task key={task.id} task={task} />)}
+        { tasks !== null && tasks.length !== 0
+          ? tasks.map((task) => <Task className="mx-auto" key={task.id} task={task} />)
+          : <p>You have no tasks currently</p>
+        }
+      </div>
     </>
   );
 }
