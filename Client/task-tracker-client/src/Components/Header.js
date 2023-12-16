@@ -11,42 +11,55 @@ function Header() {
   const { auth, setAuth, setUser } = useContext(AuthContext);
 
   return (
-    <nav>
-      <ul>
-        <li className="navigation">
-          <Link to="/">Home</Link>
-        </li>
-        <li className="navigation">
-          <Link to="/Tasks">Tasks</Link>
-        </li>
-        <li className="navigation">
-          <Link to="/About">About</Link>
-        </li>
-      </ul>
+    <nav className="mx-auto">
+      <div className="mx-auto container-fluid">
+        <ul>
+          <li className="navigation">
+            <Link to="/">Home</Link>
+          </li>
+          <li className="navigation mx-auto">
+            <div id="dropdown-div" className="mx-auto">
+              <button id="dropdown-btn" data-bs-toggle="dropdown" aria-expanded="false">
+                Tasks
+              </button>
+              <ul id="dropdown-ul" className="dropdown-menu mx-auto">
+                <li id="dropdown-li" className="navigation dropdown-item mx-auto">
+                  <Link id="dropdown-a" to="/Tasks">All Tasks</Link>
+                </li>
+                <li className="navigation dropdown-item mx-auto">
+                  <Link to="#">Another action</Link>
+                </li>
+                <li className="navigation dropdown-item mx-auto">
+                  <Link to="#">Something else here</Link>
+                </li>
+              </ul>
+            </div>
+          </li>
+          <li className="navigation mx-auto">
+            <Link to="/About">About</Link>
+          </li>
+        </ul>
+        {auth === true ?
+          <ul className="authenticationUl">
+            <li className="authenticationLi">
+              <Link to="/" onClick={async () => {
+                await logout();
 
-      { auth === true ?
-        <ul className="authenticationUl">
-          <li className="authenticationLi">
-            <Link to="/" onClick={async () => {
-              const status = await logout();
-
-              if (status === true) {
                 setAuth(false);
                 setUser(null);
-              }
-            }}>Logout</Link>
-          </li>
-        </ul>
-        :
-        <ul className="authenticationUl">
-          <li className="authenticationLi">
-            <Link to="/Login">Login</Link>
-          </li>
-          <li className="authenticationLi">
-            <Link to="/Register">Register</Link>
-          </li>
-        </ul>
-      }
+              }}>Logout</Link>
+            </li>
+          </ul> :
+          <ul className="authenticationUl">
+            <li className="authenticationLi">
+              <Link to="/Login">Login</Link>
+            </li>
+            <li className="authenticationLi">
+              <Link to="/Register">Register</Link>
+            </li>
+          </ul>
+        }
+      </div>
     </nav>
   )
 }

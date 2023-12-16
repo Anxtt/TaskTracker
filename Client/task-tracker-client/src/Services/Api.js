@@ -103,19 +103,11 @@ async function login(username, password) {
 }
 
 async function logout() {
-  const request = await fetch("https://localhost:7219/api/identity/logout", {
+    await fetch("https://localhost:7219/api/identity/logout", {
     method: "POST",
     credentials: "include",
     mode: "cors"
   });
-
-  if (request.ok === false) {
-    alert('Error. Try again!');
-
-    return false;
-  }
-
-  return true;
 }
 
 async function doesEmailExist(email) {
@@ -145,7 +137,9 @@ async function allChores() {
     mode: "cors"
   });
 
-  return await response.json();
+  return response.status === 200
+    ? await response.json()
+    : null;
 }
 
 async function verifyUser() {
