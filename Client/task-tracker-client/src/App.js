@@ -11,6 +11,7 @@ import About from "./Components/About";
 import Error from "./Components/Error";
 
 import "./Styles/App.css";
+import AddTask from "./Components/AddTask";
 
 function App() {
   return (
@@ -22,6 +23,8 @@ function App() {
           <Route path="/" element={<Home /> } />
 
           <Route path="/Tasks" element={<Tasks />} />
+          <Route path="/AddTask" element={<AddTask />} />
+
           <Route path="/About" element={<About />} />
 
           <Route path="/Login" element={<Login />} />

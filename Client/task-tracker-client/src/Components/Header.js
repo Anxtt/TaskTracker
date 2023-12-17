@@ -27,10 +27,7 @@ function Header() {
                   <Link id="dropdown-a" to="/Tasks">All Tasks</Link>
                 </li>
                 <li className="navigation dropdown-item mx-auto">
-                  <Link to="#">Another action</Link>
-                </li>
-                <li className="navigation dropdown-item mx-auto">
-                  <Link to="#">Something else here</Link>
+                  <Link to="/AddTask">Add Task</Link>
                 </li>
               </ul>
             </div>
