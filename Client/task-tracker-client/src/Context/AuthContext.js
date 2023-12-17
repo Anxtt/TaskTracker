@@ -36,7 +36,7 @@ export default function AuthProvider({ children }) {
             }
         }
 
-            getData();
+        getData();
     }, [auth]);
 
     console.log("After:");
