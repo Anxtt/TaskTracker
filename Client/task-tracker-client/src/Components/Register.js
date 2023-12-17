@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react"
 import { useNavigate, Link } from 'react-router-dom'
 
 import { register } from "../Services/Api"
-import { validateForm } from "../Helpers/ValidateForm"
+import CustomInput from "./CustomInput"
 
 import '../Styles/Form.css'
 
@@ -58,84 +58,24 @@ function Register() {
 
     return (
         <div className="mx-auto container col-6">
-            <form className="mx-auto">
-                <div className='mx-auto col-md-6'>
-                    <label className="form-label">Username</label>
-                    <input type='text'
-                        className={formErrors.Username === undefined
-                            ? "form-control"
-                            : "form-control-error"}
-                        id="Username" name="Username"
-                        placeholder="Your Username..."
-                        ref={usernameRef}
-                        value={username} onChange={(e) => setUsername(e.target.value)}
-                        onBlur={(e) => validateForm(e.target, formErrors, setFormErrors, password, confirmPassword, "register")}
-                    />
-                    {
-                        formErrors.Username !== undefined
-                            ? <span className="">{formErrors.Username}</span>
-                            : null
-                    }
-                </div>
+            <form>
+                <CustomInput type="text" name="Username" refValue={usernameRef} value={username} setValue={setUsername}
+                    formErrors={formErrors} setFormErrors={setFormErrors} formType="register"
+                    password={password} confirmPassword={confirmPassword} />
 
-                <div className="mx-auto col-md-6">
-                    <label className="form-label">Email</label>
-                    <input type='text'
-                        className={formErrors.Email === undefined
-                            ? "form-control"
-                            : "form-control-error"}
-                        id="Email" name="Email"
-                        placeholder="Your Email..."
-                        ref={emailRef}
-                        value={email} onChange={(e) => setEmail(e.target.value)}
-                        onBlur={(e) => validateForm(e.target, formErrors, setFormErrors, password, confirmPassword, "register")}
-                    />
-                    {
-                        formErrors.Email !== undefined
-                            ? <span className="">{formErrors.Email}</span>
-                            : null
-                    }
-                </div>
+                <CustomInput type="text" name="Email" refValue={emailRef} value={email} setValue={setEmail}
+                    formErrors={formErrors} setFormErrors={setFormErrors} formType="register"
+                    password={password} confirmPassword={confirmPassword} />
 
-                <div className="mx-auto col-md-6">
-                    <label className="form-label">Password</label>
-                    <input type='password'
-                        className={formErrors.Password === undefined
-                            ? "form-control"
-                            : "form-control-error"}
-                        id="Password" name="Password"
-                        ref={passwordRef}
-                        placeholder="Your Password..."
-                        value={password} onChange={(e) => setPassword(e.target.value)}
-                        onBlur={(e) => validateForm(e.target, formErrors, setFormErrors, password, confirmPassword, "register")}
-                    />
-                    {
-                        formErrors.Password !== undefined
-                            ? <span className="">{formErrors.Password}</span>
-                            : null
-                    }
-                </div>
+                <CustomInput type="password" name="Password" refValue={passwordRef} value={password} setValue={setPassword}
+                    formErrors={formErrors} setFormErrors={setFormErrors} formType="register"
+                    password={password} confirmPassword={confirmPassword} />
 
-                <div className="mx-auto col-md-6">
-                    <label className="form-label">Confirm Password</label>
-                    <input type='password'
-                        className={formErrors.ConfirmPassword === undefined
-                            ? "form-control"
-                            : "form-control-error"}
-                        id="ConfirmPassword" name="ConfirmPassword"
-                        placeholder="Confirm Password..."
-                        ref={confirmPasswordRef}
-                        value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}
-                        onBlur={(e) => validateForm(e.target, formErrors, setFormErrors, password, confirmPassword, "register")}
-                    />
-                    {
-                        formErrors.ConfirmPassword !== undefined
-                            ? <span className="">{formErrors.ConfirmPassword}</span>
-                            : null
-                    }
-                </div>
+                <CustomInput type="password" name="ConfirmPassword" refValue={confirmPasswordRef} value={confirmPassword} setValue={setConfirmPassword}
+                    formErrors={formErrors} setFormErrors={setFormErrors} formType="register"
+                    password={password} confirmPassword={confirmPassword} />
 
-                <div className="mx-auto mt-3 mb-2 col-md-1">
+                <div className="mx-auto mt-3 mb-2 col-md-2">
                     <button
                         className="btn"
                         style={{ backgroundColor: "#a3cfbb" }}
@@ -146,9 +86,9 @@ function Register() {
                         Register
                     </button>
                 </div>
-            </form>
 
-            <p>Already have an account? <Link to="/Login">Login</Link></p>
+                <p>Already have an account? <Link to="/Login">Login</Link></p>
+            </form>
         </div>
     )
 }
