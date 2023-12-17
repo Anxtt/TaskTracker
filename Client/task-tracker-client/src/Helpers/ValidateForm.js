@@ -38,7 +38,7 @@ async function validateForm(e, formErrors, setFormErrors, password, confirmPassw
             break;
         case "Password":
             value.length < 6 || value.length > 18
-                ? currentFormErrors[name] = "Password must be between 6 and 18 characters."
+                ? currentFormErrors[name] = "Password must be between 6 and 18 characters. Password must contain at least 1 Capital letter, 1 Lower-case letter, 1 number, 1 special character."
                 : currentFormErrors[name] = undefined;
 
                 type === "register" && confirmPassword.length === 0
