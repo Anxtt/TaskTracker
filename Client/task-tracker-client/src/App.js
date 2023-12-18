@@ -13,8 +13,6 @@ import Error from "./Components/Error";
 import "./Styles/App.css";
 import AddTask from "./Components/AddTask";
 
-// Test 2
-
 function App() {
   return (
     <>

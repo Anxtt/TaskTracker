@@ -1,12 +1,22 @@
-import React, { useRef, useState } from "react"
+import React, { useContext, useEffect, useRef, useState } from "react"
 import { useNavigate, Link } from 'react-router-dom'
 
+import { AuthContext } from "../Context/AuthContext"
 import { register } from "../Services/Api"
 import CustomInput from "./CustomInput"
 
 import '../Styles/Form.css'
 
 function Register() {
+    const { auth } = useContext(AuthContext);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (auth === true) {
+            return navigate("/Tasks");
+        }
+    }, [auth])
+
     const [username, setUsername] = useState("");
     const usernameRef = useRef(username);
 
@@ -22,7 +32,6 @@ function Register() {
     const [formErrors, setFormErrors] = useState({});
 
 
-    const navigate = useNavigate();
 
     async function HandleRegister(e) {
         e.preventDefault();

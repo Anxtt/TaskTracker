@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from "react"
+import React, { useContext, useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router-dom";
 
 import { AuthContext } from "../Context/AuthContext";
@@ -10,7 +10,14 @@ import "../Styles/Form.css"
 import "../Styles/Login.css"
 
 function Login() {
-    const { setAuth, setUser } = useContext(AuthContext);
+    const { auth, setAuth, setUser } = useContext(AuthContext);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (auth === true){
+            return navigate("/Tasks");
+        }
+    }, [auth]);
 
     const [username, setUsername] = useState("");
     const usernameRef = useRef(username);
@@ -19,8 +26,6 @@ function Login() {
     const passwordRef = useRef(password);
 
     const [formErrors, setFormErrors] = useState({});
-
-    const navigate = useNavigate();
 
     async function HandleLogin(e) {
         e.preventDefault();
