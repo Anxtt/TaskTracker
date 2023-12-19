@@ -70,11 +70,11 @@ function Login() {
         <div className="mx-auto container col-6">
             <form>
                 <CustomInput type="text" name="Username" refValue={usernameRef} value={username} setValue={setUsername}
-                    formErrors={formErrors} setFormErrors={setFormErrors} formType="login"
+                    formErrors={formErrors} setFormErrors={setFormErrors} formType={null}
                     password={password} confirmPassword={null} disabled="" />
 
                 <CustomInput type="password" name="Password" refValue={passwordRef} value={password} setValue={setPassword}
-                    formErrors={formErrors} setFormErrors={setFormErrors} formType="login"
+                    formErrors={formErrors} setFormErrors={setFormErrors} formType={null}
                     password={password} confirmPassword={null} disabled="" />
 
                 <div className="mx-auto mt-3 mb-2 col-md-1">

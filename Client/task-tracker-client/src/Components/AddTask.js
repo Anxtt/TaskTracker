@@ -47,7 +47,7 @@ function AddTask() {
         <div className='mx-auto container col-6'>
             <form>
                 <CustomInput type='text' name='Task Name' refValue={taskNameRef} value={taskName} setValue={setTaskName}
-                    formErrors={formErrors} setFormErrors={setFormErrors} formType='login' disabled='' />
+                    formErrors={formErrors} setFormErrors={setFormErrors} formType={null} disabled='' />
 
                 <div className='col-md-6 mx-auto'>
                     <label className='form-label'>Task State</label>

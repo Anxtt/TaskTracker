@@ -123,7 +123,7 @@ async function verifyUser() {
 
     return response.ok === true
         ? await response.json()
-        : undefined;
+        : null;
 }
 
 async function doesEmailExist(email) {

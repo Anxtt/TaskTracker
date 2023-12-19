@@ -30,7 +30,7 @@ function AuthProvider({ children }) {
                 console.log("UseEffect in useAuth.js:")
                 console.log(data);
 
-                if (data !== undefined) {
+                if (data !== null) {
                     setUser({
                         username: data.userName,
                         token: data.token

@@ -21,7 +21,7 @@ export default function AuthProvider({ children }) {
                 console.log("UseEffect in AuthContext:")
                 console.log(data);
 
-                if (data !== undefined) {
+                if (data !== null) {
                     setUser({
                         username: data.userName,
                         token: data.token
