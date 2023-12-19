@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import { AuthContext } from "../Context/AuthContext";
 
@@ -12,9 +12,14 @@ import "../Styles/Tasks.css";
 function Tasks() {
     const { auth, setAuth, user, setUser } = useContext(AuthContext);
     const [tasks, setTasks] = useState([]);
-    const navigation = useNavigate();
+    const navigate = useNavigate();
+    const location = useLocation();
 
     useEffect(() => {
+        if (auth === false) {
+            return navigate("/Login", { state: { from: location } });
+        }
+
         async function startFetching() {
             const data = await allTasks();
             console.log(data);
@@ -22,12 +27,12 @@ function Tasks() {
             console.log(user);
 
             if (data !== null) {
-                setTasks(await allTasks());
+                setTasks(data);
             }
             else {
                 setAuth(false);
                 setUser(null);
-                return navigation("/Login");
+                return navigate("/Login", { state: { from: location }});
             }
         }
 

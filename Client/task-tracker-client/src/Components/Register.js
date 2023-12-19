@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react"
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate, Link, useLocation } from 'react-router-dom'
 
 import { AuthContext } from "../Context/AuthContext"
 import { register } from "../Services/Api"
@@ -10,10 +10,13 @@ import '../Styles/Form.css'
 function Register() {
     const { auth } = useContext(AuthContext);
     const navigate = useNavigate();
+    const location = useLocation();
 
     useEffect(() => {
         if (auth === true) {
-            return navigate("/Tasks");
+            return location.state !== null
+                ? navigate(location.state?.from?.pathname)
+                : navigate("/Tasks");
         }
     }, [auth])
 
