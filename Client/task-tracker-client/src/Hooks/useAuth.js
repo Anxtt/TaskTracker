@@ -23,11 +23,10 @@ function AuthProvider({ children }) {
     console.log(user);
 
     useEffect(() => {
-        async function isAuth(){
-            try {                
-                // need to make a request to get user data and pass it to setUser();
+        async function isAuth() {
+            try {
                 const data = await verifyUser();
-                
+
                 console.log("UseEffect in useAuth.js:")
                 console.log(data);
 

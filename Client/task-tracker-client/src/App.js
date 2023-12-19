@@ -14,29 +14,29 @@ import "./Styles/App.css";
 import AddTask from "./Components/AddTask";
 
 function App() {
-  return (
-    <>
-      <Header className="mx-auto" />
+    return (
+        <>
+            <Header className="mx-auto" />
 
-      <div className="container mx-auto">
-        <Routes>
-          <Route path="/" element={<Home /> } />
+            <div className="container mx-auto">
+                <Routes>
+                    <Route path="/" element={<Home />} />
 
-          <Route path="/Tasks" element={<Tasks />} />
-          <Route path="/AddTask" element={<AddTask />} />
+                    <Route path="/Tasks" element={<Tasks />} />
+                    <Route path="/AddTask" element={<AddTask />} />
 
-          <Route path="/About" element={<About />} />
+                    <Route path="/About" element={<About />} />
 
-          <Route path="/Login" element={<Login />} />
-          <Route path="/Register" element={<Register />} />
+                    <Route path="/Login" element={<Login />} />
+                    <Route path="/Register" element={<Register />} />
 
-          <Route path="*" element={<Error />} />
-        </Routes>
-      </div>
+                    <Route path="*" element={<Error />} />
+                </Routes>
+            </div>
 
-      <Footer className="mx-auto" />
-    </>
-  );
+            <Footer className="mx-auto" />
+        </>
+    );
 }
 
 export default App;

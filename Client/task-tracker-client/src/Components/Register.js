@@ -31,8 +31,6 @@ function Register() {
 
     const [formErrors, setFormErrors] = useState({});
 
-
-
     async function HandleRegister(e) {
         e.preventDefault();
 
@@ -80,7 +78,7 @@ function Register() {
                     formErrors={formErrors} setFormErrors={setFormErrors} formType="register"
                     password={password} confirmPassword={confirmPassword} />
 
-                <CustomInput type="password" name="ConfirmPassword" refValue={confirmPasswordRef} value={confirmPassword} setValue={setConfirmPassword}
+                <CustomInput type="password" name="Password Confirmation" refValue={confirmPasswordRef} value={confirmPassword} setValue={setConfirmPassword}
                     formErrors={formErrors} setFormErrors={setFormErrors} formType="register"
                     password={password} confirmPassword={confirmPassword} />
 
@@ -90,8 +88,7 @@ function Register() {
                         style={{ backgroundColor: "#a3cfbb" }}
                         name="Submit"
                         onClick={(e) => HandleRegister(e)}
-                        disabled={Object.entries(formErrors).some(([x, v]) => v !== undefined) === true
-                            || Object.values(formErrors).length === 0} >
+                        disabled={Object.entries(formErrors).some(([x, v]) => v !== undefined) === true} >
                         Register
                     </button>
                 </div>

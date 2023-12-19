@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react"
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 import { AuthContext } from "../Context/AuthContext";
 import { login } from "../Services/Api"
@@ -14,7 +14,7 @@ function Login() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (auth === true){
+        if (auth === true) {
             return navigate("/Tasks");
         }
     }, [auth]);
@@ -78,11 +78,12 @@ function Login() {
                         style={{ backgroundColor: "#a3cfbb" }}
                         name="Submit"
                         onClick={(e) => HandleLogin(e)}
-                        disabled={Object.entries(formErrors).some(([x, v]) => v !== undefined) === true
-                            || Object.values(formErrors).length === 0} >
+                        disabled={Object.entries(formErrors).some(([x, v]) => v !== undefined) === true} >
                         Login
                     </button>
                 </div>
+
+                <p>Don't have an account? <Link to="/Register">Register</Link></p>
             </form>
         </div>
     )
