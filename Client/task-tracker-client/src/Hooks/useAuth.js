@@ -27,7 +27,6 @@ function AuthProvider({ children }) {
             try {
                 const data = await verifyUser();
 
-
                 console.log("UseEffect in useAuth.js:")
                 console.log(data);
 
