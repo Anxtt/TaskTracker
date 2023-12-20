@@ -23,44 +23,62 @@ async function register(email, username, password, confirmPassword) {
         settings
     );
 
+    let status = {
+        state: true,
+        messages: []
+    };
+
     if (response.ok === false) {
         const data = await response.json();
+        status.state = false;
 
-        console.log("Data object:");
-        console.log(data);
+        // console.log("Data object:");
+        // console.log(data);
 
-        console.log("Data errors:");
-        console.log(data.errors);
+        // console.log("Data errors:");
+        // console.log(data.errors);
 
         const errors = data.errors !== undefined
             ? Object.entries(data.errors) : null;
 
-        if (errors !== null && errors.length !== 0) {
-            console.log("Errors:");
-            console.log(errors);
+        if (data.length > 0) {
+            // data.map(({ code, description }) => {
+            //     console.log(code);
+            //     console.log(description);
 
-            console.log("Errors length:");
-            console.log(errors.length);
+            //     status.messages.push(description);
+            // })
+            status.messages.push("User with such credentials already exists.");
 
-            errors.map(([errorName, errorMessage]) => {
-                console.log("Error name:");
-                console.log(errorName);
+            return status;
+        }
+        else if (errors !== null && errors.length !== 0) {
+            // console.log("Errors:");
+            // console.log(errors);
 
-                console.log("Error message:");
-                console.log(errorMessage);
+            // console.log("Errors length:");
+            // console.log(errors.length);
 
-                return alert(errorMessage);
-            });
+            // errors.map(([errorName, errorMessage]) => {
+            //     console.log("Error name:");
+            //     console.log(errorName);
 
-            return false;
+            //     console.log("Error message:");
+            //     console.log(errorMessage);
+
+            //     status.messages.push(errorMessage);
+            // });
+            status.messages.push("User with such credentials already exists.");
+
+            return status;
         }
 
-        alert('User with such credentials already exists');
+        status.messages.push('User with such credentials already exists.');
 
-        return false;
+        return status;
     }
 
-    return true;
+    return status;
 }
 
 async function login(username, password) {

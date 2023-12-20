@@ -32,6 +32,7 @@ function Register() {
     const [confirmPassword, setConfirmPassword] = useState("");
     const confirmPasswordRef = useRef(password);
 
+    const [messages, setMessages] = useState(null);
     const [formErrors, setFormErrors] = useState({});
 
     async function HandleRegister(e) {
@@ -58,16 +59,28 @@ function Register() {
             return;
         }
 
-        return Object.entries(formErrors).some(([x, v]) => v !== undefined) === true
-            || Object.values(formErrors).length === 0 // JSON.stringify(formErrors) === '{}'
-            ? null
-            : await register(email, username, password, confirmPassword)
-                ? navigate("/Login")
-                : null;
+        if (Object.entries(formErrors).some(([x, v]) => v !== undefined) === true
+            || Object.values(formErrors).length === 0) { // JSON.stringify(formErrors) === '{}'
+            return null;
+        }
+
+        const status = await register(email, username, password, confirmPassword);
+        
+        if (status.state === false) {
+            setMessages(status.messages);
+            return null;
+        }
+
+        return navigate("/Login");
     }
 
     return (
         <div className="mx-auto container col-6">
+            {
+                messages !== null && messages.length > 0
+                ? <span style={{ border: "3px solid #cfe2ff" }}>{messages}</span>
+                : null
+            }
             <form>
                 <CustomInput type="text" name="Username" refValue={usernameRef} value={username} setValue={setUsername}
                     formErrors={formErrors} setFormErrors={setFormErrors} formType="register"
