@@ -7,10 +7,10 @@ async function validateForm(e, formErrors, setFormErrors, password, confirmPassw
 
     switch (name) {
         case "Username":
-            value.length < 4 || value.length > 16
-                ? currentFormErrors[name] = "Username must be between 4 and 16 characters."
-                : type === "register" && await doesUsernameExist(value) === true
-                    ? currentFormErrors[name] = "Username already exists."
+            value.length === 0 || value.length < 4 || value.length > 16
+                ? currentFormErrors[name] = `This field is required. ${name} must be between 4 and 16 characters.`
+                : type === "register" && (await doesUsernameExist(value)) === true
+                    ? currentFormErrors[name] = `${name} already exists.`
                     : currentFormErrors[name] = undefined;
 
             merge = {
@@ -23,11 +23,13 @@ async function validateForm(e, formErrors, setFormErrors, password, confirmPassw
         case "Email":
             const rx = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+.\.[A-Z]{2,4}$/gim;
 
-            value.length === 0 || rx.test(value) === false
-                ? currentFormErrors[name] = "Invalid email address."
-                : await doesEmailExist(value) === true
-                    ? currentFormErrors[name] = "Email is already in use."
-                    : currentFormErrors[name] = undefined;
+            value.length === 0 || value.length < 6 || value.length > 50
+                ? currentFormErrors[name] = `This field is required. ${name} must be between 6 and 50 characters.`
+                : rx.test(value) === false
+                    ? currentFormErrors[name] = `Invalid ${name} address.`
+                    : (await doesEmailExist(value)) === true
+                        ? currentFormErrors[name] = `${name} is already in use.`
+                        : currentFormErrors[name] = undefined;
 
             merge = {
                 ...formErrors,
@@ -37,15 +39,17 @@ async function validateForm(e, formErrors, setFormErrors, password, confirmPassw
             setFormErrors(merge);
             break;
         case "Password":
-            value.length < 6 || value.length > 18
-                ? currentFormErrors[name] = "Password must be between 6 and 18 characters. Password must contain at least 1 Capital letter, 1 Lower-case letter, 1 number, 1 special character."
-                : currentFormErrors[name] = undefined;
+            value.length === 0
+                ? currentFormErrors[name] = "This field is required."
+                : value.length < 6 || value.length > 18
+                    ? currentFormErrors[name] = `${name} must be between 6 and 18 characters. ${name} must contain at least 1 Capital letter, 1 Lower-case letter, 1 number, 1 special character.`
+                    : currentFormErrors[name] = undefined;
 
-                type === "register" && confirmPassword.length === 0
-                ? currentFormErrors["ConfirmPassword"] = "This field is required."
+            type === "register" && confirmPassword.length === 0
+                ? currentFormErrors["Password Confirmation"] = "This field is required."
                 : type === "register" && confirmPassword !== password
-                    ? currentFormErrors["ConfirmPassword"] = "Confirm Password does not match Password."
-                    : currentFormErrors["ConfirmPassword"] = undefined;
+                    ? currentFormErrors["Password Confirmation"] = `Confirm Password does not match ${name}.`
+                    : currentFormErrors["Password Confirmation"] = undefined;
 
             merge = {
                 ...formErrors,
@@ -54,12 +58,24 @@ async function validateForm(e, formErrors, setFormErrors, password, confirmPassw
 
             setFormErrors(merge);
             break;
-        case "ConfirmPassword":
+        case "Password Confirmation":
             value.length === 0
                 ? currentFormErrors[name] = "This field is required."
                 : value !== password
-                    ? currentFormErrors[name] = "Confirm Password does not match Password."
+                    ? currentFormErrors[name] = `${name} does not match Password.`
                     : currentFormErrors[name] = undefined;
+
+            merge = {
+                ...formErrors,
+                ...currentFormErrors
+            }
+
+            setFormErrors(merge);
+            break;
+        case "Task Name":
+            value.length === 0 || value.length < 4 || value.length > 16
+                ? currentFormErrors[name] = `This field is required. ${name} must be between 4 and 16 characters.`
+                : currentFormErrors[name] = undefined;
 
             merge = {
                 ...formErrors,
