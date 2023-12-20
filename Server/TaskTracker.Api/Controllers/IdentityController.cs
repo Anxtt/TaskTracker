@@ -79,6 +79,11 @@ namespace TaskTracker.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Login([FromBody] IdentityLoginModel model)
         {
+            if (this.ModelState.IsValid == false)
+            {
+                return BadRequest(this.ModelState);
+            }
+
             ApplicationUser user = await userManager.FindByNameAsync(model.UserName);
 
             if (user == null ||
