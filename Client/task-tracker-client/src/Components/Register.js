@@ -64,10 +64,10 @@ function Register() {
             return null;
         }
 
-        const status = await register(email, username, password, confirmPassword);
-        
-        if (status.state === false) {
-            setMessages(status.messages);
+        const { state, messages } = await register(email, username, password, confirmPassword);
+
+        if (state === false) {
+            setMessages(messages);
             return null;
         }
 
@@ -78,8 +78,8 @@ function Register() {
         <div className="mx-auto container col-6">
             {
                 messages !== null && messages.length > 0
-                ? <span style={{ border: "3px solid #cfe2ff" }}>{messages}</span>
-                : null
+                    ? <span style={{ border: "3px solid #cfe2ff" }}>{messages}</span>
+                    : null
             }
             <form>
                 <CustomInput type="text" name="Username" refValue={usernameRef} value={username} setValue={setUsername}
