@@ -104,13 +104,17 @@ async function login(username, password) {
     console.log("Response:");
     console.log(response);
 
-    if (response.ok === false) {
-        alert('Invalid credentials.');
+    const status = {
+        state: true,
+        data: null,
+        messages: []
+    };
 
-        return {
-            status: false,
-            user: null
-        };
+    if (response.ok === false) {
+        status.state = false;
+        status.messages.push('Invalid credentials.');
+
+        return status;
     }
 
     const data = await response.json();
@@ -118,10 +122,9 @@ async function login(username, password) {
     console.log("Response data:");
     console.log(data);
 
-    return {
-        status: true,
-        data: data
-    };
+    status.data = data;
+
+    return status;
 }
 
 async function logout() {

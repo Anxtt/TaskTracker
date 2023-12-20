@@ -28,6 +28,7 @@ function Login() {
     const [password, setPassword] = useState("");
     const passwordRef = useRef(password);
 
+    const [messages, setMessages] = useState(null);
     const [formErrors, setFormErrors] = useState({});
 
     async function HandleLogin(e) {
@@ -49,9 +50,13 @@ function Login() {
             return null;
         }
 
-        const { status, data } = await login(username, password);
+        const { state, data, messages } = await login(username, password);
 
-        if (status === true) {
+        if (state === false) {
+            setMessages(messages);
+            return null;
+        }
+        else {
             setUser({
                 username: data.userName,
                 token: data.token
@@ -59,7 +64,7 @@ function Login() {
             setAuth(true);
         }
 
-        return status === true
+        return state === true
             ? location.state !== null
             : navigate(location.state?.from?.pathname)
                 ? navigate("/Tasks")
@@ -68,6 +73,11 @@ function Login() {
 
     return (
         <div className="mx-auto container col-6">
+            {
+                messages !== null && messages.length > 0
+                    ? <span style={{ border: "3px solid #cfe2ff"}}>{messages}</span>
+                    : null
+            }
             <form>
                 <CustomInput type="text" name="Username" refValue={usernameRef} value={username} setValue={setUsername}
                     formErrors={formErrors} setFormErrors={setFormErrors} formType={null}
