@@ -12,7 +12,7 @@ function Header() {
 
     return (
         <nav className="mx-auto">
-            <div className="mx-auto container-fluid">
+            <div className="mx-auto">
                 <ul>
                     <li className="navigation">
                         <Link to="/">Home</Link>

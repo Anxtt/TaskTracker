@@ -29,30 +29,23 @@ function Tasks() {
             if (data !== null) {
                 setTasks(data);
             }
-            else {
-                setAuth(false);
-                setUser(null);
-                return navigate("/Login", { state: { from: location }});
-            }
         }
 
         startFetching();
     }, [auth]);
 
     return (
-        <>
-            <div className="container mx-auto">
-                {auth === true
-                    ? <h1 className="mx-auto">Hello, {user.username}</h1>
-                    : <h1 className="mx-auto">Hello, Taskmaster</h1>
-                }
+        <div className="mx-auto">
+            {auth === true
+                ? <h1 className="mx-auto">Hello, {user.username}</h1>
+                : null
+            }
 
-                {tasks !== null && tasks.length !== 0
-                    ? tasks.map((task) => <Task className="mx-auto" key={task.id} task={task} />)
-                    : <p>You have no tasks currently</p>
-                }
-            </div>
-        </>
+            {tasks !== null && tasks.length !== 0
+                ? tasks.map((task) => <Task key={task.id} task={task} />)
+                : <p>You have no tasks currently</p>
+            }
+        </div>
     );
 }
 

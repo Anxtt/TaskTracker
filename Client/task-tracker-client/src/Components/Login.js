@@ -72,7 +72,7 @@ function Login() {
     }
 
     return (
-        <div className="mx-auto container col-6">
+        <div className="mx-auto col-6">
             {
                 messages !== null && messages.length > 0
                     ? <span style={{ border: "3px solid #cfe2ff"}}>{messages}</span>

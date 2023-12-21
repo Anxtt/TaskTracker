@@ -44,7 +44,7 @@ function AddTask() {
 
     // color: "#cfe2ff"
     return (
-        <div className='mx-auto container col-6'>
+        <div className='mx-auto col-6'>
             <form>
                 <CustomInput type='text' name='Task Name' refValue={taskNameRef} value={taskName} setValue={setTaskName}
                     formErrors={formErrors} setFormErrors={setFormErrors} formType={null} disabled='' />
