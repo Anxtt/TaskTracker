@@ -21,9 +21,9 @@ namespace TaskTracker.Core.Services
                     .Select(x => new ChoreResponseModel()
                     {
                         Id = x.Id,
-                        CreatedOn = x.CreatedOn,
                         Name = x.Name,
-                        UpdatedOn = x.UpdatedOn,
+                        CreatedOn = x.CreatedOn.Date.ToString("d MMM yyyy"),
+                        UpdatedOn = x.UpdatedOn.Date.ToString("d MMM yyyy"),
                         IsCompleted = x.IsCompleted,
                         User = x.User.UserName
                     })
@@ -58,9 +58,9 @@ namespace TaskTracker.Core.Services
                     .Select(x => new ChoreResponseModel()
                     {
                         Id = x.Id,
-                        CreatedOn = x.CreatedOn,
                         Name = x.Name,
-                        UpdatedOn = x.UpdatedOn,
+                        CreatedOn = x.CreatedOn.Date.ToString("d MMM yyyy"),
+                        UpdatedOn = x.UpdatedOn.Date.ToString("d MMM yyyy"),
                         IsCompleted = x.IsCompleted,
                         User = x.User.UserName
                     })
