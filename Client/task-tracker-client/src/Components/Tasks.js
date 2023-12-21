@@ -10,11 +10,11 @@ import Task from "./Task";
 import "../Styles/Tasks.css";
 
 function Tasks() {
-    const { auth, setAuth, user, setUser } = useContext(AuthContext);
-    const [tasks, setTasks] = useState([]);
+    const { auth, user } = useContext(AuthContext);
+    const [tasks, setTasks] = useState(null);
     const navigate = useNavigate();
     const location = useLocation();
-
+    
     useEffect(() => {
         if (auth === false) {
             return navigate("/Login", { state: { from: location } });
@@ -42,7 +42,7 @@ function Tasks() {
             }
 
             {tasks !== null && tasks.length !== 0
-                ? tasks.map((task) => <Task key={task.id} task={task} />)
+                ? tasks.map((task) => <Task key={task.id} task={task} tasks={tasks} setTasks={setTasks} />)
                 : <p>You have no tasks currently</p>
             }
         </div>

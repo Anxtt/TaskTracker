@@ -202,8 +202,20 @@ async function allTasks() {
         : null;
 }
 
+async function deleteTask(id) {
+    const response = await fetch(`https://localhost:7219/api/chore/delete/${id}`, {
+        method: "DELETE",
+        credentials: "include",
+        mode: "cors"
+    });
+
+    return response.status === 200
+        ? true
+        : false;
+}
+
 // function getToken(key) {
 //   return JSON.parse(localStorage.getItem(key));
 // }
 
-export { register, login, logout, verifyUser, doesUsernameExist, doesEmailExist, allTasks, createTask };
+export { register, login, logout, verifyUser, doesUsernameExist, doesEmailExist, allTasks, createTask, deleteTask };
