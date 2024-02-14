@@ -1,7 +1,13 @@
+const URL = "https://localhost:7219/api";
+const IDENTITY = "identity";
+const CHORE = "chore";
+
+// Add more consts
+
 /************
 *    User   *
 ************/
-async function register(email, username, password, confirmPassword) {
+export async function register(email, username, password, confirmPassword) {
     const formData = JSON.stringify({
         email: email,
         username: username,
@@ -13,13 +19,13 @@ async function register(email, username, password, confirmPassword) {
         method: "POST",
         headers: {
             Accept: "application/json",
-            "Content-Type": "application/json",
+            "Content-Type": "application/json"
         },
         body: formData
     };
 
     const response = await fetch(
-        "https://localhost:7219/api/identity/register",
+        `${URL}/${IDENTITY}/register`,
         settings
     );
 
@@ -81,12 +87,12 @@ async function register(email, username, password, confirmPassword) {
     return status;
 }
 
-async function login(username, password) {
+export async function login(username, password) {
     const settings = {
         method: "POST",
         headers: {
             Accept: "application/json",
-            "Content-Type": "application/json",
+            "Content-Type": "application/json"
         },
         body: JSON.stringify({
             username: username,
@@ -97,7 +103,7 @@ async function login(username, password) {
     };
 
     const response = await fetch(
-        "https://localhost:7219/api/identity/login",
+        `${URL}/${IDENTITY}/login`,
         settings
     );
 
@@ -127,16 +133,16 @@ async function login(username, password) {
     return status;
 }
 
-async function logout() {
-    await fetch("https://localhost:7219/api/identity/logout", {
+export async function logout() {
+    await fetch(`${URL}/${IDENTITY}/logout`, {
         method: "POST",
         credentials: "include",
         mode: "cors"
     });
 }
 
-async function verifyUser() {
-    const response = await fetch("https://localhost:7219/api/identity/verifyuser", {
+export async function verifyUser() {
+    const response = await fetch(`${URL}/${IDENTITY}/verifyuser`, {
         method: "GET",
         credentials: "include",
         mode: "cors"
@@ -147,8 +153,8 @@ async function verifyUser() {
         : null;
 }
 
-async function doesEmailExist(email) {
-    const response = await fetch(`https://localhost:7219/api/identity/doesExistByEmail/${email}`, {
+export async function doesEmailExist(email) {
+    const response = await fetch(`${URL}/${IDENTITY}/doesExistByEmail/${email}`, {
         method: "GET",
         credentials: "include", // важно, за да мога да получавам бисквитки
         mode: "cors"
@@ -157,8 +163,8 @@ async function doesEmailExist(email) {
     return await response.json();
 }
 
-async function doesUsernameExist(username) {
-    const response = await fetch(`https://localhost:7219/api/identity/doesExistByUserName/${username}`, {
+export async function doesUsernameExist(username) {
+    const response = await fetch(`${URL}/${IDENTITY}/doesExistByUserName/${username}`, {
         method: "GET",
         credentials: "include", // важно, за да мога да получавам бисквитки
         mode: "cors"
@@ -170,16 +176,16 @@ async function doesUsernameExist(username) {
 /************
 *    Task   *
 ************/
-async function createTask(name, isCompleted) {
-    const response = await fetch("https://localhost:7219/api/chore/create", {
+export async function createTask(name, isCompleted) {
+    const response = await fetch(`${URL}/${CHORE}/create`, {
         method: "POST",
         headers: {
             Accept: "application/json",
-            "Content-Type": "application/json",
+            "Content-Type": "application/json"
         },
         body: JSON.stringify({
             name: name,
-            isCompleted: isCompleted
+            isCompleted: isCompleted === true ? true : false
         }),
         credentials: "include", // важно, за да мога да получавам бисквитки
         mode: "cors"
@@ -190,8 +196,8 @@ async function createTask(name, isCompleted) {
         : null;
 }
 
-async function allTasks() {
-    const response = await fetch("https://localhost:7219/api/chore/all", {
+export async function allTasks() {
+    const response = await fetch(`${URL}/${CHORE}/all`, {
         method: "GET",
         credentials: "include", // важно, за да мога да получавам бисквитки
         mode: "cors"
@@ -202,8 +208,8 @@ async function allTasks() {
         : null;
 }
 
-async function deleteTask(id) {
-    const response = await fetch(`https://localhost:7219/api/chore/delete/${id}`, {
+export async function deleteTask(id) {
+    const response = await fetch(`${URL}/${CHORE}/delete/${id}`, {
         method: "DELETE",
         credentials: "include",
         mode: "cors"
@@ -214,8 +220,26 @@ async function deleteTask(id) {
         : false;
 }
 
+export async function editTask(id, updatedOn, isCompleted) {
+    const response = await fetch(`${URL}/${CHORE}/edit/${id}`, {
+        method: "PUT",
+        headers: {
+            "Accept": "application/json",
+            "Content-Type" : "application/json"
+        },
+        body: JSON.stringify({
+            updatedOn: updatedOn,
+            isCompleted: isCompleted
+        }),
+        credentials: "include",
+        mode: "cors"
+    });
+
+    return response.status === 204
+        ? true
+        : false;
+}
+
 // function getToken(key) {
 //   return JSON.parse(localStorage.getItem(key));
 // }
-
-export { register, login, logout, verifyUser, doesUsernameExist, doesEmailExist, allTasks, createTask, deleteTask };

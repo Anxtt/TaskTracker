@@ -9,7 +9,7 @@ import CustomInput from "./CustomInput";
 import "../Styles/Form.css"
 import "../Styles/Login.css"
 
-function Login() {
+export default function Login() {
     const { auth, setAuth, setUser } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
@@ -109,5 +109,3 @@ function Login() {
         </div>
     )
 }
-
-export default Login

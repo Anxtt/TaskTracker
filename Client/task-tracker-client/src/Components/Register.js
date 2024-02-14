@@ -7,7 +7,7 @@ import CustomInput from "./CustomInput"
 
 import '../Styles/Form.css'
 
-function Register() {
+export default function Register() {
     const { auth } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
@@ -114,5 +114,3 @@ function Register() {
         </div>
     )
 }
-
-export default Register

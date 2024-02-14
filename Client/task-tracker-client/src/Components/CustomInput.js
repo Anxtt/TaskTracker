@@ -1,8 +1,8 @@
 import React from 'react'
 
-import { validateForm } from '../Helpers/ValidateForm'
+import validateForm from '../Helpers/ValidateForm'
 
-function CustomInput({ type, name, refValue, value, setValue,
+export default function CustomInput({ type, name, refValue, value, setValue,
     formErrors, setFormErrors, formType, disabled,
     password, confirmPassword }) {
     return (
@@ -13,7 +13,7 @@ function CustomInput({ type, name, refValue, value, setValue,
                     ? 'form-control'
                     : 'form-control-error'}
                 id={name} name={name}
-                placeholder={`Your ${name}...`}
+                placeholder={name}
                 ref={refValue}
                 value={value} onChange={(e) => setValue(e.target.value)}
                 onBlur={(e) => validateForm(e.target, formErrors, setFormErrors, password, confirmPassword, formType)}
@@ -27,5 +27,3 @@ function CustomInput({ type, name, refValue, value, setValue,
         </div>
     )
 }
-
-export default CustomInput

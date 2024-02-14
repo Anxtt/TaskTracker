@@ -2,7 +2,7 @@ import React from 'react'
 
 import '../Styles/Footer.css'
 
-function Footer() {
+export default function Footer() {
     return (
         <footer>
             <p>
@@ -11,5 +11,3 @@ function Footer() {
         </footer>
     )
 }
-
-export default Footer

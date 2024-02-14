@@ -5,7 +5,7 @@ import { useAuth } from '../Hooks/useAuth';
 import { createTask } from '../Services/Api';
 import CustomInput from './CustomInput';
 
-function AddTask() {
+export default function AddTask() {
     const { auth } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
@@ -71,5 +71,3 @@ function AddTask() {
         </div>
     )
 }
-
-export default AddTask

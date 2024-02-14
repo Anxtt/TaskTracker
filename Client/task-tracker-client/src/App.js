@@ -13,7 +13,7 @@ import Error from "./Components/Error";
 import "./Styles/App.css";
 import AddTask from "./Components/AddTask";
 
-function App() {
+export default function App() {
     return (
         <>
             <Header className="mx-auto" />
@@ -38,5 +38,3 @@ function App() {
         </>
     );
 }
-
-export default App;

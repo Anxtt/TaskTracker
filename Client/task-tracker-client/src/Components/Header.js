@@ -7,7 +7,7 @@ import { logout } from "../Services/Api"
 
 import "../Styles/Header.css"
 
-function Header() {
+export default function Header() {
     const { auth, setAuth, setUser } = useAuth();
 
     return (
@@ -60,5 +60,3 @@ function Header() {
         </nav>
     )
 }
-
-export default Header
