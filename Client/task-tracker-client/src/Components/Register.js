@@ -1,14 +1,14 @@
-import React, { useContext, useEffect, useRef, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { useNavigate, Link, useLocation } from 'react-router-dom'
 
-import { AuthContext } from "../Context/AuthContext"
+import { useAuth } from '../Hooks/useAuth';
 import { register } from "../Services/Api"
 import CustomInput from "./CustomInput"
 
 import '../Styles/Form.css'
 
 function Register() {
-    const { auth } = useContext(AuthContext);
+    const { auth } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -18,7 +18,7 @@ function Register() {
                 ? navigate(location.state?.from?.pathname)
                 : navigate("/Tasks");
         }
-    }, [auth])
+    }, [auth, location.state, navigate])
 
     const [username, setUsername] = useState("");
     const usernameRef = useRef(username);

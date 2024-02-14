@@ -1,12 +1,12 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom';
 
-import { AuthContext } from '../Context/AuthContext';
+import { useAuth } from '../Hooks/useAuth';
 import { createTask } from '../Services/Api';
 import CustomInput from './CustomInput';
 
 function AddTask() {
-    const { auth } = useContext(AuthContext);
+    const { auth } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -14,7 +14,7 @@ function AddTask() {
         if (auth === false) {
             return navigate("/Login", { state: { from: location } });
         }
-    }, [auth]);
+    }, [auth, navigate, location]);
 
     const [taskName, setTaskName] = useState("");
     const taskNameRef = useRef(taskName);

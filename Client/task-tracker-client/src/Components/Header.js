@@ -1,14 +1,14 @@
-import React, { useContext } from "react"
+import React from "react"
 import { Link } from "react-router-dom"
 
-import { AuthContext } from "../Context/AuthContext"
+import { useAuth } from '../Hooks/useAuth';
 
 import { logout } from "../Services/Api"
 
 import "../Styles/Header.css"
 
 function Header() {
-    const { auth, setAuth, setUser } = useContext(AuthContext);
+    const { auth, setAuth, setUser } = useAuth();
 
     return (
         <nav className="mx-auto">

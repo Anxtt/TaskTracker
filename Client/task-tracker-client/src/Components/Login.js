@@ -1,7 +1,7 @@
-import React, { useContext, useEffect, useRef, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { useNavigate, Link, useLocation } from "react-router-dom";
 
-import { AuthContext } from "../Context/AuthContext";
+import { useAuth } from '../Hooks/useAuth';
 import { login } from "../Services/Api"
 
 import CustomInput from "./CustomInput";
@@ -10,7 +10,7 @@ import "../Styles/Form.css"
 import "../Styles/Login.css"
 
 function Login() {
-    const { auth, setAuth, setUser } = useContext(AuthContext);
+    const { auth, setAuth, setUser } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -20,7 +20,7 @@ function Login() {
                 ? navigate(location.state?.from?.pathname)
                 : navigate("/Tasks");
         }
-    }, [auth]);
+    }, [auth, location.state, navigate]);
 
     const [username, setUsername] = useState("");
     const usernameRef = useRef(username);
@@ -75,13 +75,19 @@ function Login() {
         <div className="mx-auto col-6">
             {
                 messages !== null && messages.length > 0
-                    ? <span style={{ border: "3px solid #cfe2ff"}}>{messages}</span>
+                    ? <span style={{ border: "3px solid #cfe2ff" }}>{messages}</span>
                     : null
             }
             <form>
+                {/* <CustomInput type="text" name="Username" refValue={usernameRef} value={username} setValue={setUsername}
+                    formErrors={formErrors} setFormErrors={setFormErrors} formType={null}
+                    password={password} confirmPassword={null} disabled="" /> */}
+                
+                {/* AYOOOOOOOOO LOK AT THIS BELOW -> TESTINGS */}
                 <CustomInput type="text" name="Username" refValue={usernameRef} value={username} setValue={setUsername}
                     formErrors={formErrors} setFormErrors={setFormErrors} formType={null}
-                    password={password} confirmPassword={null} disabled="" />
+                    password={password} confirmPassword={null} disabled="">
+                </CustomInput> { /* HERE */ }
 
                 <CustomInput type="password" name="Password" refValue={passwordRef} value={password} setValue={setPassword}
                     formErrors={formErrors} setFormErrors={setFormErrors} formType={null}

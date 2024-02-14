@@ -2,18 +2,9 @@ import React, { createContext, useEffect, useContext, useState } from "react";
 
 import { verifyUser } from '../Services/Api';
 
-const AuthContext = createContext(
-    {
-        auth: null,
-        setAuth: () => { },
-        user: null
-    });
+const AuthContext = createContext();
 
-export function useAuth() {
-    return useContext(AuthContext);
-}
-
-function AuthProvider({ children }) {
+export default function AuthProvider({ children }) {
     const [auth, setAuth] = useState(false);
     const [user, setUser] = useState(null);
 
@@ -53,10 +44,12 @@ function AuthProvider({ children }) {
     console.log(user);
 
     return (
-        <AuthContext.Provider value={{ auth, setAuth, user }}>
+        <AuthContext.Provider value={{ auth, setAuth, user, setUser }}>
             {children}
         </AuthContext.Provider>
     );
 };
 
-export default AuthProvider;
+export function useAuth() {
+    return useContext(AuthContext);
+}
