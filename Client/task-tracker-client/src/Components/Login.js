@@ -79,15 +79,9 @@ export default function Login() {
                     : null
             }
             <form>
-                {/* <CustomInput type="text" name="Username" refValue={usernameRef} value={username} setValue={setUsername}
-                    formErrors={formErrors} setFormErrors={setFormErrors} formType={null}
-                    password={password} confirmPassword={null} disabled="" /> */}
-                
-                {/* AYOOOOOOOOO LOK AT THIS BELOW -> TESTINGS */}
                 <CustomInput type="text" name="Username" refValue={usernameRef} value={username} setValue={setUsername}
                     formErrors={formErrors} setFormErrors={setFormErrors} formType={null}
-                    password={password} confirmPassword={null} disabled="">
-                </CustomInput> { /* HERE */ }
+                    password={password} confirmPassword={null} disabled="" />
 
                 <CustomInput type="password" name="Password" refValue={passwordRef} value={password} setValue={setPassword}
                     formErrors={formErrors} setFormErrors={setFormErrors} formType={null}

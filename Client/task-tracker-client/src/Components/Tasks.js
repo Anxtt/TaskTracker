@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
-import { AuthContext } from "../Context/AuthContext";
+import { useAuth } from '../Hooks/useAuth';
 
 import { allTasks } from "../Services/Api";
 
@@ -9,8 +9,8 @@ import Task from "./Task";
 
 import "../Styles/Tasks.css";
 
-function Tasks() {
-    const { auth, user } = useContext(AuthContext);
+export default function Tasks() {
+    const { auth, user } = useAuth();
     const [tasks, setTasks] = useState(null);
     const navigate = useNavigate();
     const location = useLocation();
@@ -32,21 +32,19 @@ function Tasks() {
         }
 
         startFetching();
-    }, [auth]);
+    }, [auth, location, navigate, user]);
 
     return (
-        <div className="mx-auto">
+        <div className="mx-auto row">
             {auth === true
                 ? <h1 className="mx-auto">Hello, {user.username}</h1>
                 : null
             }
 
             {tasks !== null && tasks.length !== 0
-                ? tasks.map((task) => <Task key={task.id} task={task} tasks={tasks} setTasks={setTasks} />)
+                ? tasks.map((task, idx) => <Task key={task.id} task={task} index={idx} tasks={tasks} setTasks={setTasks} />)
                 : <p>You have no tasks currently</p>
             }
         </div>
     );
 }
-
-export default Tasks;
