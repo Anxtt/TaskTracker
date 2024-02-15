@@ -1,8 +1,6 @@
 const URL = "https://localhost:7219/api";
-const IDENTITY = "identity";
-const CHORE = "chore";
-
-// Add more consts
+const IDENTITY = "Identity";
+const CHORE = "Chore";
 
 /************
 *    User   *
@@ -25,7 +23,7 @@ export async function register(email, username, password, confirmPassword) {
     };
 
     const response = await fetch(
-        `${URL}/${IDENTITY}/register`,
+        `${URL}/${IDENTITY}/Register`,
         settings
     );
 
@@ -103,7 +101,7 @@ export async function login(username, password) {
     };
 
     const response = await fetch(
-        `${URL}/${IDENTITY}/login`,
+        `${URL}/${IDENTITY}/Login`,
         settings
     );
 
@@ -134,7 +132,7 @@ export async function login(username, password) {
 }
 
 export async function logout() {
-    await fetch(`${URL}/${IDENTITY}/logout`, {
+    await fetch(`${URL}/${IDENTITY}/Logout`, {
         method: "POST",
         credentials: "include",
         mode: "cors"
@@ -142,7 +140,7 @@ export async function logout() {
 }
 
 export async function verifyUser() {
-    const response = await fetch(`${URL}/${IDENTITY}/verifyuser`, {
+    const response = await fetch(`${URL}/${IDENTITY}/VerifyUser`, {
         method: "GET",
         credentials: "include",
         mode: "cors"
@@ -154,7 +152,7 @@ export async function verifyUser() {
 }
 
 export async function doesEmailExist(email) {
-    const response = await fetch(`${URL}/${IDENTITY}/doesExistByEmail/${email}`, {
+    const response = await fetch(`${URL}/${IDENTITY}/DoesExistByEmail/${email}`, {
         method: "GET",
         credentials: "include", // важно, за да мога да получавам бисквитки
         mode: "cors"
@@ -164,7 +162,7 @@ export async function doesEmailExist(email) {
 }
 
 export async function doesUsernameExist(username) {
-    const response = await fetch(`${URL}/${IDENTITY}/doesExistByUserName/${username}`, {
+    const response = await fetch(`${URL}/${IDENTITY}/DoesExistByUserName/${username}`, {
         method: "GET",
         credentials: "include", // важно, за да мога да получавам бисквитки
         mode: "cors"
@@ -177,7 +175,7 @@ export async function doesUsernameExist(username) {
 *    Task   *
 ************/
 export async function createTask(name, isCompleted) {
-    const response = await fetch(`${URL}/${CHORE}/create`, {
+    const response = await fetch(`${URL}/${CHORE}/Create`, {
         method: "POST",
         headers: {
             Accept: "application/json",
@@ -197,7 +195,7 @@ export async function createTask(name, isCompleted) {
 }
 
 export async function allTasks() {
-    const response = await fetch(`${URL}/${CHORE}/all`, {
+    const response = await fetch(`${URL}/${CHORE}/All`, {
         method: "GET",
         credentials: "include", // важно, за да мога да получавам бисквитки
         mode: "cors"
@@ -209,7 +207,7 @@ export async function allTasks() {
 }
 
 export async function deleteTask(id) {
-    const response = await fetch(`${URL}/${CHORE}/delete/${id}`, {
+    const response = await fetch(`${URL}/${CHORE}/Delete/${id}`, {
         method: "DELETE",
         credentials: "include",
         mode: "cors"
@@ -220,16 +218,27 @@ export async function deleteTask(id) {
         : false;
 }
 
-export async function editTask(id, updatedOn, isCompleted) {
-    const response = await fetch(`${URL}/${CHORE}/edit/${id}`, {
+export async function doesExistByName(name) {
+    const response = await fetch(`${URL}/${CHORE}/DoesExistByName/${name}`, {
+        method: "GET",
+        credentials: "include",
+        mode: "cors"
+    });
+
+    return await response.json();
+}
+
+export async function editTask(id, name, updatedOn, isCompleted) {
+    const response = await fetch(`${URL}/${CHORE}/Edit/${id}`, {
         method: "PUT",
         headers: {
             "Accept": "application/json",
             "Content-Type" : "application/json"
         },
         body: JSON.stringify({
+            name: name,
             updatedOn: updatedOn,
-            isCompleted: isCompleted
+            isCompleted: isCompleted === 'true' ? true : false
         }),
         credentials: "include",
         mode: "cors"

@@ -43,7 +43,6 @@ namespace TaskTracker.Api
                .UseHttpsRedirection()
                .UseRouting()
                .UseCors()
-               .UseHttpsRedirection()
                .UseAuthentication()
                .UseAuthorization()
                //.UseMiddleware<LoginRequiredMiddleware>()

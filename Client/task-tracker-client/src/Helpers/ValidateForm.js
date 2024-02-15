@@ -1,4 +1,4 @@
-import { doesUsernameExist, doesEmailExist } from "../Services/Api";
+import { doesUsernameExist, doesEmailExist, doesExistByName } from "../Services/Api";
 
 export default async function validateForm(e, formErrors, setFormErrors, password, confirmPassword, type) {
     const { name, value } = e;
@@ -47,7 +47,9 @@ export default async function validateForm(e, formErrors, setFormErrors, passwor
         case "Task Name":
             value.length === 0 || value.length < 4 || value.length > 16
                 ? currentFormErrors[name] = `This field is required. ${name} must be between 4 and 16 characters.`
-                : currentFormErrors[name] = undefined;
+                : (await doesExistByName(value)) === true    
+                    ? currentFormErrors[name] = `${name} is already in use.`
+                    : currentFormErrors[name] = undefined;
             break;
         default:
             break;

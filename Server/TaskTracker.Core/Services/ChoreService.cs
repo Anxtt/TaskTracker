@@ -74,10 +74,15 @@ namespace TaskTracker.Core.Services
             => await this.db.Chores
                .AnyAsync(x => x.UserId == userId && x.Id == id);
 
+        public async Task<bool> DoesExistByName(string name)
+            => await this.db.Chores
+                .AnyAsync(x => x.Name == name);
+
         public async Task Edit(int id, ChoreEditModel model, string userId)
         {
             Chore chore = await GetChoreByUser(id, userId);
 
+            chore.Name = model.Name;
             chore.UpdatedOn = DateTime.Parse(model.UpdatedOn);
             chore.IsCompleted = model.IsCompleted;
 

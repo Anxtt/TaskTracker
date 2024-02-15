@@ -68,6 +68,16 @@ namespace TaskTracker.Api.Controllers
             return Ok();
         }
 
+        [HttpGet("{name}")]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> DoesExistByName([FromRoute] string name)
+            => string.IsNullOrWhiteSpace(name) ||
+               await this.choreService.DoesExistByName(name) == false
+                ? this.Ok(false)
+                : this.BadRequest(true);
+
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

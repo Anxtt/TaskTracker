@@ -33,7 +33,8 @@ namespace TaskTracker.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> DoesExistByUserName([FromRoute] string username)
-            => await this.identityService.DoesExistByUserName(username) == false
+            => string.IsNullOrWhiteSpace(username) ||
+               await this.identityService.DoesExistByUserName(username) == false
                 ? this.Ok(false)
                 : this.BadRequest(true);
 
@@ -42,7 +43,8 @@ namespace TaskTracker.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> DoesExistByEmail([FromRoute] string email)
-            => await this.identityService.DoesExistByEmail(email) == false
+            => string.IsNullOrWhiteSpace(email) ||
+               await this.identityService.DoesExistByEmail(email) == false
                 ? this.Ok(false)
                 : this.BadRequest(true);
 
