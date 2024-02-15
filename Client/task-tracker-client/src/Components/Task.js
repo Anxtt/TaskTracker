@@ -1,14 +1,16 @@
-import React from "react"
+import React, { useState } from "react"
 
 import { deleteTask } from "../Services/Api";
+import FormPopUp from '../Components/FormPopUp';
 
 import "../Styles/Task.css"
 
-function Task({ task, tasks, setTasks }) {
+export default function Task({ task, tasks, setTasks }) {
+    const [seen, setSeen] = useState(false);
 
     return (
         <>
-            <div className="card mb-3" style={{ border: "0.3rem solid #a3cfbb", background: "#0c0c0d", fontFamily: "Arial, Helvetica, sans-serif" }}>
+            <div className="card me-2 mb-2 col-3" style={{ border: "0.3rem solid #a3cfbb", background: "#0c0c0d", fontFamily: "Arial, Helvetica, sans-serif" }}>
                 <div style={{ borderBottom: "0.15rem solid #a3cfbb", color: "#cfe2ff", fontFamily: "Arial, Helvetica, sans-serif" }}>{task.name}</div>
                 <div className="card-body" style={{ color: "#cfe2ff", fontFamily: "Arial, Helvetica, sans-serif" }}>
                     <h5 className="card-title" style={{ color: "#cfe2ff", fontFamily: "Arial, Helvetica, sans-serif" }}>#{task.id}</h5>
@@ -17,13 +19,14 @@ function Task({ task, tasks, setTasks }) {
                     <p className="card-text" style={{ color: "#cfe2ff", fontFamily: "Arial, Helvetica, sans-serif" }}>Is Completed: {task.isCompleted === true ? "true" : "false"}</p>
                 </div>
                 <div style={{ borderTop: "0.15rem solid #a3cfbb", color: "#cfe2ff", fontFamily: "Arial, Helvetica, sans-serif" }}>
-                    <button className="btn mx-auto col-4 text-center"
-                        style={{ backgroundColor: "yellow" }}
-                        onClick={(e) => {
-
-                        }}>Edit</button>
-                    <button className="btn mx-auto col-4 text-center"
-                        style={{ backgroundColor: "red" }}
+                    <button className="btn btn-warning mx-auto mt-1 mb-1 ms-1 me-1 text-center"
+                        onClick={() => setSeen(!seen)}>Edit</button>
+                    {
+                        seen === true
+                            ? <FormPopUp seen={seen} setSeen={setSeen} task={task} tasks={tasks} setTasks={setTasks} />
+                            : null
+                    }
+                    <button className="btn btn-danger mx-auto mt-1 mb-1 ms-1 me-1 text-center"
                         onClick={async () => {
                             const state = await deleteTask(task.id);
 
@@ -41,4 +44,3 @@ function Task({ task, tasks, setTasks }) {
     )
 }
 
-export default Task

@@ -20,18 +20,20 @@ export default function Tasks() {
             return navigate("/Login", { state: { from: location } });
         }
 
-        async function startFetching() {
+        async function getTasks() {
             const data = await allTasks();
-            console.log(data);
-            console.log(auth);
-            console.log(user);
 
-            if (data !== null) {
+            if (data !== null && ignore === false) {
                 setTasks(data);
             }
         }
 
-        startFetching();
+        let ignore = false;
+        getTasks();
+
+        return () => {
+            ignore = true;
+        }
     }, [auth, location, navigate, user]);
 
     return (
@@ -41,10 +43,12 @@ export default function Tasks() {
                 : null
             }
 
-            {tasks !== null && tasks.length !== 0
-                ? tasks.map((task, idx) => <Task key={task.id} task={task} index={idx} tasks={tasks} setTasks={setTasks} />)
-                : <p>You have no tasks currently</p>
-            }
+            <div className="offset-md-1 row">
+                {tasks !== null && tasks.length !== 0
+                    ? tasks.map(task => <Task key={task.id} task={task} tasks={tasks} setTasks={setTasks} />)
+                    : <p>You have no tasks currently</p>
+                }
+            </div>
         </div>
     );
 }
