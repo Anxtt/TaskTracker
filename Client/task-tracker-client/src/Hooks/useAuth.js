@@ -8,20 +8,12 @@ export default function AuthProvider({ children }) {
     const [auth, setAuth] = useState(false);
     const [user, setUser] = useState(null);
 
-    console.log("useAuth.js");
-    console.log("Before:");
-    console.log(auth);
-    console.log(user);
-
     useEffect(() => {
         async function isAuth() {
             try {
                 const data = await verifyUser();
 
-                console.log("UseEffect in useAuth.js:")
-                console.log(data);
-
-                if (data !== null) {
+                if (data !== null && ignore === false) {
                     setUser({
                         username: data.userName,
                         token: data.token
@@ -31,17 +23,17 @@ export default function AuthProvider({ children }) {
             } catch (error) {
                 setUser(null);
                 setAuth(false);
-                console.log(error);
                 console.log("Could not verify the user.");
             }
         }
 
+        let ignore = false;
         isAuth();
-    }, [auth]);
 
-    console.log("After:");
-    console.log(auth);
-    console.log(user);
+        return () => {
+            ignore = true;
+        }
+    }, [auth]);
 
     return (
         <AuthContext.Provider value={{ auth, setAuth, user, setUser }}>
