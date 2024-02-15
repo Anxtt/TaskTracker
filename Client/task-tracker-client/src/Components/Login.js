@@ -28,7 +28,7 @@ export default function Login() {
     const [password, setPassword] = useState("");
     const passwordRef = useRef(password);
 
-    const [messages, setMessages] = useState(null);
+    const [errorMessages, setErrorMessages] = useState(null);
     const [formErrors, setFormErrors] = useState({});
 
     async function HandleLogin(e) {
@@ -53,7 +53,7 @@ export default function Login() {
         const { state, data, messages } = await login(username, password);
 
         if (state === false) {
-            setMessages(messages);
+            setErrorMessages(messages);
             return null;
         }
         else {
@@ -74,8 +74,8 @@ export default function Login() {
     return (
         <div className="mx-auto col-6">
             {
-                messages !== null && messages.length > 0
-                    ? <span style={{ border: "3px solid #cfe2ff" }}>{messages}</span>
+                errorMessages !== null && errorMessages.length > 0
+                    ? <span style={{ border: "3px solid #cfe2ff" }}>{errorMessages}</span>
                     : null
             }
             <form>
