@@ -4,7 +4,7 @@ import '../Styles/Footer.css'
 
 export default function Footer() {
     return (
-        <footer>
+        <footer className="mt-auto">
             <p>
                 &copy; TaskTracker - {new Date().getFullYear()}
             </p>

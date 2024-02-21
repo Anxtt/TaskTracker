@@ -6,7 +6,7 @@ export default function CustomInput({ type, name, refValue, value, setValue,
     formErrors, setFormErrors, formType, disabled,
     password, confirmPassword }) {
     return (
-        <div className='mx-auto col-md-6'>
+        <div className='mx-auto col-md-6 pt-2'>
             <label className="form-label">{name}</label>
             <input type={type}
                 className={formErrors[name] === undefined

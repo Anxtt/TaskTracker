@@ -87,7 +87,7 @@ export default function Login() {
                     formErrors={formErrors} setFormErrors={setFormErrors} formType={null}
                     password={password} confirmPassword={null} disabled="" />
 
-                <div className="mx-auto mt-3 mb-2 col-md-1">
+                <div className="mx-auto mt-3 mb-2">
                     <button
                         className="btn"
                         style={{ backgroundColor: "#a3cfbb" }}
@@ -98,7 +98,7 @@ export default function Login() {
                     </button>
                 </div>
 
-                <p>Don't have an account? <Link to="/Register">Register</Link></p>
+                <p className="pt-3">Don't have an account? <Link to="/Register">Register</Link></p>
             </form>
         </div>
     )

@@ -98,7 +98,7 @@ export default function Register() {
                     formErrors={formErrors} setFormErrors={setFormErrors} formType="register"
                     password={password} confirmPassword={confirmPassword} />
 
-                <div className="mx-auto mt-3 mb-2 col-md-2">
+                <div className="mx-auto mt-3 mb-2">
                     <button
                         className="btn"
                         style={{ backgroundColor: "#a3cfbb" }}
@@ -109,7 +109,7 @@ export default function Register() {
                     </button>
                 </div>
 
-                <p>Already have an account? <Link to="/Login">Login</Link></p>
+                <p className="pt-3">Already have an account? <Link to="/Login">Login</Link></p>
             </form>
         </div>
     )

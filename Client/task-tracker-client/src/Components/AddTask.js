@@ -5,6 +5,8 @@ import { useAuth } from '../Hooks/useAuth';
 import { createTask } from '../Services/Api';
 import CustomInput from './CustomInput';
 
+import '../Styles/Form.css';
+
 export default function AddTask() {
     const { auth } = useAuth();
     const navigate = useNavigate();
@@ -49,7 +51,7 @@ export default function AddTask() {
                 <CustomInput type='text' name='Task Name' refValue={taskNameRef} value={taskName} setValue={setTaskName}
                     formErrors={formErrors} setFormErrors={setFormErrors} formType={null} disabled='' />
 
-                <div className='col-md-6 mx-auto'>
+                <div className='col-md-6 mx-auto pt-3'>
                     <label className='form-label'>Task State</label>
                     <select className='form-control' onChange={(e) => setIsCompleted(e.target.value)} value={isCompleted}>
                         <option value='false'>Incomplete</option>
@@ -57,7 +59,7 @@ export default function AddTask() {
                     </select>
                 </div>
 
-                <div className="mx-auto mt-3 mb-2 col-md-1">
+                <div className="mx-auto mt-3 mb-2">
                     <button
                         className="btn"
                         style={{ backgroundColor: "#a3cfbb" }}

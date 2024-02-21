@@ -39,11 +39,11 @@ export default function Tasks() {
     return (
         <div className="mx-auto row">
             {auth === true
-                ? <h1 className="mx-auto">Hello, {user.username}</h1>
+                ? <h1 className="pe-5">Hello, {user.username}</h1>
                 : null
             }
 
-            <div className="offset-md-1 row">
+            <div className="offset-md-1 ps-5 row">
                 {tasks !== null && tasks.length !== 0
                     ? tasks.map(task => <Task key={task.id} task={task} tasks={tasks} setTasks={setTasks} />)
                     : <p>You have no tasks currently</p>
