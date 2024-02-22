@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 import { useAuth } from '../Hooks/useAuth';
+import useRedirect from "../Hooks/useRedirect";
 
 import { allTasks } from "../Services/Api";
 
 import Task from "./Task";
 
 import "../Styles/Tasks.css";
-import useRedirect from "../Hooks/useRedirect";
 
 export default function Tasks() {
     const { auth, user } = useAuth();

@@ -2,10 +2,14 @@ import React, { useRef, useState } from "react"
 import { useNavigate, Link, useLocation } from "react-router-dom";
 
 import { useAuth } from '../Hooks/useAuth';
+import useRedirect from "../Hooks/useRedirect";
+
 import { login } from "../Services/Api"
 
+import isFormInvalid from '../Helpers/FormErrorsValidator';
+
 import CustomInput from "./CustomInput";
-import useRedirect from "../Hooks/useRedirect";
+import CustomButton from './CustomButton';
 
 import "../Styles/Form.css"
 import "../Styles/Login.css"
@@ -40,8 +44,7 @@ export default function Login() {
             return;
         }
 
-        if (Object.entries(formErrors).some(([x, v]) => v !== undefined) === true
-            || Object.values(formErrors).length === 0) {
+        if (isFormInvalid(formErrors) === true) {
             return null;
         }
 
@@ -82,16 +85,7 @@ export default function Login() {
                     formErrors={formErrors} setFormErrors={setFormErrors} formType={null}
                     password={password} confirmPassword={null} disabled="" />
 
-                <div className="mx-auto mt-3 mb-2">
-                    <button
-                        className="btn"
-                        style={{ backgroundColor: "#a3cfbb" }}
-                        name="Submit"
-                        onClick={(e) => HandleLogin(e)}
-                        disabled={Object.entries(formErrors).some(([x, v]) => v !== undefined) === true} >
-                        Login
-                    </button>
-                </div>
+                <CustomButton handleOnClick={HandleLogin} formErrors={formErrors} name="Login" />
 
                 <p className="pt-3">Don't have an account? <Link to="/Register">Register</Link></p>
             </form>

@@ -1,10 +1,14 @@
 import React, { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 
+import useRedirect from '../Hooks/useRedirect';
+
 import { createTask } from '../Services/Api';
 
+import isFormInvalid from '../Helpers/FormErrorsValidator';
+
 import CustomInput from './CustomInput';
-import useRedirect from '../Hooks/useRedirect';
+import CustomButton from './CustomButton';
 
 import '../Styles/Form.css';
 
@@ -29,8 +33,7 @@ export default function AddTask() {
             return;
         }
 
-        if (Object.entries(formErrors).some(([x, v]) => v !== undefined) === true
-            || Object.values(formErrors).length === 0) { // JSON.stringify(formErrors) === '{}')
+        if (isFormInvalid(formErrors) === true) {
             return null;
         }
 
@@ -54,16 +57,7 @@ export default function AddTask() {
                     </select>
                 </div>
 
-                <div className="mx-auto mt-3 mb-2">
-                    <button
-                        className="btn"
-                        style={{ backgroundColor: "#a3cfbb" }}
-                        name="Submit"
-                        onClick={(e) => HandleCreate(e)}
-                        disabled={Object.entries(formErrors).some(([x, v]) => v !== undefined) === true} >
-                        Create
-                    </button>
-                </div>
+                <CustomButton handleOnClick={HandleCreate} formErrors={formErrors} name="Create" />
             </form>
         </div>
     )
