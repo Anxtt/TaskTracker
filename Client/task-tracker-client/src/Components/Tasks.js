@@ -8,6 +8,7 @@ import { allTasks } from "../Services/Api";
 import Task from "./Task";
 
 import "../Styles/Tasks.css";
+import useRedirect from "../Hooks/useRedirect";
 
 export default function Tasks() {
     const { auth, user } = useAuth();
@@ -15,11 +16,9 @@ export default function Tasks() {
     const navigate = useNavigate();
     const location = useLocation();
     
-    useEffect(() => {
-        if (auth === false) {
-            return navigate("/Login", { state: { from: location } });
-        }
+    useRedirect(null);
 
+    useEffect(() => {
         async function getTasks() {
             const data = await allTasks();
 

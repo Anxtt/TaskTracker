@@ -1,26 +1,21 @@
-import React, { useEffect, useRef, useState } from "react"
+import React, { useRef, useState } from "react"
 import { useNavigate, Link, useLocation } from "react-router-dom";
 
 import { useAuth } from '../Hooks/useAuth';
 import { login } from "../Services/Api"
 
 import CustomInput from "./CustomInput";
+import useRedirect from "../Hooks/useRedirect";
 
 import "../Styles/Form.css"
 import "../Styles/Login.css"
 
 export default function Login() {
-    const { auth, setAuth, setUser } = useAuth();
-    const navigate = useNavigate();
+    const { setAuth, setUser } = useAuth();
     const location = useLocation();
+    const navigate = useNavigate();
 
-    useEffect(() => {
-        if (auth === true) {
-            return location.state !== null
-                ? navigate(location.state?.from?.pathname)
-                : navigate("/Tasks");
-        }
-    }, [auth, location.state, navigate]);
+    useRedirect("signed");
 
     const [username, setUsername] = useState("");
     const usernameRef = useRef(username);

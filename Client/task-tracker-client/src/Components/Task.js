@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 
 import { deleteTask } from "../Services/Api";
+
 import FormPopUp from '../Components/FormPopUp';
 
 import "../Styles/Task.css"

@@ -1,24 +1,18 @@
-import React, { useEffect, useRef, useState } from "react"
-import { useNavigate, Link, useLocation } from 'react-router-dom'
+import React, { useRef, useState } from "react"
+import { useNavigate, Link } from 'react-router-dom'
 
-import { useAuth } from '../Hooks/useAuth';
 import { register } from "../Services/Api"
+
 import CustomInput from "./CustomInput"
+import isFormInvalid from "../Helpers/FormErrorsValidator";
+import useRedirect from "../Hooks/useRedirect";
 
 import '../Styles/Form.css'
 
 export default function Register() {
-    const { auth } = useAuth();
     const navigate = useNavigate();
-    const location = useLocation();
 
-    useEffect(() => {
-        if (auth === true) {
-            return location.state !== null
-                ? navigate(location.state?.from?.pathname)
-                : navigate("/Tasks");
-        }
-    }, [auth, location.state, navigate])
+    useRedirect("signed");
 
     const [username, setUsername] = useState("");
     const usernameRef = useRef(username);

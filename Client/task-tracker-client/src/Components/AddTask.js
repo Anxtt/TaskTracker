@@ -1,22 +1,17 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom';
+import React, { useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 
-import { useAuth } from '../Hooks/useAuth';
 import { createTask } from '../Services/Api';
+
 import CustomInput from './CustomInput';
+import useRedirect from '../Hooks/useRedirect';
 
 import '../Styles/Form.css';
 
 export default function AddTask() {
-    const { auth } = useAuth();
     const navigate = useNavigate();
-    const location = useLocation();
 
-    useEffect(() => {
-        if (auth === false) {
-            return navigate("/Login", { state: { from: location } });
-        }
-    }, [auth, navigate, location]);
+    useRedirect(null);
 
     const [taskName, setTaskName] = useState("");
     const taskNameRef = useRef(taskName);
