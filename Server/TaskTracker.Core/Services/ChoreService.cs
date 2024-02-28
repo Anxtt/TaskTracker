@@ -15,6 +15,16 @@ namespace TaskTracker.Core.Services
         public ChoreService(TaskTrackerDbContext db)
             => this.db = db;
 
+        /// <summary>
+        /// Queries all <see cref="Chore"/>s with the given argument <paramref name="userId"/>
+        /// which is then translated into an <see cref="IEnumerable{ChoreResponseModel}"/> collection 
+        /// of type <see cref="ChoreResponseModel"/>.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="userId"></param>
+        /// <returns>
+        /// <see cref="IEnumerable{ChoreResponseModel}"/> collection of type <see cref="ChoreResponseModel"/>.
+        /// </returns>
         public async Task<IEnumerable<ChoreResponseModel>> All(string userId)
             => await this.db.Chores
                     .Where(x => x.UserId == userId)
@@ -29,6 +39,16 @@ namespace TaskTracker.Core.Services
                     })
                     .ToListAsync();
 
+        /// <summary>
+        /// Creates a new <see cref="Chore"/> with the properties of <see cref="ChoreRequestModel"/> <paramref name="model"/>
+        /// for the given <see cref="ApplicationUser"/> with <paramref name="userId"/> and 
+        /// adds it to <see cref="TaskTrackerDbContext"/>.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="userId"></param>
+        /// <returns>
+        /// The Id of the newly created <see cref="Chore"/>.
+        /// </returns>
         public async Task<int> Create(ChoreRequestModel model, string userId)
         {
             Chore chore = new Chore()
@@ -44,6 +64,13 @@ namespace TaskTracker.Core.Services
             return chore.Id;
         }
 
+        /// <summary>
+        /// Deletes a <see cref="Chore"/> with the given <paramref name="id"/> for a <see cref="ApplicationUser"/>
+        /// with the given <paramref name="userId"/>.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         public async Task Delete(int id, string userId)
         {
             Chore chore = await GetChoreByUser(id, userId);
@@ -52,6 +79,15 @@ namespace TaskTracker.Core.Services
             await this.db.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Queries the first <see cref="Chore"/> with the given arguments <paramref name="id"/> and <paramref name="userId"/>
+        /// which is then translated into a <see cref="ChoreResponseModel"/>.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="userId"></param>
+        /// <returns>
+        /// <see cref="ChoreResponseModel"/>
+        /// </returns>
         public async Task<ChoreResponseModel> Details(int id, string userId)
             => await this.db.Chores
                     .Where(x => x.Id == id && x.UserId == userId)
@@ -66,18 +102,40 @@ namespace TaskTracker.Core.Services
                     })
                     .FirstOrDefaultAsync();
 
+        /// <summary>
+        /// Checks if an <see cref="ApplicationUser"/> with the given <paramref name="userId"/> 
+        /// has a task with the given <see cref="Chore"/> <paramref name="name"/>.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="userId"></param>
+        /// <returns>
+        /// A <see cref="bool"/> value on the executed query with parameters <paramref name="name"/> and <paramref name="userId"/>.
+        /// </returns>
         public async Task<bool> DoesExist(string name, string userId)
             => await this.db.Chores
                     .AnyAsync(x => x.UserId == userId && x.Name == name);
 
+        /// <summary>
+        /// Checks if an <see cref="ApplicationUser"/> with the given <paramref name="userId"/>
+        /// has a task with the given <see cref="Chore"/> <paramref name="id"/>.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="userId"></param>
+        /// <returns>
+        /// A <see cref="bool"/> value on the executed query with parameters <paramref name="id"/> and <paramref name="userId"/>.
+        /// </returns>
         public async Task<bool> DoesExist(int id, string userId)
             => await this.db.Chores
                .AnyAsync(x => x.UserId == userId && x.Id == id);
 
-        public async Task<bool> DoesExistByName(string name)
-            => await this.db.Chores
-                .AnyAsync(x => x.Name == name);
-
+        /// <summary>
+        /// Updates a <see cref="Chore"/> with the given <paramref name="id"/> for an <see cref="ApplicationUser"/>
+        /// with the given <paramref name="userId"/> to the properties held in the <see cref="ChoreEditModel"/> <paramref name="model"/>
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="model"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         public async Task Edit(int id, ChoreEditModel model, string userId)
         {
             Chore chore = await GetChoreByUser(id, userId);
@@ -89,6 +147,14 @@ namespace TaskTracker.Core.Services
             await this.db.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Query the first <see cref="Chore"/> with the given parameters <paramref name="id"/> and <paramref name="userId"/>.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="userId">userId</param>
+        /// <returns>
+        /// A data model of type <see cref="Chore"/>.
+        /// </returns>
         private async Task<Chore> GetChoreByUser(int id, string userId)
              => await this.db
                          .Chores

@@ -10,8 +10,6 @@ namespace TaskTracker.Core.Services.Contracts
 
         Task Delete(int id, string userId);
 
-        Task<bool> DoesExistByName(string name);
-
         Task<ChoreResponseModel> Details(int id, string userId);
     
         Task<bool> DoesExist(int id, string userId);

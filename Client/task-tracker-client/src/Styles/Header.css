@@ -2,6 +2,7 @@ nav {
     text-align: center;
     margin-top: 1rem;
     border-bottom: 2px solid #a3cfbb;
+    width: 100%;
 }
 
 nav ul {

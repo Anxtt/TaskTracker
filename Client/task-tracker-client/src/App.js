@@ -8,10 +8,10 @@ import Register from "./Components/Register";
 import Login from "./Components/Login";
 import Tasks from "./Components/Tasks";
 import About from "./Components/About";
+import AddTask from "./Components/AddTask";
 import Error from "./Components/Error";
 
 import "./Styles/App.css";
-import AddTask from "./Components/AddTask";
 
 export default function App() {
     return (
