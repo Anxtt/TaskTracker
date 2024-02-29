@@ -8,6 +8,7 @@ namespace TaskTracker.Core.Models.Chore
         [StringLength(16, MinimumLength = 4)]
         public string Name { get; set; }
 
-        public bool IsCompleted { get; set; }
+        [Required]
+        public string Deadline { get; set; }
     }
 }

@@ -8,7 +8,7 @@
 
         public string CreatedOn { get; set; }
 
-        public string UpdatedOn { get; set; }
+        public string Deadline { get; set; }
 
         public bool IsCompleted { get; set; }
 

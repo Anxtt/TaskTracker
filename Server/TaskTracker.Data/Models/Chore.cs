@@ -17,7 +17,7 @@ namespace TaskTracker.Data.Models
         public DateTime CreatedOn { get; set; } = DateTime.Now;
 
         [Required]
-        public DateTime UpdatedOn { get; set; } = DateTime.Now;
+        public DateTime Deadline { get; set; }
 
         public bool IsCompleted { get; set; } = false;
 
