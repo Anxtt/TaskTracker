@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
+using Microsoft.Extensions.Caching.Memory;
+
 using TaskTracker.Api.Extensions;
 
 using TaskTracker.Core.Models.Chore;
@@ -11,10 +13,17 @@ namespace TaskTracker.Api.Controllers
     [Authorize]
     public class ChoreController : ApiController
     {
+        private const string TASK_NAME_CACHE_KEY = $"{nameof(DoesExistByName)}-{{0}}-{{1}}";
+
+        private readonly IMemoryCache cache;
+
         private readonly IChoreService choreService;
 
-        public ChoreController(IChoreService choreService)
-            => this.choreService = choreService;
+        public ChoreController(IChoreService choreService, IMemoryCache cache)
+        {
+            this.choreService = choreService;
+            this.cache = cache;
+        }
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -41,7 +50,11 @@ namespace TaskTracker.Api.Controllers
         {
             string userId = this.User.GetId();
 
-            if (await this.choreService.DoesExist(model.Name, userId))
+            if (await this.cache.ShortCacheTaskName(
+                string.Format(TASK_NAME_CACHE_KEY, userId, model.Name),
+                model.Name,
+                userId,
+                this.choreService) == true)
             {
                 return BadRequest();
             }
@@ -58,7 +71,7 @@ namespace TaskTracker.Api.Controllers
         {
             string userId = this.User.GetId();
 
-            if (!await this.choreService.DoesExist(id, userId))
+            if (await this.choreService.DoesExist(id, userId) == false)
             {
                 return NotFound();
             }
@@ -73,10 +86,24 @@ namespace TaskTracker.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> DoesExistByName([FromRoute] string name)
-            => string.IsNullOrWhiteSpace(name) ||
-               await this.choreService.DoesExistByName(name) == false
-                ? this.Ok(false)
-                : this.BadRequest(true);
+        {
+            if (string.IsNullOrWhiteSpace(name) == true)
+            {
+                return this.BadRequest(true);
+            }
+
+            string userId = this.User.GetId();
+
+            bool doesExist = await this.cache.ShortCacheTaskName(
+                string.Format(TASK_NAME_CACHE_KEY, userId, name),
+                name,
+                userId,
+                this.choreService);
+
+            return doesExist == false
+                    ? this.Ok(false)
+                    : this.BadRequest(true);
+        }
 
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -102,7 +129,7 @@ namespace TaskTracker.Api.Controllers
         {
             string userId = this.User.GetId();
 
-            if (!await this.choreService.DoesExist(id, userId))
+            if (await this.choreService.DoesExist(id, userId) == false)
             {
                 return BadRequest();
             }

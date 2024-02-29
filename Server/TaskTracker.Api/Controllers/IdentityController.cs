@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
+using Microsoft.Extensions.Caching.Memory;
+
 using TaskTracker.Api.Extensions;
 using TaskTracker.Api.Services.Contracts;
 
@@ -13,40 +15,67 @@ namespace TaskTracker.Api.Controllers
 {
     public class IdentityController : ApiController
     {
+        private const string AUTH_CACHE_KEY = $"AuthCache-{{0}}";
+
         private readonly UserManager<ApplicationUser> userManager;
         private readonly SignInManager<ApplicationUser> signInManager;
+        private readonly IMemoryCache cache;
 
         private readonly IIdentityService identityService;
 
         public IdentityController(UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            IIdentityService identityService)
+            IIdentityService identityService,
+            IMemoryCache cache)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
+            this.cache = cache;
+
             this.identityService = identityService;
         }
 
-        // Add caching for this and ByEmail, because a request is sent on every input blur call
         [HttpGet("{username}")]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> DoesExistByUserName([FromRoute] string username)
-            => string.IsNullOrWhiteSpace(username) ||
-               await this.identityService.DoesExistByUserName(username) == false
-                ? this.Ok(false)
-                : this.BadRequest(true);
+        {
+            if (string.IsNullOrWhiteSpace(username) == true)
+            {
+                return this.BadRequest(true);
+            }
+
+            bool doesExist = await this.cache.ShortCacheUserName(
+                $"{nameof(this.DoesExistByUserName)}-{username}",
+                username,
+                this.identityService);
+
+            return doesExist == false
+                        ? this.Ok(false)
+                        : this.BadRequest(true);
+        }
 
         [HttpGet("{email}")]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> DoesExistByEmail([FromRoute] string email)
-            => string.IsNullOrWhiteSpace(email) ||
-               await this.identityService.DoesExistByEmail(email) == false
-                ? this.Ok(false)
-                : this.BadRequest(true);
+        {
+            if (string.IsNullOrWhiteSpace(email) == true)
+            {
+                return this.BadRequest(true);
+            }
+
+            bool doesExist = await this.cache.ShortCacheEmail(
+                $"{nameof(this.DoesExistByEmail)}-{email}",
+                email,
+                this.identityService);
+
+            return doesExist == false
+                    ? this.Ok(false)
+                    : this.BadRequest(true);
+        }
 
         [HttpPost]
         [ProducesDefaultResponseType]
@@ -67,7 +96,7 @@ namespace TaskTracker.Api.Controllers
 
             var result = await userManager.CreateAsync(user, model.Password);
 
-            if (!result.Succeeded)
+            if (result.Succeeded == false)
             {
                 return BadRequest(result.Errors);
             }
@@ -89,7 +118,7 @@ namespace TaskTracker.Api.Controllers
             ApplicationUser user = await userManager.FindByNameAsync(model.UserName);
 
             if (user == null ||
-                !await userManager.CheckPasswordAsync(user, model.Password))
+                await userManager.CheckPasswordAsync(user, model.Password) == false)
             {
                 return BadRequest();
             }
@@ -145,6 +174,8 @@ namespace TaskTracker.Api.Controllers
 
             await this.signInManager.SignOutAsync();
 
+            this.cache.Remove(string.Format(AUTH_CACHE_KEY, this.User.GetId()));
+
             return SignOut();
         }
 
@@ -155,16 +186,16 @@ namespace TaskTracker.Api.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> VerifyUser()
         {
-            // 1.
-            // maybe cache this, up to 10 minutes before token expiry
-            // will have to manage token on log out
-            string username = await this.identityService.GetUserNameById(this.User.GetId());
+            string token = this.HttpContext.Request.Cookies[".AspNetCore.Application.Verified"]!;
+            string userId = this.User.GetId();
 
-            return Ok(new IdentityResponseModel()
-            {
-                UserName = username,
-                Token = this.HttpContext.Request.Cookies[".AspNetCore.Application.Verified"]!
-            });
+            IdentityResponseModel authenticated = await this.cache.ShortCacheAuth(
+                string.Format(AUTH_CACHE_KEY, this.User.GetId()),
+                userId,
+                token,
+                this.identityService);
+
+            return this.Ok(authenticated);
         }
     }
 }
