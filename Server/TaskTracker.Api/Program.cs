@@ -17,6 +17,7 @@ namespace TaskTracker.Api
                     .AddEndpointsApiExplorer()
                     .AddSwaggerGen()
                     .AddServices()
+                    .AddMemoryCache()
                     .AddIdentityWithJWT(builder.Configuration)
                     .AddAuthorization()
                     .AddCors(options =>
