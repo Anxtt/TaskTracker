@@ -146,7 +146,7 @@ namespace TaskTracker.Core.Services
 
             await this.db.SaveChangesAsync();
         }
-
+        //
         /// <summary>
         /// Query the first <see cref="Chore"/> with the given parameters <paramref name="id"/> and <paramref name="userId"/>.
         /// </summary>
