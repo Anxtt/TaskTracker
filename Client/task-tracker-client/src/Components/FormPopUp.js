@@ -14,7 +14,7 @@ import "../Styles/Form.css";
 export default function FormPopUp({ task, seen, setSeen }) {
     const [newName, setNewName] = useState(task.name);
     const [newDate, setNewDate] = useState(task.deadline);
-//
+
     const { dispatch } = useTasks();
 
     const [formErrors, setFormErrors] = useState({});
