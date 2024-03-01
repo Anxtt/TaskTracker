@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 
+import { useTasks } from '../Hooks/useTasks';
+
 import { editTask } from "../Services/Api";
 
 import isFormInvalid from '../Helpers/FormErrorsValidator';
@@ -9,10 +11,11 @@ import CustomButton from './CustomButton';
 
 import "../Styles/Form.css";
 
-export default function FormPopUp({ task, tasks, setTasks, seen, setSeen }) {
+export default function FormPopUp({ task, seen, setSeen }) {
     const [newName, setNewName] = useState(task.name);
-    const [newDate, setNewDate] = useState(task.updatedOn);
-    const [newStatus, setNewStatus] = useState(task.isCompleted);
+    const [newDate, setNewDate] = useState(task.deadline);
+
+    const { dispatch } = useTasks();
 
     const [formErrors, setFormErrors] = useState({});
 
@@ -23,22 +26,24 @@ export default function FormPopUp({ task, tasks, setTasks, seen, setSeen }) {
             return null;
         }
 
-        const state = await editTask(task.id, newName, newDate, newStatus);
+        const status = await editTask(task.id, newName, newDate, task.isCompleted);
 
-        if (state === true) {
-            const nextTasks = tasks.map(x => {
-                if (x.id !== task.id) {
-                    return x;
+        if (status === true) {
+            dispatch({
+                type: "editTask",
+                task: {
+                    id: task.id,
+                    name: newName,
+                    deadline: newDate,
+                    isCompleted: task.isCompleted
                 }
-
-                return { ...x, name: newName, updatedOn: newDate, isCompleted: newStatus };
             })
 
-            setTasks(nextTasks);
             alert("task updated successfully.");
         }
         else {
             alert("error.");
+            return;
         }
 
         setSeen(!seen);
@@ -56,35 +61,17 @@ export default function FormPopUp({ task, tasks, setTasks, seen, setSeen }) {
                             </button>
                         </div>
 
-                        <CustomInput type="text" name={`Current name: ${task.name}`} refValue={null} value={undefined} setValue={null}
-                            formErrors={{}} setFormErrors={null} formType={null}
-                            password={null} confirmPassword={null} disabled={true} />
-
                         <CustomInput type="text" name="Task Name" refValue={null} value={newName} setValue={setNewName}
                             formErrors={formErrors} setFormErrors={setFormErrors} formType={null}
                             password={null} confirmPassword={null} disabled="" />
+                        <label className='pb-2' style={{ color: "#cfe2ff" }}>{`Current name: ${task.name}`}</label>
 
-                        <CustomInput type="text" name={`Last updated on: ${task.updatedOn}`} refValue={null} value={undefined} setValue={null}
-                            formErrors={{}} setFormErrors={null} formType={null}
-                            password={null} confirmPassword={null} disabled={true} />
-
-                        <CustomInput type="text" name="Date" refValue={null} value={newDate} setValue={setNewDate}
+                        <CustomInput type="date" name="Update Deadline" refValue={null} value={newDate} setValue={setNewDate}
                             formErrors={formErrors} setFormErrors={setFormErrors} formType={null}
                             password={null} confirmPassword={null} disabled="" />
+                        <label className='pb-2' style={{ color: "#cfe2ff" }}>{`Current Deadline: ${task.deadline}`}</label>
 
-                        <CustomInput type="text" name={`Status: ${task.isCompleted}`} refValue={null} value={undefined} setValue={null}
-                            formErrors={{}} setFormErrors={null} formType={null}
-                            password={null} confirmPassword={null} disabled={true} />
-
-                        <div className='col-md-6 mx-auto'>
-                            <label className='form-label'>Task State</label>
-                            <select className='form-control' onChange={(e) => setNewStatus(e.target.value)} value={newStatus}>
-                                <option value='false'>Incomplete</option>
-                                <option value='true'>Complete</option>
-                            </select>
-                        </div>
-
-                        <CustomButton handleOnClick={HandleCreate} formErrors={formErrors} name="Edit"/>
+                        <CustomButton handleOnClick={HandleCreate} formErrors={formErrors} name="Edit" />
                     </form>
                 </div>
             </div>

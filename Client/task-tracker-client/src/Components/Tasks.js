@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import React, { useEffect } from "react";
 
 import { useAuth } from '../Hooks/useAuth';
 import useRedirect from "../Hooks/useRedirect";
+import { useTasks } from "../Hooks/useTasks";
 
 import { allTasks } from "../Services/Api";
 
@@ -11,11 +11,9 @@ import Task from "./Task";
 import "../Styles/Tasks.css";
 
 export default function Tasks() {
-    const { auth, user } = useAuth();
-    const [tasks, setTasks] = useState(null);
-    const navigate = useNavigate();
-    const location = useLocation();
-    
+    const { auth, user } = useAuth();   
+    const { tasks, dispatch } = useTasks();
+
     useRedirect(null);
 
     useEffect(() => {
@@ -23,7 +21,10 @@ export default function Tasks() {
             const data = await allTasks();
 
             if (data !== null && ignore === false) {
-                setTasks(data);
+                dispatch({
+                    type: "getData",
+                    tasks: data
+                });
             }
         }
 
@@ -33,7 +34,7 @@ export default function Tasks() {
         return () => {
             ignore = true;
         }
-    }, [auth, location, navigate, user]);
+    }, [auth, user, dispatch]);
 
     return (
         <div className="mx-auto row">
@@ -44,7 +45,7 @@ export default function Tasks() {
 
             <div className="offset-md-1 ps-5 row">
                 {tasks !== null && tasks.length !== 0
-                    ? tasks.map(task => <Task key={task.id} task={task} tasks={tasks} setTasks={setTasks} />)
+                    ? tasks.map(task => <Task key={task.id} task={task} />)
                     : <p>You have no tasks currently</p>
                 }
             </div>

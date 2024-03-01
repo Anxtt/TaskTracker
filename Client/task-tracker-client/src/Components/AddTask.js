@@ -20,7 +20,7 @@ export default function AddTask() {
     const [taskName, setTaskName] = useState("");
     const taskNameRef = useRef(taskName);
 
-    const [isCompleted, setIsCompleted] = useState(false);
+    const [deadline, setDeadline] = useState();
 
     const [formErrors, setFormErrors] = useState({});
 
@@ -37,7 +37,7 @@ export default function AddTask() {
             return null;
         }
 
-        return (await createTask(taskName, isCompleted)) !== null
+        return (await createTask(taskName, deadline)) !== null
             ? navigate("/Tasks")
             : null;
     }
@@ -49,14 +49,10 @@ export default function AddTask() {
                 <CustomInput type='text' name='Task Name' refValue={taskNameRef} value={taskName} setValue={setTaskName}
                     formErrors={formErrors} setFormErrors={setFormErrors} formType={null} disabled='' />
 
-                <div className='col-md-6 mx-auto pt-3'>
-                    <label className='form-label'>Task State</label>
-                    <select className='form-control' onChange={(e) => setIsCompleted(e.target.value)} value={isCompleted}>
-                        <option value='false'>Incomplete</option>
-                        <option value='true'>Complete</option>
-                    </select>
-                </div>
-
+                <CustomInput type="date" name="Deadline" refValue={null} value={deadline} setValue={setDeadline}
+                    formErrors={formErrors} setFormErrors={setFormErrors} formType={null}
+                    password={null} confirmPassword={null} disabled="" />
+                    
                 <CustomButton handleOnClick={HandleCreate} formErrors={formErrors} name="Create" />
             </form>
         </div>

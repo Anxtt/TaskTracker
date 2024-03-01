@@ -174,7 +174,7 @@ export async function doesUsernameExist(username) {
 /************
 *    Task   *
 ************/
-export async function createTask(name, isCompleted) {
+export async function createTask(name, deadline) {
     const response = await fetch(`${URL}/${CHORE}/Create`, {
         method: "POST",
         headers: {
@@ -183,7 +183,7 @@ export async function createTask(name, isCompleted) {
         },
         body: JSON.stringify({
             name: name,
-            isCompleted: isCompleted === true ? true : false
+            deadline: deadline
         }),
         credentials: "include", // важно, за да мога да получавам бисквитки
         mode: "cors"
@@ -228,7 +228,7 @@ export async function doesExistByName(name) {
     return await response.json();
 }
 
-export async function editTask(id, name, updatedOn, isCompleted) {
+export async function editTask(id, name, deadline, isCompleted) {
     const response = await fetch(`${URL}/${CHORE}/Edit/${id}`, {
         method: "PUT",
         headers: {
@@ -237,8 +237,8 @@ export async function editTask(id, name, updatedOn, isCompleted) {
         },
         body: JSON.stringify({
             name: name,
-            updatedOn: updatedOn,
-            isCompleted: isCompleted === 'true' ? true : false
+            deadline: deadline,
+            isCompleted: isCompleted === true ? true : false
         }),
         credentials: "include",
         mode: "cors"
