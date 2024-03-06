@@ -22,7 +22,7 @@ export default function Tasks() {
 
             if (data !== null && ignore === false) {
                 dispatch({
-                    type: "getData",
+                    type: "getTasks",
                     tasks: data
                 });
             }

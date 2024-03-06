@@ -1,0 +1,37 @@
+#deleteButton, #editButton, #submitButton {    
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+#deleteButton {
+    background: #b00818;
+    border-Color: #ddd;
+    color: #ddd;
+}
+
+#deleteButton:hover {
+    background: #8a0011;
+    border-color: #959595;   
+}
+
+#editButton {
+    background: #ffc107;
+    border-Color: #ff6c00;
+    color: #000;
+}
+
+#editButton:hover {
+    background: #d7ac30;
+    border-color: #ff3c00;
+}
+
+#submitButton {
+    background: #a3cfbb;
+    border-Color: #fff;
+    color: #fff;
+}
+
+#submitButton:hover {
+    background: #59a683;
+    border-Color: #cfe2ff;
+    color: #cfe2ff;
+}

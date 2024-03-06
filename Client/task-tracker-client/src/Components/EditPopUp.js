@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 
 import { useTasks } from '../Hooks/useTasks';
 
@@ -11,8 +11,10 @@ import CustomButton from './CustomButton';
 
 import "../Styles/Form.css";
 
-export default function FormPopUp({ task, seen, setSeen }) {
+export default function EditPopUp({ task, seen, setSeen }) {
     const [newName, setNewName] = useState(task.name);
+    const newNameRef = useRef();
+
     const [newDate, setNewDate] = useState(task.deadline);
 
     const { dispatch } = useTasks();
@@ -22,13 +24,19 @@ export default function FormPopUp({ task, seen, setSeen }) {
     async function HandleCreate(e) {
         e.preventDefault();
 
+        if (newName === "") {
+            newNameRef.current.focus();
+            newNameRef.current.blur();
+            return;
+        }
+
         if (isFormInvalid(formErrors) === true) {
             return null;
         }
 
-        const status = await editTask(task.id, newName, newDate, task.isCompleted);
+        const state = await editTask(task.id, newName, newDate, task.isCompleted);
 
-        if (status === true) {
+        if (state === true) {
             dispatch({
                 type: "editTask",
                 task: {
@@ -51,9 +59,9 @@ export default function FormPopUp({ task, seen, setSeen }) {
     return (
         <div className="modal show fade" style={{ display: 'block', backgroundColor: 'rgba(0, 0, 0, 0.8)' }}>
             <div className="modal-dialog">
-                <div className='modal-content' style={{ backgroundColor: '#0c0c0d' }}>
+                <div className='modal-content' style={{ backgroundColor: '#0c0c0d', border: "0.3rem solid #a3cfbb" }}>
                     <form className='modal-body'>
-                        <div className="mb-2 offset-md-10">
+                        <div className="offset-md-10">
                             <button
                                 className="btn btn-danger"
                                 onClick={() => setSeen(!seen)} >
@@ -61,7 +69,7 @@ export default function FormPopUp({ task, seen, setSeen }) {
                             </button>
                         </div>
 
-                        <CustomInput type="text" name="Task Name" refValue={null} value={newName} setValue={setNewName}
+                        <CustomInput type="text" name="Task Name" refValue={newNameRef} value={newName} setValue={setNewName}
                             formErrors={formErrors} setFormErrors={setFormErrors} formType={null}
                             password={null} confirmPassword={null} disabled="" />
                         <label className='pb-2' style={{ color: "#cfe2ff" }}>{`Current name: ${task.name}`}</label>

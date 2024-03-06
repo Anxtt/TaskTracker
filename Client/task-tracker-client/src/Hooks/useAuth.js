@@ -9,6 +9,8 @@ export default function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
 
     useEffect(() => {
+        let ignore = false;
+
         async function isAuth() {
             try {
                 const data = await verifyUser();
@@ -21,13 +23,12 @@ export default function AuthProvider({ children }) {
                     setAuth(true);
                 }
             } catch (error) {
-                setUser(null);
                 setAuth(false);
-                console.log("Could not verify the user.");
+                setUser(null);
+                alert("Could not verify the user.");
             }
         }
 
-        let ignore = false;
         isAuth();
 
         return () => {
