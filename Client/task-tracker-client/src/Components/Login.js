@@ -45,22 +45,21 @@ export default function Login() {
         }
 
         if (isFormInvalid(formErrors) === true) {
-            return null;
+            return;
         }
 
         const { state, data, messages } = await login(username, password);
 
         if (state === false) {
             setErrorMessages(messages);
-            return null;
+            return;
         }
-        else {
-            setUser({
-                username: data.userName,
-                token: data.token
-            });
-            setAuth(true);
-        }
+
+        setUser({
+            username: data.userName,
+            token: data.token
+        });
+        setAuth(true);
 
         return state === true
             ? location.state !== null

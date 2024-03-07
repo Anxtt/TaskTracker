@@ -15,13 +15,15 @@ export default function AuthProvider({ children }) {
             try {
                 const data = await verifyUser();
 
-                if (data !== null && ignore === false) {
-                    setUser({
-                        username: data.userName,
-                        token: data.token
-                    });
-                    setAuth(true);
+                if (data === null || ignore === true) {
+                    return;
                 }
+
+                setUser({
+                    username: data.userName,
+                    token: data.token
+                });
+                setAuth(true);
             } catch (error) {
                 setAuth(false);
                 setUser(null);

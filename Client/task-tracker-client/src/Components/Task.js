@@ -29,21 +29,20 @@ export default function Task({ task }) {
                             onClick={async () => {
                                 const state = await editTask(task.id, task.name, task.deadline, !task.isCompleted);
 
-                                if (state === true) {
-                                    dispatch({
-                                        type: "editTask",
-                                        task: {
-                                            id: task.id,
-                                            name: task.name,
-                                            deadline: task.deadline,
-                                            isCompleted: !task.isCompleted
-                                        }
-                                    })
-                                }
-                                else {
+                                if (state === false) {
                                     alert("error.");
                                     return;
                                 }
+                                
+                                dispatch({
+                                    type: "editTask",
+                                    task: {
+                                        id: task.id,
+                                        name: task.name,
+                                        deadline: task.deadline,
+                                        isCompleted: !task.isCompleted
+                                    }
+                                })
                             }}>
                             &#x2705;
                         </span>
@@ -73,17 +72,17 @@ export default function Task({ task }) {
                             onClick={async () => {
                                 const state = await deleteTask(task.id);
 
-                                if (state === true) {
-                                    dispatch({
-                                        type: "deleteTask",
-                                        id: task.id
-                                    })
-
-                                    alert("task was successfully deleted.");
-                                }
-                                else {
+                                if (state === false) {
                                     alert("task could not be deleted.");
+                                    return;
                                 }
+                                
+                                dispatch({
+                                    type: "deleteTask",
+                                    id: task.id
+                                })
+
+                                alert("task was successfully deleted.");
                             }}>
                             Delete
                         </button>

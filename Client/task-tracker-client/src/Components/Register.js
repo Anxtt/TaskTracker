@@ -57,14 +57,14 @@ export default function Register() {
         }
 
         if (isFormInvalid(formErrors) === true) {
-            return null;
+            return;
         }
 
         const { state, messages } = await register(email, username, password, confirmPassword);
 
         if (state === false) {
             setErrorMessages(messages);
-            return null;
+            return;
         }
 
         return navigate("/Login");

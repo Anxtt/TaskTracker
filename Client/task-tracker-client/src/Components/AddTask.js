@@ -34,7 +34,7 @@ export default function AddTask() {
         }
 
         if (isFormInvalid(formErrors) === true) {
-            return null;
+            return;
         }
 
         return (await createTask(taskName, deadline)) !== null

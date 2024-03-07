@@ -31,28 +31,27 @@ export default function EditPopUp({ task, seen, setSeen }) {
         }
 
         if (isFormInvalid(formErrors) === true) {
-            return null;
+            return;
         }
 
         const state = await editTask(task.id, newName, newDate, task.isCompleted);
 
-        if (state === true) {
-            dispatch({
-                type: "editTask",
-                task: {
-                    id: task.id,
-                    name: newName,
-                    deadline: newDate,
-                    isCompleted: task.isCompleted
-                }
-            })
-
-            alert("task updated successfully.");
-        }
-        else {
+        if (state === false) {
             alert("error.");
             return;
         }
+
+        dispatch({
+            type: "editTask",
+            task: {
+                id: task.id,
+                name: newName,
+                deadline: newDate,
+                isCompleted: task.isCompleted
+            }
+        })
+
+        alert("task updated successfully.");
 
         setSeen(!seen);
     }
