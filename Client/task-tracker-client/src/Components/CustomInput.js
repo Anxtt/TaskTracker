@@ -9,7 +9,7 @@ export default function CustomInput({ type, name, refValue, value, setValue,
     const min = now.toJSON().slice(0, 10);
     const max = new Date(now.setFullYear(now.getFullYear() + 1)).toJSON().slice(0, 10);
 
-        return (
+    return (
         type !== "date" ?
             (<div className='mx-auto col-md-6 pb-2'>
                 <label className="form-label">{name}</label>

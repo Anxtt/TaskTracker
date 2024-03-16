@@ -21,13 +21,15 @@ export default function AuthProvider({ children }) {
                 console.log("UseEffect in AuthContext:")
                 console.log(data);
 
-                if (data !== null) {
-                    setUser({
-                        username: data.userName,
-                        token: data.token
-                    });
-                    setAuth(true);
+                if (data === null) {
+                    return;
                 }
+
+                setUser({
+                    username: data.userName,
+                    token: data.token
+                });
+                setAuth(true);
             } catch (error) {
                 setUser(null);
                 setAuth(false);

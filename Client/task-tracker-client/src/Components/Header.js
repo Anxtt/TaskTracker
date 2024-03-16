@@ -8,7 +8,7 @@ import { logout } from "../Services/Api"
 import "../Styles/Header.css"
 
 export default function Header() {
-    const { auth, setAuth, setUser } = useAuth();
+    const { auth, user, setAuth, setUser } = useAuth();
 
     return (
         <nav className="mx-auto">
@@ -26,6 +26,7 @@ export default function Header() {
                                 <li id="dropdown-li" className="navigation dropdown-item mx-auto">
                                     <Link id="dropdown-a" to="/Tasks">All Tasks</Link>
                                 </li>
+
                                 <li className="navigation dropdown-item mx-auto">
                                     <Link to="/AddTask">Add Task</Link>
                                 </li>
@@ -46,11 +47,16 @@ export default function Header() {
                                 setUser(null);
                             }}>Logout</Link>
                         </li>
+                        
+                        <li className="authenticationLi">
+                            <Link to="/">{user.username}</Link>
+                        </li>
                     </ul> :
                     <ul className="authenticationUl">
                         <li className="authenticationLi">
                             <Link to="/Login">Login</Link>
                         </li>
+
                         <li className="authenticationLi">
                             <Link to="/Register">Register</Link>
                         </li>

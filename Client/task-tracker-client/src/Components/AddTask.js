@@ -50,8 +50,7 @@ export default function AddTask() {
                     formErrors={formErrors} setFormErrors={setFormErrors} formType={null} disabled='' />
 
                 <CustomInput type="date" name="Deadline" refValue={null} value={deadline} setValue={setDeadline}
-                    formErrors={formErrors} setFormErrors={setFormErrors} formType={null}
-                    password={null} confirmPassword={null} disabled="" />
+                    formErrors={formErrors} setFormErrors={setFormErrors} formType={null} disabled="" />
                     
                 <CustomButton handleOnClick={HandleCreate} formErrors={formErrors} name="Create" />
             </form>

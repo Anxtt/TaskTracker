@@ -47,7 +47,7 @@ export default async function validateForm(e, formErrors, setFormErrors, passwor
         case "Task Name":
             value.length === 0 || value.length < 4 || value.length > 16
                 ? currentFormErrors[name] = `This field is required. ${name} must be between 4 and 16 characters.`
-                : (await doesExistByName(value)) === true    
+                : (await doesExistByName(value)) === true
                     ? currentFormErrors[name] = `${name} is already in use.`
                     : currentFormErrors[name] = undefined;
             break;
