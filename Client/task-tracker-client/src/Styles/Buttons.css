@@ -1,4 +1,6 @@
-#deleteButton, #editButton, #submitButton {    
+#deleteButton,
+#editButton,
+#submitButton {
     font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -10,7 +12,7 @@
 
 #deleteButton:hover {
     background: #8a0011;
-    border-color: #959595;   
+    border-color: #959595;
 }
 
 #editButton {
@@ -22,6 +24,19 @@
 #editButton:hover {
     background: #d7ac30;
     border-color: #ff3c00;
+}
+
+.param {
+    font-weight: bold;
+    font-size: 1.5rem;
+    border: none;
+    background-color: rgba(0, 0, 0, 0.0);
+    color: rgb(207, 226, 255);
+    cursor: pointer;
+}
+
+.param:hover {
+    border: #59a683 0.5rem solid
 }
 
 #submitButton {

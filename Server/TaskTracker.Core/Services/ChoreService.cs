@@ -39,6 +39,20 @@ namespace TaskTracker.Core.Services
                     })
                     .ToListAsync();
 
+        public async Task<IEnumerable<ChoreResponseModel>> AllByCompletionStatus(string userId, bool isCompleted)
+            => await this.db.Chores
+                    .Where(x => x.UserId == userId && x.IsCompleted == isCompleted)
+                    .Select(x => new ChoreResponseModel()
+                    {
+                        CreatedOn = x.CreatedOn.ToString("d-MM-yyyy"),
+                        Deadline = x.Deadline.ToString("d-M-yyyy"),
+                        Id = x.Id,
+                        IsCompleted = x.IsCompleted,
+                        Name = x.Name,
+                        User = x.User.UserName
+                    })
+                    .ToListAsync();
+
         /// <summary>
         /// Creates a new <see cref="Chore"/> with the properties of <see cref="ChoreRequestModel"/> <paramref name="model"/>
         /// for the given <see cref="ApplicationUser"/> with <paramref name="userId"/> and 
@@ -146,7 +160,7 @@ namespace TaskTracker.Core.Services
 
             await this.db.SaveChangesAsync();
         }
-        
+
         /// <summary>
         /// Query the first <see cref="Chore"/> with the given parameters <paramref name="id"/> and <paramref name="userId"/>.
         /// </summary>

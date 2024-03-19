@@ -190,7 +190,7 @@ namespace TaskTracker.Api.Controllers
             string userId = this.User.GetId();
 
             IdentityResponseModel authenticated = await this.cache.ShortCacheAuth(
-                string.Format(AUTH_CACHE_KEY, this.User.GetId()),
+                string.Format(AUTH_CACHE_KEY, userId),
                 userId,
                 token,
                 this.identityService);

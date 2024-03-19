@@ -105,9 +105,9 @@ export async function login(username, password) {
         settings
     );
 
-    console.log("Response:");
+    console.log("Login Response:");
     console.log(response);
-
+    
     const status = {
         state: true,
         data: null,
@@ -206,6 +206,18 @@ export async function allTasks() {
         : null;
 }
 
+export async function allTasksByCompletionStatus(status) {
+    const response = await fetch(`${URL}/${CHORE}/AllByCompletionStatus?status=${status}`, {
+        method: "GET",
+        credentials: "include",
+        mode: "cors"
+    });
+
+    return response.status === 200
+        ? await response.json()
+        : null;
+}
+
 export async function deleteTask(id) {
     const response = await fetch(`${URL}/${CHORE}/Delete/${id}`, {
         method: "DELETE",
@@ -233,7 +245,7 @@ export async function editTask(id, name, deadline, isCompleted) {
         method: "PUT",
         headers: {
             "Accept": "application/json",
-            "Content-Type" : "application/json"
+            "Content-Type": "application/json"
         },
         body: JSON.stringify({
             name: name,

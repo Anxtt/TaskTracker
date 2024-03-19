@@ -42,6 +42,24 @@ namespace TaskTracker.Api.Controllers
             return Ok(response);
         }
 
+        [HttpGet]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> AllByCompletionStatus([FromQuery] bool status)
+        {
+            string userId = this.User.GetId();
+
+            IEnumerable<ChoreResponseModel> response = await this.choreService.AllByCompletionStatus(userId, status);
+
+            if (response == null)
+            {
+                return this.BadRequest();
+            }
+
+            return this.Ok(response);
+        }
+
         [HttpPost]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status201Created)]
