@@ -1,5 +1,6 @@
+using AspNetCoreRateLimit;
+
 using TaskTracker.Api.Extensions;
-using TaskTracker.Api.Middleware;
 
 namespace TaskTracker.Api
 {
@@ -16,8 +17,9 @@ namespace TaskTracker.Api
                 .Services
                     .AddEndpointsApiExplorer()
                     .AddSwaggerGen()
-                    .AddServices()
                     .AddMemoryCache()
+                    .AddServices()
+                    .AddIpRateLimiting(builder.Configuration)
                     .AddIdentityWithJWT(builder.Configuration)
                     .AddAuthorization()
                     .AddCors(options =>
@@ -34,6 +36,8 @@ namespace TaskTracker.Api
 
             var app = builder.Build();
 
+            app.UseIpRateLimiting();
+
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger()
@@ -46,7 +50,6 @@ namespace TaskTracker.Api
                .UseCors()
                .UseAuthentication()
                .UseAuthorization()
-               //.UseMiddleware<LoginRequiredMiddleware>()
                .UseEndpoints(endpoints => endpoints
                     .MapControllers());
 

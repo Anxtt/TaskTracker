@@ -2,8 +2,12 @@
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+
 using Microsoft.EntityFrameworkCore;
+
 using Microsoft.IdentityModel.Tokens;
+
+using AspNetCoreRateLimit;
 
 using TaskTracker.Api.Services;
 using TaskTracker.Api.Services.Contracts;
@@ -13,6 +17,8 @@ using TaskTracker.Core.Services.Contracts;
 
 using TaskTracker.Data;
 using TaskTracker.Data.Models;
+
+using static TaskTracker.Api.Extensions.AspNetCoreRateLimitExtensions;
 
 namespace TaskTracker.Api.Extensions
 {
@@ -81,6 +87,36 @@ namespace TaskTracker.Api.Extensions
                         }
                     };
                 });
+
+            return services;
+        }
+
+        public static IServiceCollection AddClientRateLimiting(this IServiceCollection services, IConfiguration config)
+        {
+            services.AddOptions();
+
+            services.Configure<ClientRateLimitOptions>(config.GetSection("ClientRateLimiting"));
+
+            services.Configure<ClientRateLimitPolicies>(config.GetSection("ClientRateLimitPolicies"));
+
+            services.AddInMemoryRateLimiting();
+
+            services.AddSingleton<IRateLimitConfiguration, CustomRateLimitConfiguration>();
+
+            return services;
+        }
+
+        public static IServiceCollection AddIpRateLimiting(this IServiceCollection services, IConfiguration config)
+        {
+            services.AddOptions();
+
+            services.Configure<IpRateLimitOptions>(config.GetSection("IpRateLimiting"));
+
+            services.Configure<IpRateLimitPolicies>(config.GetSection("IpRateLimitPolicies"));
+
+            services.AddInMemoryRateLimiting();
+
+            services.AddSingleton<IRateLimitConfiguration, CustomRateLimitConfiguration>();
 
             return services;
         }
