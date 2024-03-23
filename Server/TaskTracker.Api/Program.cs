@@ -24,7 +24,7 @@ namespace TaskTracker.Api
                     .AddAuthorization()
                     .AddCors(options =>
                     {
-                        options.AddDefaultPolicy(opt =>
+                        options.AddPolicy(name: "MyPolicy", opt =>
                         {
                             opt
                             .WithOrigins("http://localhost:3000")
@@ -36,8 +36,6 @@ namespace TaskTracker.Api
 
             var app = builder.Build();
 
-            app.UseIpRateLimiting();
-
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger()
@@ -47,9 +45,10 @@ namespace TaskTracker.Api
             app
                .UseHttpsRedirection()
                .UseRouting()
-               .UseCors()
+               .UseCors("MyPolicy")
                .UseAuthentication()
                .UseAuthorization()
+               .UseIpRateLimiting()
                .UseEndpoints(endpoints => endpoints
                     .MapControllers());
 

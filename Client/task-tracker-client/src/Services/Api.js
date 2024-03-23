@@ -107,7 +107,7 @@ export async function login(username, password) {
 
     console.log("Login Response:");
     console.log(response);
-    
+
     const status = {
         state: true,
         data: null,
@@ -158,7 +158,9 @@ export async function doesEmailExist(email) {
         mode: "cors"
     });
 
-    return await response.json();
+    return response.status === 429
+        ? null
+        : await response.json();
 }
 
 export async function doesUsernameExist(username) {
@@ -168,7 +170,9 @@ export async function doesUsernameExist(username) {
         mode: "cors"
     });
 
-    return await response.json();
+    return response.status === 429
+        ? null
+        : await response.json();
 }
 
 /************
@@ -237,7 +241,9 @@ export async function doesExistByName(name) {
         mode: "cors"
     });
 
-    return await response.json();
+    return response.status === 429
+        ? null
+        : await response.json();
 }
 
 export async function editTask(id, name, deadline, isCompleted) {

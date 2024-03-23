@@ -1,5 +1,7 @@
 import { doesUsernameExist, doesEmailExist, doesExistByName } from "../Services/Api";
 
+const TOO_MANY_REQUESTS = `Too many requests. You will need to wait a bit.`;
+
 export default async function validateForm(e, formErrors, setFormErrors, password, confirmPassword, type) {
     const { name, value } = e;
     const currentFormErrors = {};
@@ -11,7 +13,9 @@ export default async function validateForm(e, formErrors, setFormErrors, passwor
                 ? currentFormErrors[name] = `This field is required. ${name} must be between 4 and 16 characters.`
                 : type === "register" && (await doesUsernameExist(value)) === true
                     ? currentFormErrors[name] = `${name} already exists.`
-                    : currentFormErrors[name] = undefined;
+                    : type === "register" && (await doesUsernameExist(value)) === null
+                        ? currentFormErrors[name] = TOO_MANY_REQUESTS
+                        : currentFormErrors[name] = undefined;
             break;
         case "Email":
             const rx = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+.\.[A-Z]{2,4}$/gim;
@@ -22,7 +26,9 @@ export default async function validateForm(e, formErrors, setFormErrors, passwor
                     ? currentFormErrors[name] = `Invalid ${name} address.`
                     : (await doesEmailExist(value)) === true
                         ? currentFormErrors[name] = `${name} is already in use.`
-                        : currentFormErrors[name] = undefined;
+                        : (await doesEmailExist(value)) === null
+                            ? currentFormErrors[name] = TOO_MANY_REQUESTS
+                            : currentFormErrors[name] = undefined;
             break;
         case "Password":
             value.length === 0
@@ -49,7 +55,9 @@ export default async function validateForm(e, formErrors, setFormErrors, passwor
                 ? currentFormErrors[name] = `This field is required. ${name} must be between 4 and 16 characters.`
                 : (await doesExistByName(value)) === true
                     ? currentFormErrors[name] = `${name} is already in use.`
-                    : currentFormErrors[name] = undefined;
+                    : (await doesExistByName(value)) === null
+                        ? currentFormErrors[name] = TOO_MANY_REQUESTS
+                        : currentFormErrors[name] = undefined;
             break;
         default:
             break;
