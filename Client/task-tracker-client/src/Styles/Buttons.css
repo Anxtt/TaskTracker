@@ -1,7 +1,7 @@
 #deleteButton,
 #editButton,
 #submitButton {
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: 'Lucida Console', 'Courier New', Courier, monospace, Arial, Helvetica, sans-serif;
 }
 
 #deleteButton {
@@ -36,7 +36,11 @@
 }
 
 .param:hover {
-    border: #59a683 0.5rem solid
+    /* PARALLELOGRAM */
+    border: #a3cfbb 0.4rem solid;
+    width: 12rem;
+	height: 3rem;
+	transform: skew(-33deg);
 }
 
 #submitButton {

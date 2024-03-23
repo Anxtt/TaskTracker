@@ -1,3 +1,7 @@
+span, .form-control-error {
+    font-family: 'Lucida Console', 'Courier New', Courier, monospace, Arial, Helvetica, sans-serif;
+}
+
 .form-control-error {
     display: block;
     border: 0.150rem solid red;

@@ -15,7 +15,7 @@ export default function Task({ task }) {
 
     const cardStyle = {
         color: "#cfe2ff",
-        fontFamily: "Arial, Helvetica, sans-serif"
+        fontFamily: "Lucida Console, Courier New, Courier, monospace, Arial, Helvetica, sans-serif"
     };
 
     return (
