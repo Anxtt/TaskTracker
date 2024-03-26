@@ -56,10 +56,10 @@ export default function EditPopUp({ task, seen, setSeen }) {
         setSeen(!seen);
     }
     return (
-        <div className="modal show fade" style={{ display: 'block', backgroundColor: 'rgba(0, 0, 0, 0.8)' }}>
-            <div className="modal-dialog">
-                <div className='modal-content' style={{ backgroundColor: '#0c0c0d', border: "0.3rem solid #a3cfbb" }}>
-                    <form className='modal-body'>
+        <div className="modal show fade" style={{ display: "block", backgroundColor: "rgba(0, 0, 0, 0.8)" }}>
+            <div className="modal-dialog modal-dialog-centered">
+                <div className="modal-content" style={{ backgroundColor: "#0c0c0d", border: "0.3rem solid #a3cfbb" }}>
+                    <form className="modal-body">
                         <div className="offset-md-10">
                             <button
                                 className="btn btn-danger"
@@ -71,12 +71,12 @@ export default function EditPopUp({ task, seen, setSeen }) {
                         <CustomInput type="text" name="Task Name" refValue={newNameRef} value={newName} setValue={setNewName}
                             formErrors={formErrors} setFormErrors={setFormErrors} formType={null}
                             password={null} confirmPassword={null} disabled="" />
-                        <label className='pb-2' style={{ color: "#cfe2ff" }}>{`Current name: ${task.name}`}</label>
+                        <label className="pb-2" style={{ color: "#cfe2ff" }}>{`Current name: ${task.name}`}</label>
 
                         <CustomInput type="date" name="Update Deadline" refValue={null} value={newDate} setValue={setNewDate}
                             formErrors={formErrors} setFormErrors={setFormErrors} formType={null}
                             password={null} confirmPassword={null} disabled="" />
-                        <label className='pb-2' style={{ color: "#cfe2ff" }}>{`Current Deadline: ${task.deadline}`}</label>
+                        <label className="pb-2" style={{ color: "#cfe2ff" }}>{`Current Deadline: ${task.deadline}`}</label>
 
                         <CustomButton handleOnClick={HandleCreate} formErrors={formErrors} name="Edit" />
                     </form>

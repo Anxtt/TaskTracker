@@ -18,13 +18,18 @@ nav ul {
     font-family: 'Lucida Console', 'Courier New', Courier, monospace, Arial, Helvetica, sans-serif;
     background-color: #0c0c0d;
     border: 2px solid #a3cfbb;
-    position: absolute;
+}
+
+#dropdown-ul.show {
+    display: grid;
+    justify-content: center;
+    /* inset: 0px auto auto -7%; */
 }
 
 #dropdown-ul li:hover {
     text-decoration: none;
     background-color: #0c0c0d;
-    border: 2px solid #a3cfbb;
+    border: 2px solid #cfe2ff;
     transition: .15s;
 }
 

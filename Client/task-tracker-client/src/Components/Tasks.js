@@ -16,6 +16,8 @@ export default function Tasks() {
     const { tasks, dispatch } = useTasks();
 
     const [param, setParam] = useState(null);
+    const [sort, setSort] = useState("");
+    const [filter, setFilter] = useState("");
 
     useRedirect(null);
 
@@ -49,7 +51,6 @@ export default function Tasks() {
             })
 
             setParam(null);
-            
             return;
         }
 
@@ -75,13 +76,32 @@ export default function Tasks() {
                 : null
             }
 
-            <div className="d-inline-flex offset-md-1 mb-2 ps-5">
-                <button className="param" onClick={async () => {
-                    await HandleFiltering(false);
-                }}>Incomplete</button>
-                <button className="ms-5 param" onClick={async () => {
-                    await HandleFiltering(true);
-                }}>Complete</button>
+            <div className="mb-2 mx-auto row">
+                <div className="d-lg-inline-flex d-md-grid mx-auto col-lg-3">
+                    <button className="param mx-auto" onClick={async () => {
+                        await HandleFiltering(false);
+                    }}>Incomplete</button>
+
+                    <button className="param mx-auto" onClick={async () => {
+                        await HandleFiltering(true);
+                    }}>Complete</button>
+                </div>
+
+                <div className="mx-auto col-sm-6 col-lg-4" style={{ border: "transparent 0.4rem solid" }}>
+                    <select className="" value={sort} onChange={e => setSort(e.target.value)}>
+                        <option value="" disabled>Sort By:</option>
+                        <option value="creation">Creation</option>
+                        <option value="deadline">Deadline</option>
+                        <option value="">Reset</option>
+                    </select>
+
+                    <input
+                        className="ms-3 mt-2"
+                        placeholder="Filter by name.."
+                        value={filter}
+                        onChange={e => setFilter(e.target.value)}
+                    />
+                </div>
             </div>
 
             <div className="offset-md-1 ps-5 row">

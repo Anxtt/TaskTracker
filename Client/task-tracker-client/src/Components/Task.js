@@ -20,7 +20,7 @@ export default function Task({ task }) {
 
     return (
         <>
-            <div className="card me-3 mb-3 col-3" style={{ ...cardStyle, ...{ border: "0.3rem solid #a3cfbb", background: "#0c0c0d" } }}>
+            <div className="card me-3 mb-3 col-md-4 col-lg-3" style={{ ...cardStyle, ...{ border: "0.3rem solid #a3cfbb", background: "#0c0c0d" } }}>
                 <div className="row">
                     <div style={{ borderBottom: "0.15rem solid #a3cfbb" }}>
                         <p style={cardStyle} className="text-center col-9 mt-auto mx-auto d-inline-flex">{task.name}</p>
@@ -67,7 +67,7 @@ export default function Task({ task }) {
                                 : null
                         }
 
-                        <button className="btn btn-danger mt-1 mb-1 mx-auto ms-5 d-inline-flex"
+                        <button className="btn btn-danger mt-1 mb-1 mx-auto d-inline-flex"
                             id="deleteButton"
                             onClick={async () => {
                                 const state = await deleteTask(task.id);

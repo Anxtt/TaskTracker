@@ -22,8 +22,8 @@ export default function Header() {
                             <button id="dropdown-btn" data-bs-toggle="dropdown" aria-expanded="false">
                                 Tasks
                             </button>
-                            <ul id="dropdown-ul" className="dropdown-menu mx-auto">
-                                <li id="dropdown-li" className="navigation dropdown-item mx-auto">
+                            <ul id="dropdown-ul" className="dropdown-menu">
+                                <li className="navigation dropdown-item mx-auto">
                                     <Link id="dropdown-a" to="/Tasks">All Tasks</Link>
                                 </li>
 
