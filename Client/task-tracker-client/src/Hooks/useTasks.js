@@ -30,9 +30,6 @@ function tasksReducer(state, action) {
                 return { ...x, name: action.task.name, deadline: action.task.deadline, isCompleted: action.task.isCompleted };
             })
         }
-        case "filteredTasks": {
-            return action.tasks;
-        }
         case "getTasks": {
             return action.tasks;
         }

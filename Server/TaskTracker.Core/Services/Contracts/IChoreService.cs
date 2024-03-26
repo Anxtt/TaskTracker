@@ -6,7 +6,11 @@ namespace TaskTracker.Core.Services.Contracts
     {
         Task<IEnumerable<ChoreResponseModel>> All(string userId);
 
-        Task<IEnumerable<ChoreResponseModel>> AllByCompletionStatus(string userId, bool isCompleted);
+        Task<IEnumerable<ChoreResponseModel>> AllByCompletionStatus(
+            string userId,
+            bool? isCompleted,
+            string sort,
+            string filter);
 
         Task<int> Create(ChoreRequestModel model, string userId);
 

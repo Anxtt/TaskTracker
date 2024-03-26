@@ -210,8 +210,8 @@ export async function allTasks() {
         : null;
 }
 
-export async function allTasksByCompletionStatus(status) {
-    const response = await fetch(`${URL}/${CHORE}/AllByCompletionStatus?status=${status}`, {
+export async function allTasksByCompletionStatus(isCompletedStatus, sortStatus, filterStatus) {
+    const response = await fetch(`${URL}/${CHORE}/AllByCompletionStatus?isCompletedStatus=${isCompletedStatus}&sortStatus=${sortStatus}&filterStatus=${filterStatus}`, {
         method: "GET",
         credentials: "include",
         mode: "cors"

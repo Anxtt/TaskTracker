@@ -46,11 +46,19 @@ namespace TaskTracker.Api.Controllers
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> AllByCompletionStatus([FromQuery] bool status)
+        public async Task<IActionResult> AllByCompletionStatus(
+            [FromQuery] bool? isCompletedStatus,
+            [FromQuery] string? sortStatus,
+            [FromQuery] string? filterStatus)
         {
             string userId = this.User.GetId();
 
-            IEnumerable<ChoreResponseModel> response = await this.choreService.AllByCompletionStatus(userId, status);
+            IEnumerable<ChoreResponseModel> response = await this.choreService
+                .AllByCompletionStatus(
+                    userId,
+                    isCompletedStatus,
+                    sortStatus,
+                    filterStatus);
 
             if (response == null)
             {

@@ -9,7 +9,7 @@ import EditPopUp from "./EditPopUp";
 import "../Styles/Task.css"
 import "../Styles/Buttons.css"
 
-export default function Task({ task }) {
+export default function Task({ task, isCompleted, sort, filter, handleFiltering }) {
     const [seen, setSeen] = useState(false);
     const { dispatch } = useTasks();
 
@@ -43,6 +43,8 @@ export default function Task({ task }) {
                                         isCompleted: !task.isCompleted
                                     }
                                 })
+
+                                await handleFiltering(isCompleted, sort, filter);
                             }}>
                             &#x2705;
                         </span>

@@ -39,19 +39,54 @@ namespace TaskTracker.Core.Services
                     })
                     .ToListAsync();
 
-        public async Task<IEnumerable<ChoreResponseModel>> AllByCompletionStatus(string userId, bool isCompleted)
-            => await this.db.Chores
-                    .Where(x => x.UserId == userId && x.IsCompleted == isCompleted)
-                    .Select(x => new ChoreResponseModel()
-                    {
-                        CreatedOn = x.CreatedOn.ToString("d-MM-yyyy"),
-                        Deadline = x.Deadline.ToString("d-M-yyyy"),
-                        Id = x.Id,
-                        IsCompleted = x.IsCompleted,
-                        Name = x.Name,
-                        User = x.User.UserName
-                    })
-                    .ToListAsync();
+        public async Task<IEnumerable<ChoreResponseModel>> AllByCompletionStatus(
+            string userId,
+            bool? isCompleted,
+            string sort,
+            string filter)
+        {
+            IQueryable<Chore> chores = this.db.Chores
+                .Where(x => x.UserId == userId);
+
+            if (isCompleted is not null)
+            {
+                chores = chores
+                    .Where(x => x.IsCompleted == isCompleted);
+            }
+
+            if (string.IsNullOrWhiteSpace(filter) == false)
+            {
+                chores = chores
+                    .Where(x => x.Name.Contains(filter));
+            }
+
+            if (string.IsNullOrWhiteSpace(sort) == false)
+            {
+                chores = sort == "creation ASC"
+                    ? chores
+                        .OrderBy(x => x.CreatedOn)
+                    : sort == "creation DESC"
+                        ? chores
+                            .OrderByDescending(x => x.CreatedOn)
+                        : sort == "deadline ASC"
+                            ? chores
+                                .OrderBy(x => x.Deadline)
+                            : chores
+                                .OrderByDescending(x => x.Deadline);
+            }
+
+            return await chores
+                            .Select(x => new ChoreResponseModel()
+                            {
+                                CreatedOn = x.CreatedOn.ToString("d-MM-yyyy"),
+                                Deadline = x.Deadline.ToString("d-MM-yyyy"),
+                                Id = x.Id,
+                                IsCompleted = x.IsCompleted,
+                                Name = x.Name,
+                                User = x.User.UserName
+                            })
+                            .ToListAsync();
+        }
 
         /// <summary>
         /// Creates a new <see cref="Chore"/> with the properties of <see cref="ChoreRequestModel"/> <paramref name="model"/>
