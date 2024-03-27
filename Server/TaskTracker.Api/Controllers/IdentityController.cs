@@ -8,15 +8,14 @@ using TaskTracker.Api.Extensions;
 using TaskTracker.Api.Services.Contracts;
 
 using TaskTracker.Core.Models.Identity;
-
 using TaskTracker.Data.Models;
+
+using static TaskTracker.Core.Constants.Web.Identity;
 
 namespace TaskTracker.Api.Controllers
 {
     public class IdentityController : ApiController
     {
-        private const string AUTH_CACHE_KEY = $"AuthCache-{{0}}";
-
         private readonly UserManager<ApplicationUser> userManager;
         private readonly SignInManager<ApplicationUser> signInManager;
         private readonly IMemoryCache cache;
@@ -67,10 +66,8 @@ namespace TaskTracker.Api.Controllers
                 return this.BadRequest(true);
             }
 
-            bool doesExist = await this.cache.ShortCacheEmail(
-                $"{nameof(this.DoesExistByEmail)}-{email}",
-                email,
-                this.identityService);
+            bool doesExist = await this.cache
+                .ShortCacheEmail(email, this.identityService);
 
             return doesExist == false
                     ? this.Ok(false)
@@ -189,11 +186,8 @@ namespace TaskTracker.Api.Controllers
             string token = this.HttpContext.Request.Cookies[".AspNetCore.Application.Verified"]!;
             string userId = this.User.GetId();
 
-            IdentityResponseModel authenticated = await this.cache.ShortCacheAuth(
-                string.Format(AUTH_CACHE_KEY, userId),
-                userId,
-                token,
-                this.identityService);
+            IdentityResponseModel authenticated = await this.cache
+                .ShortCacheAuth(userId, token, this.identityService);
 
             return this.Ok(authenticated);
         }

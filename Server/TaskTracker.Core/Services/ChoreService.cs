@@ -17,7 +17,7 @@ namespace TaskTracker.Core.Services
 
         /// <summary>
         /// Queries all <see cref="Chore"/>s with the given argument <paramref name="userId"/>
-        /// which is then translated into an <see cref="IEnumerable{ChoreResponseModel}"/> collection 
+        /// which are then translated into an <see cref="IEnumerable{ChoreResponseModel}"/> collection 
         /// of type <see cref="ChoreResponseModel"/>.
         /// </summary>
         /// <param name="id"></param>
@@ -38,55 +38,6 @@ namespace TaskTracker.Core.Services
                         User = x.User.UserName
                     })
                     .ToListAsync();
-
-        public async Task<IEnumerable<ChoreResponseModel>> AllByCompletionStatus(
-            string userId,
-            bool? isCompleted,
-            string sort,
-            string filter)
-        {
-            IQueryable<Chore> chores = this.db.Chores
-                .Where(x => x.UserId == userId);
-
-            if (isCompleted is not null)
-            {
-                chores = chores
-                    .Where(x => x.IsCompleted == isCompleted);
-            }
-
-            if (string.IsNullOrWhiteSpace(filter) == false)
-            {
-                chores = chores
-                    .Where(x => x.Name.Contains(filter));
-            }
-
-            if (string.IsNullOrWhiteSpace(sort) == false)
-            {
-                chores = sort == "creation ASC"
-                    ? chores
-                        .OrderBy(x => x.CreatedOn)
-                    : sort == "creation DESC"
-                        ? chores
-                            .OrderByDescending(x => x.CreatedOn)
-                        : sort == "deadline ASC"
-                            ? chores
-                                .OrderBy(x => x.Deadline)
-                            : chores
-                                .OrderByDescending(x => x.Deadline);
-            }
-
-            return await chores
-                            .Select(x => new ChoreResponseModel()
-                            {
-                                CreatedOn = x.CreatedOn.ToString("d-MM-yyyy"),
-                                Deadline = x.Deadline.ToString("d-MM-yyyy"),
-                                Id = x.Id,
-                                IsCompleted = x.IsCompleted,
-                                Name = x.Name,
-                                User = x.User.UserName
-                            })
-                            .ToListAsync();
-        }
 
         /// <summary>
         /// Creates a new <see cref="Chore"/> with the properties of <see cref="ChoreRequestModel"/> <paramref name="model"/>
@@ -194,6 +145,67 @@ namespace TaskTracker.Core.Services
             chore.IsCompleted = model.IsCompleted;
 
             await this.db.SaveChangesAsync();
+        }
+        /// <summary>
+        /// Queries all <see cref="Chore"/>s with the given argument <paramref name="userId"/>
+        /// filtered or ordered according to <paramref name="isCompleted"/>, <paramref name="sort"/>, and
+        /// <paramref name="filter"/> which are then translated into an 
+        /// <see cref="IEnumerable{ChoreResponseModel}"/> collection of type <see cref="ChoreResponseModel"/>.
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="isCompleted"></param>
+        /// <param name="sort"></param>
+        /// <param name="filter"></param>
+        /// <returns>
+        /// <see cref="IEnumerable{ChoreResponseModel}"/> collection of type <see cref="ChoreResponseModel"/>.
+        /// </returns>
+        public async Task<IEnumerable<ChoreResponseModel>> FilteredTasks(
+            string userId,
+            bool? isCompleted,
+            string sort,
+            string filter)
+        {
+            IQueryable<Chore> chores = this.db.Chores
+                .Where(x => x.UserId == userId);
+
+            if (isCompleted is not null)
+            {
+                chores = chores
+                    .Where(x => x.IsCompleted == isCompleted);
+            }
+
+            if (string.IsNullOrWhiteSpace(filter) == false)
+            {
+                chores = chores
+                    .Where(x => x.Name.Contains(filter));
+            }
+
+            if (string.IsNullOrWhiteSpace(sort) == false)
+            {
+                chores = sort == "creation ASC"
+                    ? chores
+                        .OrderBy(x => x.CreatedOn)
+                    : sort == "creation DESC"
+                        ? chores
+                            .OrderByDescending(x => x.CreatedOn)
+                        : sort == "deadline ASC"
+                            ? chores
+                                .OrderBy(x => x.Deadline)
+                            : chores
+                                .OrderByDescending(x => x.Deadline);
+            }
+
+            return await chores
+                            .Select(x => new ChoreResponseModel()
+                            {
+                                CreatedOn = x.CreatedOn.ToString("d-MM-yyyy"),
+                                Deadline = x.Deadline.ToString("d-MM-yyyy"),
+                                Id = x.Id,
+                                IsCompleted = x.IsCompleted,
+                                Name = x.Name,
+                                User = x.User.UserName
+                            })
+                            .ToListAsync();
         }
 
         /// <summary>

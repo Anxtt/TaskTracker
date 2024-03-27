@@ -6,12 +6,6 @@ namespace TaskTracker.Core.Services.Contracts
     {
         Task<IEnumerable<ChoreResponseModel>> All(string userId);
 
-        Task<IEnumerable<ChoreResponseModel>> AllByCompletionStatus(
-            string userId,
-            bool? isCompleted,
-            string sort,
-            string filter);
-
         Task<int> Create(ChoreRequestModel model, string userId);
 
         Task Delete(int id, string userId);
@@ -23,5 +17,11 @@ namespace TaskTracker.Core.Services.Contracts
         Task<bool> DoesExist(string name, string userId);
 
         Task Edit(int id, ChoreEditModel model, string userId);
+
+        Task<IEnumerable<ChoreResponseModel>> FilteredTasks(
+            string userId,
+            bool? isCompleted,
+            string sort,
+            string filter);
     }
 }

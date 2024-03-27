@@ -4,7 +4,7 @@ import { useAuth } from '../Hooks/useAuth';
 import useRedirect from "../Hooks/useRedirect";
 import { useTasks } from "../Hooks/useTasks";
 
-import { allTasks, allTasksByCompletionStatus } from "../Services/Api";
+import { allTasks, allTasksFiltered } from "../Services/Api";
 
 import Task from "./Task";
 
@@ -44,7 +44,7 @@ export default function Tasks() {
     }, [auth, user, dispatch]);
 
     async function HandleFiltering(isCompletedStatus, sortStatus, filterStatus) {
-        const data = await allTasksByCompletionStatus(isCompletedStatus, sortStatus, filterStatus);
+        const data = await allTasksFiltered(isCompletedStatus, sortStatus, filterStatus);
 
         if (data === null) {
             alert("error.");

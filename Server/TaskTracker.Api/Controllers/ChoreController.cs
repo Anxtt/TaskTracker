@@ -13,8 +13,6 @@ namespace TaskTracker.Api.Controllers
     [Authorize]
     public class ChoreController : ApiController
     {
-        private const string TASK_NAME_CACHE_KEY = $"{nameof(DoesExistByName)}-{{0}}-{{1}}";
-
         private readonly IMemoryCache cache;
 
         private readonly IChoreService choreService;
@@ -46,7 +44,7 @@ namespace TaskTracker.Api.Controllers
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> AllByCompletionStatus(
+        public async Task<IActionResult> AllFiltered(
             [FromQuery] bool? isCompletedStatus,
             [FromQuery] string? sortStatus,
             [FromQuery] string? filterStatus)
@@ -54,7 +52,7 @@ namespace TaskTracker.Api.Controllers
             string userId = this.User.GetId();
 
             IEnumerable<ChoreResponseModel> response = await this.choreService
-                .AllByCompletionStatus(
+                .FilteredTasks(
                     userId,
                     isCompletedStatus,
                     sortStatus,
@@ -76,11 +74,8 @@ namespace TaskTracker.Api.Controllers
         {
             string userId = this.User.GetId();
 
-            if (await this.cache.ShortCacheTaskName(
-                string.Format(TASK_NAME_CACHE_KEY, userId, model.Name),
-                model.Name,
-                userId,
-                this.choreService) == true)
+            if (await this.cache
+                .ShortCacheTaskNameByName(model.Name, userId, this.choreService) == true)
             {
                 return BadRequest();
             }
@@ -120,11 +115,8 @@ namespace TaskTracker.Api.Controllers
 
             string userId = this.User.GetId();
 
-            bool doesExist = await this.cache.ShortCacheTaskName(
-                string.Format(TASK_NAME_CACHE_KEY, userId, name),
-                name,
-                userId,
-                this.choreService);
+            bool doesExist = await this.cache
+                .ShortCacheTaskNameByName(name, userId, this.choreService);
 
             return doesExist == false
                     ? this.Ok(false)
