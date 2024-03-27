@@ -11,7 +11,7 @@ export default function CustomInput({ type, name, refValue, value, setValue,
 
     return (
         type !== "date" ?
-            (<div className='mx-auto col-md-6 pb-2'>
+            (<div className='mx-auto col-sm-6 pb-2'>
                 <label className="form-label">{name}</label>
                 <input type={type}
                     className={formErrors[name] === undefined
@@ -27,12 +27,12 @@ export default function CustomInput({ type, name, refValue, value, setValue,
                 />
                 {
                     formErrors[name] !== undefined
-                        ? <span>{formErrors[name]}</span>
+                        ? <span className='col-sm-12'>{formErrors[name]}</span> 
                         : null
                 }
             </div>) :
             (
-                <div className='mx-auto col-md-6 pb-2'>
+                <div className='mx-auto col-sm-6 pb-2'>
                     <label className="form-label">{name}</label>
                     <input type={type}
                         min={min}
@@ -50,7 +50,7 @@ export default function CustomInput({ type, name, refValue, value, setValue,
                     />
                     {
                         formErrors[name] !== undefined
-                            ? <span>{formErrors[name]}</span>
+                            ? <span className='col-sm-12'>{formErrors[name]}</span>
                             : null
                     }
                 </div>
