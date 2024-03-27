@@ -55,8 +55,8 @@ namespace TaskTracker.Api.Controllers
                 .FilteredTasks(
                     userId,
                     isCompletedStatus,
-                    sortStatus,
-                    filterStatus);
+                    sortStatus!,
+                    filterStatus!);
 
             if (response == null)
             {

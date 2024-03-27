@@ -11,7 +11,9 @@
 
         public class Task
         {
-            public const string TASK_NAME_CACHE_KEY = $"DoesExistByEmail-{{0}}-{{1}}";
+            public const string TASK_NAME_CACHE_KEY = $"DoesExistByName-{{0}}-{{1}}";
+
+            public const string USER_TASKS_CACHE_KEY = $"User-{{0}}-Tasks-{{1}}";
         }
     }
 }
