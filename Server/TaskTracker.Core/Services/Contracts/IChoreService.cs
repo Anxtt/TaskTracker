@@ -18,8 +18,8 @@ namespace TaskTracker.Core.Services.Contracts
 
         Task Edit(int id, ChoreEditModel model, string userId);
 
-        Task<IEnumerable<ChoreResponseModel>> FilteredTasks(
-            string userId,
+        IEnumerable<ChoreResponseModel> FilteredTasks(
+            IEnumerable<ChoreResponseModel> models,
             bool? isCompleted,
             string sort,
             string filter);

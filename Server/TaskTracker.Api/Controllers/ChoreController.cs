@@ -8,6 +8,8 @@ using TaskTracker.Api.Extensions;
 using TaskTracker.Core.Models.Chore;
 using TaskTracker.Core.Services.Contracts;
 
+using static TaskTracker.Core.Constants.Web.Task;
+
 namespace TaskTracker.Api.Controllers
 {
     [Authorize]
@@ -28,9 +30,7 @@ namespace TaskTracker.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> All()
         {
-            string userId = this.User.GetId();
-
-            IEnumerable<ChoreResponseModel> response = await this.choreService.All(userId);
+            IEnumerable<ChoreResponseModel> response = await this.GetOrCacheTasks();
 
             if (response == null)
             {
@@ -49,14 +49,10 @@ namespace TaskTracker.Api.Controllers
             [FromQuery] string? sortStatus,
             [FromQuery] string? filterStatus)
         {
-            string userId = this.User.GetId();
+            IEnumerable<ChoreResponseModel> chores = await this.GetOrCacheTasks();
 
-            IEnumerable<ChoreResponseModel> response = await this.choreService
-                .FilteredTasks(
-                    userId,
-                    isCompletedStatus,
-                    sortStatus!,
-                    filterStatus!);
+            IEnumerable<ChoreResponseModel> response = this.choreService
+                .FilteredTasks(chores, isCompletedStatus, sortStatus!, filterStatus!);
 
             if (response == null)
             {
@@ -82,6 +78,8 @@ namespace TaskTracker.Api.Controllers
 
             int id = await this.choreService.Create(model, userId);
 
+            this.RemoveCachedTasks(userId);
+
             return Created(nameof(this.Create), id);
         }
 
@@ -98,6 +96,8 @@ namespace TaskTracker.Api.Controllers
             }
 
             await this.choreService.Delete(id, userId);
+
+            this.RemoveCachedTasks(userId);
 
             return Ok();
         }
@@ -154,7 +154,28 @@ namespace TaskTracker.Api.Controllers
 
             await this.choreService.Edit(id, model, userId);
 
+            this.RemoveCachedTasks(userId);
+
             return NoContent();
+        }
+
+        [NonAction]
+        private async Task<IEnumerable<ChoreResponseModel>> GetOrCacheTasks()
+        {
+            string userId = this.User.GetId();
+            string username = this.User.Identity!.Name!;
+
+            return await this.cache
+                .ShortCacheTasksByUserId(userId, username, this.choreService);
+        }
+
+        [NonAction]
+        private void RemoveCachedTasks(string userId)
+        {
+            string username = this.User.Identity!.Name!;
+
+            this.cache.Remove(string.Format(
+                USER_TASKS_CACHE_KEY, userId, username));
         }
     }
 }

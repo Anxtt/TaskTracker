@@ -21,43 +21,44 @@ namespace TaskTracker.Api.Extensions
             IIdentityService identityService)
                 => await cache.GetOrCreateAsync(string.Format(AUTH_CACHE_KEY, userId),
                    async x =>
-                    {
-                        x.AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(10);
-                        x.SlidingExpiration = TimeSpan.FromSeconds(30);
+                   {
+                       x.AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(10);
+                       x.SlidingExpiration = TimeSpan.FromSeconds(30);
 
-                        string userName = await identityService.GetUserNameById(userId);
+                       string userName = await identityService.GetUserNameById(userId);
 
-                        return new IdentityResponseModel()
-                        {
-                            UserName = userName,
-                            Token = token
-                        };
-                    });
+                       return new IdentityResponseModel()
+                       {
+                           UserName = userName,
+                           Token = token
+                       };
+                   });
 
         public static async Task<bool> ShortCacheEmail(
             this IMemoryCache cache,
             string email,
             IIdentityService identityService)
-                => await cache.GetOrCreateAsync(string.Format(EMAIL_CACHE_KEY, email), async x =>
-                {
-                    x.AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(1);
-                    x.SlidingExpiration = TimeSpan.FromSeconds(30);
+                => await cache.GetOrCreateAsync(string.Format(EMAIL_CACHE_KEY, email),
+                   async x =>
+                   {
+                       x.AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(1);
+                       x.SlidingExpiration = TimeSpan.FromSeconds(30);
 
-                    return await identityService.DoesExistByEmail(email);
-                });
+                       return await identityService.DoesExistByEmail(email);
+                   });
 
         public static async Task<bool> ShortCacheUserName(
             this IMemoryCache cache,
-            string key,
             string username,
             IIdentityService identityService)
-                => await cache.GetOrCreateAsync(key, async x =>
-                {
-                    x.AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(1);
-                    x.SlidingExpiration = TimeSpan.FromSeconds(30);
+                => await cache.GetOrCreateAsync(string.Format(USERNAME_CACHE_KEY, username),
+                   async x =>
+                   {
+                       x.AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(1);
+                       x.SlidingExpiration = TimeSpan.FromSeconds(30);
 
-                    return await identityService.DoesExistByUserName(username);
-                });
+                       return await identityService.DoesExistByUserName(username);
+                   });
 
         // Tasks
         public static async Task<bool> ShortCacheTaskNameByName(
@@ -67,12 +68,12 @@ namespace TaskTracker.Api.Extensions
             IChoreService choreService)
                 => await cache.GetOrCreateAsync(string.Format(TASK_NAME_CACHE_KEY, userId, taskName),
                    async x =>
-                    {
-                        x.AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(1);
-                        x.SlidingExpiration = TimeSpan.FromSeconds(30);
+                   {
+                       x.AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(1);
+                       x.SlidingExpiration = TimeSpan.FromSeconds(30);
 
-                        return await choreService.DoesExist(taskName, userId);
-                    });
+                       return await choreService.DoesExist(taskName, userId);
+                   });
 
 
         public static async Task<bool> ShortCacheTaskNameById(
@@ -82,18 +83,25 @@ namespace TaskTracker.Api.Extensions
             IChoreService choreService)
                 => await cache.GetOrCreateAsync(string.Format(TASK_NAME_CACHE_KEY, userId, taskId),
                    async x =>
-                    {
-                        x.AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(1);
-                        x.SlidingExpiration = TimeSpan.FromSeconds(30);
+                   {
+                       x.AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(1);
+                       x.SlidingExpiration = TimeSpan.FromSeconds(30);
 
-                        return await choreService.DoesExist(taskId, userId);
-                    });
+                       return await choreService.DoesExist(taskId, userId);
+                   });
 
         public static async Task<IEnumerable<ChoreResponseModel>> ShortCacheTasksByUserId(
             this IMemoryCache cache,
-            string userId)
-        {
-            return Enumerable.Empty<ChoreResponseModel>();
-        }
+            string userId,
+            string username,
+            IChoreService choreService)
+                => await cache.GetOrCreateAsync(string.Format(USER_TASKS_CACHE_KEY, userId, username),
+                   async x =>
+                   {
+                       x.AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(3);
+                       x.SlidingExpiration = TimeSpan.FromSeconds(30);
+
+                       return await choreService.All(userId);
+                   });
     }
 }

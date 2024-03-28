@@ -7,13 +7,15 @@
             public const string AUTH_CACHE_KEY = $"AuthCache-{{0}}";
 
             public const string EMAIL_CACHE_KEY = $"DoesExistByEmail-{{0}}";
+
+            public const string USERNAME_CACHE_KEY = $"DoesExistByUserName-{{0}}";
         }
 
         public class Task
         {
             public const string TASK_NAME_CACHE_KEY = $"DoesExistByName-{{0}}-{{1}}";
 
-            public const string USER_TASKS_CACHE_KEY = $"User-{{0}}-Tasks-{{1}}";
+            public const string USER_TASKS_CACHE_KEY = $"Tasks-User-{{0}}-Name-{{1}}";
         }
     }
 }

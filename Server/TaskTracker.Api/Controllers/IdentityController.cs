@@ -45,10 +45,8 @@ namespace TaskTracker.Api.Controllers
                 return this.BadRequest(true);
             }
 
-            bool doesExist = await this.cache.ShortCacheUserName(
-                $"{nameof(this.DoesExistByUserName)}-{username}",
-                username,
-                this.identityService);
+            bool doesExist = await this.cache
+                .ShortCacheUserName(username, this.identityService);
 
             return doesExist == false
                         ? this.Ok(false)
