@@ -219,7 +219,9 @@ export async function allTasksFiltered(isCompletedStatus, sortStatus, filterStat
 
     return response.status === 200
         ? await response.json()
-        : null;
+        : response.status === 429
+            ? 429
+            : null;
 }
 
 export async function deleteTask(id) {

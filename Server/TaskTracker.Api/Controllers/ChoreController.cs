@@ -32,7 +32,7 @@ namespace TaskTracker.Api.Controllers
         {
             IEnumerable<ChoreResponseModel> response = await this.GetOrCacheTasks();
 
-            if (response == null)
+            if (response.Count() == 0)
             {
                 return BadRequest();
             }
@@ -51,13 +51,13 @@ namespace TaskTracker.Api.Controllers
         {
             IEnumerable<ChoreResponseModel> chores = await this.GetOrCacheTasks();
 
-            IEnumerable<ChoreResponseModel> response = this.choreService
-                .FilteredTasks(chores, isCompletedStatus, sortStatus!, filterStatus!);
-
-            if (response == null)
+            if (chores.Count() == 0)
             {
                 return this.BadRequest();
             }
+
+            IEnumerable<ChoreResponseModel> response = this.choreService
+                .FilteredTasks(chores, isCompletedStatus, sortStatus!, filterStatus!);
 
             return this.Ok(response);
         }
