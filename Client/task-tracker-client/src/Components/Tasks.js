@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from 'react-router-dom'
 
 import { useAuth } from '../Hooks/useAuth';
 import useRedirect from "../Hooks/useRedirect";
@@ -8,8 +9,9 @@ import { allTasks, allTasksFiltered } from "../Services/Api";
 
 import Task from "./Task";
 
-import "../Styles/Tasks.css";
 import "../Styles/Buttons.css";
+import "../Styles/Tasks.css";
+import "../Styles/Form.css";
 
 export default function Tasks() {
     const { auth, user } = useAuth();
@@ -19,6 +21,8 @@ export default function Tasks() {
     const [sort, setSort] = useState("");
     const [filter, setFilter] = useState("");
 
+    const [errorMessage, setErrorMessage] = useState(null);
+
     useRedirect(null);
 
     useEffect(() => {
@@ -26,6 +30,10 @@ export default function Tasks() {
             const data = await allTasks();
 
             if (data === null || ignore === true) {
+                dispatch({
+                    type: "getTasks",
+                    tasks: []
+                });
                 return;
             }
 
@@ -47,7 +55,11 @@ export default function Tasks() {
         const data = await allTasksFiltered(isCompletedStatus, sortStatus, filterStatus);
 
         if (data === null) {
-            alert("error.");
+            setErrorMessage("No existing tasks to filter.");
+            return;
+        }
+        else if (data === 429) {
+            setErrorMessage("Too many requests. Slow down.");
             return;
         }
 
@@ -111,15 +123,27 @@ export default function Tasks() {
                 </div>
             </div>
 
-            {tasks !== null && tasks.length !== 0
-                ? (
-                    <div className="offset-md-1 row">
-                        {tasks.map(task => <Task key={task.id} task={task}
-                                                 isCompleted={isCompleted} sort={sort}
-                                                 filter={filter} handleFiltering={HandleFiltering} />)}
-                    </div>
-                )
-                : <h3 className="pt-5">You have no tasks currently</h3>
+            {
+                errorMessage !== null && errorMessage.length > 0
+                    ? <span className="pt-4">{errorMessage}</span>
+                    : null
+            }
+
+            {
+                tasks !== null && tasks.length !== 0
+                    ? (
+                        <div className="offset-md-1 row">
+                            {tasks.map(task => <Task key={task.id} task={task}
+                                                isCompleted={isCompleted} sort={sort}
+                                                filter={filter} handleFiltering={HandleFiltering} />)}
+                        </div>
+                    )
+                    : (
+                        <>
+                            <h3 className="pt-5">You have no tasks currently</h3>
+                            <h4>Create them at <Link to="/AddTask">Add Task</Link></h4>
+                        </>
+                    )
             }
         </div>
     );
