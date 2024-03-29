@@ -9,9 +9,10 @@ import EditPopUp from "./EditPopUp";
 import "../Styles/Task.css"
 import "../Styles/Buttons.css"
 
-export default function Task({ task, isCompleted, sort, filter, handleFiltering }) {
-    const [seen, setSeen] = useState(false);
+export default function Task({ task, isCompleted, sort, filter, handleFiltering, handleShouldPop }) {
     const { dispatch } = useTasks();
+
+    const [seen, setSeen] = useState(false);
 
     const cardStyle = {
         color: "#cfe2ff",
@@ -30,10 +31,10 @@ export default function Task({ task, isCompleted, sort, filter, handleFiltering 
                                 const state = await editTask(task.id, task.name, task.deadline, !task.isCompleted);
 
                                 if (state === false) {
-                                    alert("error.");
+                                    handleShouldPop("Error. Failed to update the task. Try again.");
                                     return;
                                 }
-                                
+
                                 dispatch({
                                     type: "editTask",
                                     task: {
@@ -44,6 +45,9 @@ export default function Task({ task, isCompleted, sort, filter, handleFiltering 
                                     }
                                 })
 
+                                handleShouldPop(
+                                    `Task was updated successfully. 
+                                    State changed to ${!task.isCompleted === true ? "Complete." : "Incomplete."}`);
                                 await handleFiltering(isCompleted, sort, filter);
                             }}>
                             &#x2705;
@@ -65,7 +69,7 @@ export default function Task({ task, isCompleted, sort, filter, handleFiltering 
 
                         {
                             seen === true
-                                ? <EditPopUp seen={seen} setSeen={setSeen} task={task} />
+                                ? <EditPopUp seen={seen} setSeen={setSeen} task={task} handleShouldPop={handleShouldPop} />
                                 : null
                         }
 
@@ -75,16 +79,16 @@ export default function Task({ task, isCompleted, sort, filter, handleFiltering 
                                 const state = await deleteTask(task.id);
 
                                 if (state === false) {
-                                    alert("task could not be deleted.");
+                                    handleShouldPop("Error. Task could not be deleted. Try again.");
                                     return;
                                 }
-                                
+
                                 dispatch({
                                     type: "deleteTask",
                                     id: task.id
                                 })
 
-                                alert("task was successfully deleted.");
+                                handleShouldPop(`Task ${task.name} was deleted successfully.`);
                             }}>
                             Delete
                         </button>

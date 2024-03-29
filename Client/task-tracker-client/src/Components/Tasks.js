@@ -22,6 +22,8 @@ export default function Tasks() {
     const [filter, setFilter] = useState("");
 
     const [errorMessage, setErrorMessage] = useState(null);
+    const [eventMessage, setEventMessage] = useState(null);
+    const [shouldPop, setShouldPop] = useState(false);
 
     useRedirect(null);
 
@@ -66,7 +68,7 @@ export default function Tasks() {
         dispatch({
             type: "getTasks",
             tasks: data
-        })
+        });
     }
 
     async function HandleIsCompleted(isCompletedStatus) {
@@ -78,6 +80,12 @@ export default function Tasks() {
 
         setIsCompleted(isCompletedStatus);
         await HandleFiltering(isCompletedStatus, sort, filter);
+    }
+
+    function HandleShouldPop(message) {
+        setEventMessage(message);
+        setShouldPop(true);
+        setTimeout(() => setShouldPop(false), 3500);
     }
 
     return (
@@ -124,6 +132,12 @@ export default function Tasks() {
             </div>
 
             {
+                shouldPop === true
+                    ? <p style={{ color: "#0dcaf0" }}>{eventMessage}</p>
+                    : null
+            }
+
+            {
                 errorMessage !== null && errorMessage.length > 0
                     ? <span className="pt-4">{errorMessage}</span>
                     : null
@@ -135,7 +149,8 @@ export default function Tasks() {
                         <div className="offset-md-1 row">
                             {tasks.map(task => <Task key={task.id} task={task}
                                                 isCompleted={isCompleted} sort={sort}
-                                                filter={filter} handleFiltering={HandleFiltering} />)}
+                                                filter={filter} handleFiltering={HandleFiltering}
+                                                handleShouldPop={HandleShouldPop} />)}
                         </div>
                     )
                     : (

@@ -11,7 +11,7 @@ import CustomButton from './CustomButton';
 
 import "../Styles/Form.css";
 
-export default function EditPopUp({ task, seen, setSeen }) {
+export default function EditPopUp({ task, seen, setSeen, handleShouldPop }) {
     const [newName, setNewName] = useState(task.name);
     const newNameRef = useRef();
 
@@ -37,7 +37,7 @@ export default function EditPopUp({ task, seen, setSeen }) {
         const state = await editTask(task.id, newName, newDate, task.isCompleted);
 
         if (state === false) {
-            alert("error.");
+            handleShouldPop("Error. Failed to update the task. Try again.");
             return;
         }
 
@@ -51,7 +51,7 @@ export default function EditPopUp({ task, seen, setSeen }) {
             }
         })
 
-        alert("task updated successfully.");
+        handleShouldPop("Task was updated successfully!");
 
         setSeen(!seen);
     }
