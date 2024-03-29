@@ -10,8 +10,9 @@ import { allTasks, allTasksFiltered } from "../Services/Api";
 import Task from "./Task";
 
 import "../Styles/Buttons.css";
-import "../Styles/Tasks.css";
+import "../Styles/Filters.css";
 import "../Styles/Form.css";
+import "../Styles/Tasks.css";
 
 export default function Tasks() {
     const { auth, user } = useAuth();
@@ -96,18 +97,18 @@ export default function Tasks() {
             }
 
             <div className="mb-2 mx-auto row">
-                <div className="d-lg-inline-flex d-md-grid mx-auto col-lg-3">
-                    <button className="param mx-auto" onClick={async () => {
+                <div className="d-lg-inline-flex d-md-grid mx-auto col-lg-2">
+                    <button className="stateButton mx-auto" onClick={async () => {
                         await HandleIsCompleted(false);
                     }}>Incomplete</button>
 
-                    <button className="param mx-auto" onClick={async () => {
+                    <button className="stateButton mx-auto" onClick={async () => {
                         await HandleIsCompleted(true);
                     }}>Complete</button>
                 </div>
 
                 <div className="mx-auto col-sm-6 col-lg-4" style={{ border: "transparent 0.4rem solid" }}>
-                    <select className="" value={sort} onChange={async e => {
+                    <select className="selectBox" value={sort} onChange={async e => {
                         setSort(e.target.value);
                         await HandleFiltering(isCompleted, e.target.value, filter);
                     }}>
@@ -120,7 +121,7 @@ export default function Tasks() {
                     </select>
 
                     <input
-                        className="ms-3 mt-2 col-xxl-5"
+                        className="ms-3 mt-2 col-xxl-5 filterBox"
                         placeholder="Filter by name.."
                         value={filter}
                         onChange={e => setFilter(e.target.value)}
@@ -148,9 +149,9 @@ export default function Tasks() {
                     ? (
                         <div className="offset-md-1 row">
                             {tasks.map(task => <Task key={task.id} task={task}
-                                                isCompleted={isCompleted} sort={sort}
-                                                filter={filter} handleFiltering={HandleFiltering}
-                                                handleShouldPop={HandleShouldPop} />)}
+                                isCompleted={isCompleted} sort={sort}
+                                filter={filter} handleFiltering={HandleFiltering}
+                                handleShouldPop={HandleShouldPop} />)}
                         </div>
                     )
                     : (
