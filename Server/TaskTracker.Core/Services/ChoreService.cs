@@ -171,13 +171,13 @@ namespace TaskTracker.Core.Services
                     .Where(x => x.IsCompleted == isCompleted);
             }
 
-            if (string.IsNullOrWhiteSpace(filter) == false)
+            if (string.IsNullOrWhiteSpace(filter) is false)
             {
                 models = models
                     .Where(x => x.Name.Contains(filter));
             }
 
-            if (string.IsNullOrWhiteSpace(sort) == false)
+            if (string.IsNullOrWhiteSpace(sort) is false)
             {
                 models = sort == "creation ASC"
                     ? models

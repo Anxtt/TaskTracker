@@ -1,6 +1,7 @@
 using AspNetCoreRateLimit;
 
 using TaskTracker.Api.Extensions;
+using TaskTracker.Api.Middleware;
 
 namespace TaskTracker.Api
 {
@@ -19,6 +20,7 @@ namespace TaskTracker.Api
                     .AddSwaggerGen()
                     .AddMemoryCache()
                     .AddServices()
+                    .AddExceptionHandler<GlobalExceptionHandler>()
                     .AddIpRateLimiting(builder.Configuration)
                     .AddIdentityWithJWT(builder.Configuration)
                     .AddAuthorization()
@@ -27,7 +29,7 @@ namespace TaskTracker.Api
                         options.AddPolicy(name: "MyPolicy", opt =>
                         {
                             opt
-                            .WithOrigins("http://localhost:3000")
+                            .WithOrigins("http://localhost:4200", "http://localhost:3000")
                             .AllowAnyMethod()
                             .AllowAnyHeader()
                             .AllowCredentials();
@@ -43,9 +45,10 @@ namespace TaskTracker.Api
             }
 
             app
+               .UseExceptionHandler(_ => { })
+               .UseCors("MyPolicy")
                .UseHttpsRedirection()
                .UseRouting()
-               .UseCors("MyPolicy")
                .UseAuthentication()
                .UseAuthorization()
                .UseIpRateLimiting()
