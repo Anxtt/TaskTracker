@@ -2,6 +2,7 @@
 
 using TaskTracker.Api.Services.Contracts;
 
+using TaskTracker.Core.Models;
 using TaskTracker.Core.Models.Identity;
 
 using TaskTracker.Data;
@@ -12,13 +13,13 @@ namespace TaskTracker.Api.Services
     public class IdentityService : IIdentityService
     {
         private readonly TaskTrackerDbContext db;
-        private readonly IJwtService jwt;
+        private readonly IJwtService jwtService;
 
         public IdentityService(TaskTrackerDbContext db, IJwtService jwt)
-            => (this.db, this.jwt) = (db, jwt);
+            => (this.db, this.jwtService) = (db, jwt);
 
         /// <summary>
-        /// Creates a JWT Token for the given <see cref="ApplicationUser"/> <paramref name="user"/>.
+        /// Creates a JWT and a Refresh Token for the given <see cref="ApplicationUser"/> <paramref name="user"/>.
         /// </summary>
         /// <param name="user"></param>
         /// <returns>
@@ -26,12 +27,20 @@ namespace TaskTracker.Api.Services
         /// </returns>
         public async Task<IdentityResponseModel> Authenticate(ApplicationUser user)
         {
-            string token = this.jwt.GenerateToken(user);
+            string accessToken = this.jwtService.GenerateToken(user);
+            RefreshTokenModel refreshToken = this.jwtService.GenerateRefreshToken();
+
+            user.RefreshToken = refreshToken.Token;
+            user.Created = DateTime.Now;
+            user.Expires = user.Created.AddMinutes(60);
+
+            await this.db.SaveChangesAsync();
 
             IdentityResponseModel authenticated = new IdentityResponseModel()
             {
                 UserName = user.UserName,
-                Token = token
+                AccessToken = accessToken,
+                RefreshToken = refreshToken.Token
             };
 
             return authenticated;
@@ -96,6 +105,24 @@ namespace TaskTracker.Api.Services
             => await GetQueryableUser(id)
             .Select(x => x.UserName)
             .FirstAsync();
+
+        public async Task<ApplicationUser> GetUserByRefreshToken(string refreshToken, string accessToken)
+            => await this.db
+            .Users
+            .Where(x => x.RefreshToken == refreshToken)
+            .FirstOrDefaultAsync();
+
+        public async Task<IdentityResponseModel> RefreshToken(string refreshToken, string accessToken)
+        {
+            ApplicationUser user = await this.GetUserByRefreshToken(refreshToken, accessToken);
+
+            if (user is null || user.IsExpired is true || user.RefreshToken != refreshToken)
+            {
+                return default;
+            }
+
+            return await this.Authenticate(user);
+        }
 
         private IQueryable<ApplicationUser> GetQueryableUser(string id)
             => this.db
