@@ -1,0 +1,78 @@
+<div class="modal show fade" style="display: block; background-Color: rgba(0, 0, 0, 0.8)">
+    <div class=" modal-dialog modal-dialog-centered">
+        <!-- <div class="modal-content" style="background-Color: #0c0c0d; border: 0.3rem solid #a3cfbb"> -->
+        <div class="modal-content" style="background-Color: rgb(207, 226, 255); border: 0.3rem solid #43d6ee">
+            <form [formGroup]="editForm" (ngSubmit)="editTask()" class="modal-body">
+                <div class="offset-md-10">
+                    <button class="btn btn-danger"
+                    type="button"
+                    (click)="closeModal()">
+                        X
+                    </button>
+                </div>
+
+                @if (invalidForm !== "") {
+                    <div class="mt-auto mx-auto col-sm-6 pb-2">
+                        <!-- <span style='border: 3px solid #cfe2ff'>{{invalidForm}}</span> -->
+                        <span style='border: 3px solid #43d7ee'>{{invalidForm}}</span>
+                    </div>
+                }
+
+                <div class="mx-auto col-sm-6 pb-2">
+                    <label class="form-label">
+                        Task Name:
+                    </label>
+                    <input type="text" name="taskName" id="taskName" formControlName="taskName" placeholder="Your task..."
+                    [ngClass]="editForm.get('taskName')?.errors &&
+                    (editForm.get('taskName')?.touched ||
+                    editForm.get('taskName')?.dirty) 
+                        ? 'form-control-error' 
+                        : 'form-control'" />
+
+                    @if (this.editForm.getError('slowDown', 'taskName')) {
+                        <span class="col-sm-12">{{this.editForm.getError('slowDown', 'taskName')}}</span>
+                    }
+
+                    @if (this.editForm.getError('isUnique', 'taskName') === false) {
+                        <span class="col-sm-12">Task Name already exists.</span>
+                    }        
+                    @else if (editForm.get('taskName')?.errors &&
+                    (editForm.get('taskName')?.touched ||
+                    editForm.get('taskName')?.dirty)) {
+                    <span class="col-sm-12">Task Name is required and must be between 4 and 16 characters.</span>
+                    }
+                </div>
+                <!-- <label class="pb-2" style="color: #cfe2ff">Current name: {{currentTaskName}}</label> -->
+                <label class="pb-2" style="color: #43d7ee">Current name: {{currentTaskName}}</label>
+
+                <div class="mx-auto col-sm-6 pb-2">
+                    <label class="form-label">
+                        Deadline:
+                    </label>
+                    <input type="date" name="deadline" id="deadline" formControlName="deadline" placeholder="Your deadline..."
+                    [min]="currentDate"
+                    [ngClass]="editForm.get('deadline')?.errors &&
+                    (editForm.get('deadline')?.touched ||
+                    editForm.get('deadline')?.dirty) 
+                        ? 'form-control-error' 
+                        : 'form-control'" />
+        
+                    @if (editForm.get('deadline')?.errors &&
+                    (editForm.get('deadline')?.touched ||
+                    editForm.get('deadline')?.dirty)) {
+                    <span class="col-sm-12">Deadline is required.</span>
+                    }
+                </div>
+                <!-- <label class="pb-2" style="color: #cfe2ff">Current Deadline: {{currentDeadline}}</label> -->
+                <label class="pb-2" style="color: #43d7ee">Current Deadline: {{currentDeadline}}</label>
+
+                <div class="mt-3 mb-2 col-md-12">
+                    <button id="submitButton" name="edit" class="btn mx-auto" type="submit"
+                        [disabled]="!editForm.valid">
+                        Edit
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

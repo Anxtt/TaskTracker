@@ -1,0 +1,47 @@
+<div class="mx-auto col-6">
+    <form [formGroup]="loginForm" (ngSubmit)="handleLogin()">
+        <div class="mx-auto col-sm-6 pb-2">
+            <label class="form-label">
+                Username:
+            </label>
+            <input type="text" name="username" id="username" formControlName="username" placeholder="Your username..."
+            [ngClass]="loginForm.get('username')?.errors &&
+            (loginForm.get('username')?.touched ||
+            loginForm.get('username')?.dirty) 
+                ? 'form-control-error' 
+                : 'form-control'" />
+
+            @if (loginForm.get('username')?.errors &&
+            (loginForm.get('username')?.touched ||
+            loginForm.get('username')?.dirty)) {
+            <span class="col-sm-12">Username is required and must be between 4 and 16 characters.</span>
+            }
+        </div>
+
+        <div class="mx-auto col-sm-6 pb-2">
+            <label class="form-label">
+                Password:
+            </label>
+            <input type="password" name="password" id="password" formControlName="password" placeholder="Your password..."
+            [ngClass]="loginForm.get('password')?.errors &&
+            (loginForm.get('password')?.touched ||
+            loginForm.get('password')?.dirty) 
+                ? 'form-control-error' 
+                : 'form-control'" />
+
+            @if (loginForm.get('password')?.errors &&
+            (loginForm.get('password')?.touched ||
+            loginForm.get('password')?.dirty)) {
+            <span class="col-sm-12">Password is required. Must be between 6 and 18 characters.</span>
+            }
+        </div>
+
+        <div class="mt-3 mb-2 col-md-12">
+            <button id="submitButton" name="login" class="btn mx-auto" type="submit" [disabled]="!loginForm.valid">
+                Login
+            </button>
+        </div>
+
+        <p class="pt-3">Don't have an account? <a routerLink="/register">Register</a></p>
+    </form>
+</div>

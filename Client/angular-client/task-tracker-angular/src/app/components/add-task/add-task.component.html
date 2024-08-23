@@ -1,0 +1,52 @@
+<div class='mx-auto col-6'>
+    <form [formGroup]="createForm" (ngSubmit)="handleCreate()">
+        <div class="mx-auto col-sm-6 pb-2">
+            <label class="form-label">
+                Task Name:
+            </label>
+            <input type="text" name="taskName" id="taskName" formControlName="taskName" placeholder="Your task..."
+                [ngClass]="createForm.get('taskName')?.errors &&
+            (createForm.get('taskName')?.touched ||
+            createForm.get('taskName')?.dirty) 
+                ? 'form-control-error' 
+                : 'form-control'" />
+
+            <!-- <button (click)="something()" type="button">a</button> -->
+
+            @if (this.createForm.getError('isUnique', 'taskName') === false) {
+            <span class="col-sm-12">Task Name already exists.</span>
+            }
+            @else if ((createForm.getError('minlength', 'taskName') ||
+            createForm.getError('maxlength', 'taskName')
+            || createForm.getError('required', 'taskName')) &&
+            (createForm.get('taskName')?.touched ||
+            createForm.get('taskName')?.dirty)) {
+            <span class="col-sm-12">Task Name is required and must be between 4 and 16 characters.</span>
+            }
+        </div>
+
+        <div class="mx-auto col-sm-6 pb-2">
+            <label class="form-label">
+                Deadline:
+            </label>
+            <input type="date" name="deadline" id="deadline" formControlName="deadline" placeholder="Your deadline..."
+                [min]="currentDate" [ngClass]="createForm.get('deadline')?.errors &&
+            (createForm.get('deadline')?.touched ||
+            createForm.get('deadline')?.dirty) 
+                ? 'form-control-error' 
+                : 'form-control'" />
+
+            @if (createForm.get('deadline')?.errors &&
+            (createForm.get('deadline')?.touched ||
+            createForm.get('deadline')?.dirty)) {
+            <span class="col-sm-12">Deadline is required.</span>
+            }
+        </div>
+
+        <div class="mt-3 mb-2 col-md-12">
+            <button id="submitButton" name="create" class="btn mx-auto" type="submit" [disabled]="!createForm.valid">
+                Create
+            </button>
+        </div>
+    </form>
+</div>

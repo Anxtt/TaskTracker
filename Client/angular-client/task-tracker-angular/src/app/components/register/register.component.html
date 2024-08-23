@@ -1,0 +1,100 @@
+<div class="mx-auto col-6">
+    <form [formGroup]="registerForm" (ngSubmit)="handleRegister()">
+        <div class="mx-auto col-sm-6 pb-2">
+            <label class="form-label">
+                Username:
+            </label>
+            <input type="text" name="username" id="username" formControlName="username" placeholder="Your username..."
+                [ngClass]="registerForm.get('username')?.errors &&
+                    (registerForm.get('username')?.touched ||
+                    registerForm.get('username')?.dirty) 
+                    ? 'form-control-error' 
+                    : 'form-control'" />
+
+                    <!-- <button (click)="something()" type="button">a</button> -->
+
+            @if (this.registerForm.getError('error', 'username')) {
+            <span class="col-sm-12">{{this.registerForm.getError('error', 'username')}}</span>
+            }
+
+            @if (this.registerForm.getError('isUnique', 'username') === false) {
+            <span class="col-sm-12">Username already exists.</span>
+            }
+            @else if (registerForm.get('username')?.errors &&
+            (registerForm.get('username')?.touched ||
+            registerForm.get('username')?.dirty)) {
+            <span class="col-sm-12">Username is required and must be between 4 and 16 characters.</span>
+            }
+        </div>
+
+        <div class="mx-auto col-sm-6 pb-2">
+            <label class="form-label">
+                E-mail:
+            </label>
+            <input type="text" name="email" id="email" formControlName="email" placeholder="Your email..." [ngClass]="registerForm.get('email')?.errors &&
+            (registerForm.get('email')?.touched ||
+            registerForm.get('email')?.dirty)
+                ? 'form-control-error' 
+                : 'form-control'" />
+
+            @if (this.registerForm.getError('error', 'email') !== "") {
+            <span class="col-sm-12">{{this.registerForm.getError('error', 'email')}}</span>
+            }
+
+            @if (this.registerForm.getError('isUnique', 'email') === false) {
+            <span class="col-sm-12">E-mail already exists.</span>
+            }
+            @else if (registerForm.get('email')?.errors &&
+            (registerForm.get('email')?.touched ||
+            registerForm.get('email')?.dirty)) {
+            <span class="col-sm-12">E-mail is required and must be between 6 and 50 characters.</span>
+            }
+        </div>
+
+        <div class="mx-auto col-sm-6 pb-2">
+            <label class="form-label">
+                Password:
+            </label>
+            <input type="password" name="password" id="password" formControlName="password"
+                placeholder="Your password..." [ngClass]="registerForm.get('password')?.errors &&
+            (registerForm.get('password')?.touched ||
+            registerForm.get('password')?.dirty)
+                ? 'form-control-error' 
+                : 'form-control'" />
+
+            @if (registerForm.get('password')?.errors &&
+            (registerForm.get('password')?.touched ||
+            registerForm.get('password')?.dirty)) {
+            <span class="col-sm-12">Password is required. Must be between 6 and 18 characters.</span>
+            }
+        </div>
+
+        <div class="mx-auto col-sm-6 pb-2">
+            <label class="form-label">
+                Confirm Password:
+            </label>
+            <input type="password" name="confirmPassword" id="confirmPassword" formControlName="confirmPassword"
+                placeholder="Repeat password..." [ngClass]="registerForm.get('confirmPassword')?.errors &&
+            (registerForm.get('confirmPassword')?.touched ||
+            registerForm.get('confirmPassword')?.dirty) 
+                ? 'form-control-error' 
+                : 'form-control'" />
+
+            @if (registerForm.get('confirmPassword')?.errors &&
+            (registerForm.get('confirmPassword')?.touched ||
+            registerForm.get('confirmPassword')?.dirty)) {
+            <span class="col-sm-12">Confirm Password is required. Must match password and be between 6 and 18
+                characters.</span>
+            }
+        </div>
+
+        <div class="mt-3 mb-2 col-md-12">
+            <button id="submitButton" name="register" class="btn mx-auto" type="submit"
+                [disabled]="!registerForm.valid">
+                Register
+            </button>
+        </div>
+
+        <p class="pt-3">Already have an account? <a routerLink="/login">Login</a></p>
+    </form>
+</div>

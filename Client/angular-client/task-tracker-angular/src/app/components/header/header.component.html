@@ -1,0 +1,73 @@
+<nav class="mx-auto">
+    <div class="mx-auto">
+        <ul style="display: inline;">
+            <li class="navigation">
+                <a routerLink="/">Home</a>
+            </li>
+            <li class="navigation mx-auto">
+                <div id="dropdown-div" class="mx-auto">
+                    <button id="dropdown-btn" data-bs-toggle="dropdown" aria-expanded="false">
+                        Tasks
+                    </button>
+                    <ul id="dropdown-ul" class="dropdown-menu">
+                        <li class="navigation dropdown-item mx-auto">
+                            <a routerLink="/tasks" id="dropdown-a">All Tasks</a>
+                        </li>
+
+                        <li class="navigation dropdown-item mx-auto">
+                            <a routerLink="/addTask">Add Task</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li class="navigation mx-auto">
+                <a routerLink="/about">About</a>
+            </li>
+        </ul>
+        @let isAuth = isAuth$ | async;
+        @if (isAuth?.accessToken) {
+        <ul class="authenticationUl">
+            <li class="authenticationLi">
+                <a (click)="logOut()" style="cursor: pointer;">Logout</a>
+            </li>
+
+            <li class="authenticationLi">
+                <a routerLink="/">{{isAuth?.userName}}</a>
+            </li>
+        </ul>
+        }
+        @else {
+        <ul class="authenticationUl">
+            <li class="authenticationLi">
+                <a routerLink="/login">Login</a>
+            </li>
+
+            <li class="authenticationLi">
+                <a routerLink="/register">Register</a>
+            </li>
+        </ul>
+        }
+        <!-- @if (isAuth.accessToken !== "") {
+        <ul class="authenticationUl">
+            <li class="authenticationLi">
+                <a (click)="logOut()" style="cursor: pointer;">Logout</a>
+            </li>
+
+            <li class="authenticationLi">
+                <a routerLink="/">{{isAuth.userName}}</a>
+            </li>
+        </ul>
+        }
+        @else {
+        <ul class="authenticationUl">
+            <li class="authenticationLi">
+                <a routerLink="/login">Login</a>
+            </li>
+
+            <li class="authenticationLi">
+                <a routerLink="/register">Register</a>
+            </li>
+        </ul>
+        } -->
+    </div>
+</nav>

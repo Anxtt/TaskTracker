@@ -1,0 +1,73 @@
+nav {
+    text-align: center;
+    margin-top: 0.6rem;
+    /* border-bottom: 2px solid #a3cfbb; */
+    border-bottom: 2px solid #43d6ee;
+    width: 100%;
+}
+
+/* nav ul {
+    display: inline-flex;
+} */
+
+#dropdown-div:hover button {
+    transition: 6s;
+}
+
+#dropdown-ul {
+    text-decoration: none;
+    font-family: 'Lucida Console', 'Courier New', Courier, monospace, Arial, Helvetica, sans-serif;
+    /* background-color: #0c0c0d;
+    border: 2px solid #a3cfbb; */
+    background-color: #fff;
+    border: 2px solid #43d6ee;
+}
+
+#dropdown-ul.show {
+    display: grid;
+    justify-content: center;
+    /* inset: 0px auto auto -7%; */
+}
+
+#dropdown-ul li:hover {
+    text-decoration: none;
+    /* background-color: #0c0c0d; */
+    /* border: 2px solid #cfe2ff; */
+    background-color: #fff;
+    border: 2px solid #43d6ee;
+    transition: .15s;
+}
+
+nav ul li button {
+    /* color: #a3cfbb; */
+    color: #43d6ee;
+    text-decoration: none;
+    font-family: 'Lucida Console', 'Courier New', Courier, monospace, Arial, Helvetica, sans-serif;
+    background-color: transparent;
+    border: none;
+}
+
+nav ul li a {
+    /* color: #a3cfbb; */
+    color: #43d6ee;
+    text-decoration: none;
+    font-family: 'Lucida Console', 'Courier New', Courier, monospace, Arial, Helvetica, sans-serif;
+}
+
+.navigation {
+    list-style-type: none;
+    display: inline-flex;
+    padding-right: 2rem;
+    font-size: large;
+}
+
+.authenticationLi {
+    list-style-type: none;
+    display: inline-flex;
+    padding-right: 1rem;
+    font-size: large;
+}
+
+.authenticationUl {
+    display: inline;
+}

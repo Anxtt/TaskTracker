@@ -1,0 +1,70 @@
+.stateButton {
+    font-weight: bold;
+    font-size: 150%;
+    border: none;
+    background-color: rgba(0, 0, 0, 0.0);
+    /* color: rgb(207, 226, 255); */
+    color: #43d6ee;
+    border: transparent 0.4rem solid;
+}
+
+.stateButton:hover {
+    /* PARALLELOGRAM */
+    /* border: #a3cfbb 0.4rem solid; */
+    border: rgb(207, 226, 255) 0.4rem solid;
+    /* width: 100%;
+	height: 100%; */
+    transform: skew(-33deg);
+    transition-duration: 300ms;
+}
+
+.filterBox {
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    /* color: rgb(207, 226, 255); */
+    color: #43d6ee;
+    /* background-color: #0c0c0d; */
+    background-color: rgb(207, 226, 255);
+    background-clip: padding-box;
+    /* border: 0.175rem solid rgb(207, 226, 255); */
+    border: 0.175rem solid #43d6ee;
+    appearance: none;
+    border-radius: 0.3rem;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+.filterBox:focus {
+    outline: none;
+}
+
+.selectBox {
+    appearance: none;
+    /* border: solid rgb(207, 226, 255); */
+    border: solid #43d6ee;
+    outline: none;
+    width: 50%;
+    /* background: var(--arrow-icon) no-repeat right 0.85em center / 1.4em,
+        linear-gradient(to left, #a3cfbb 3em, #0c0c0d 3em); */
+    background: var(--arrow-icon) no-repeat right 0.85em center / 1.4em,
+        linear-gradient(to left, #43d6ee 3em, rgb(207, 226, 255) 3em);
+    /* color: rgb(207, 226, 255); */
+    color: #43d6ee;
+    border-radius: 0.3rem;
+    box-shadow: 0 0 1em 0 rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+}
+
+.selectBox option {
+    /* color: #0c0c0d;
+    background-color: #0c0c0d; */
+    color: rgb(207, 226, 255);
+    background-color: rgb(207, 226, 255);
+}
+
+::placeholder {
+    /* color: rgb(207, 226, 255); */
+    color: #43d6ee;
+    opacity: 80%;
+}

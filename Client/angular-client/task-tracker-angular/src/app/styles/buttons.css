@@ -1,0 +1,73 @@
+#deleteButton,
+#editButton,
+#submitButton {
+    font-family: 'Lucida Console', 'Courier New', Courier, monospace, Arial, Helvetica, sans-serif;
+}
+
+/* #deleteButton {
+    background: #b00818;
+    border-Color: #ddd;
+    color: #ddd;
+}
+
+#deleteButton:hover {
+    background: #8a0011;
+    border-color: #959595;
+} */
+
+#deleteButton {
+    background: rgb(207, 226, 255);
+    /* border-Color: #a3cfbb; */
+    border-Color: #43d6ee;
+    /* color: #0c0c0d; */
+    color: #43d6ee;
+}
+
+#deleteButton:hover {
+    /* background: #0c0c0d; */
+    background: #43d6ee;
+    border-color: rgb(207, 226, 255);
+    color: rgb(207, 226, 255);
+}
+
+/* #editButton {
+    background: #ffc107;
+    border-Color: #ff6c00;
+    color: #000;
+}
+
+#editButton:hover {
+    background: #d7ac30;
+    border-color: #ff3c00;
+} */
+
+#editButton {
+    /* background: #0c0c0d; */
+    background: #fff;
+    /* border-Color: #a3cfbb; */
+    border-Color: #43d6ee;
+    /* color: #a3cfbb; */
+    color: #43d6ee;
+}
+
+#editButton:hover {
+    /* background: #a3cfbb; */
+    background: #43d6ee;
+    border-color: rgb(207, 226, 255);
+    /* color: #0c0c0d; */
+    color: #fff;
+}
+
+#submitButton {
+    /* background: #a3cfbb; */
+    background: #43d6ee;
+    border-Color: #fff;
+    color: #fff;
+}
+
+#submitButton:hover {
+    /* background: #59a683; */
+    background: #43a7ee;
+    border-Color: #cfe2ff;
+    color: #cfe2ff;
+}
