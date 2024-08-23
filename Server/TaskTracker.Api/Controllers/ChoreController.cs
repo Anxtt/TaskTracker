@@ -27,23 +27,20 @@ namespace TaskTracker.Api.Controllers
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> All()
         {
             IEnumerable<ChoreResponseModel> response = await this.GetOrCacheTasks();
 
-            if (response.Count() == 0)
-            {
-                return BadRequest();
-            }
-
-            return Ok(response);
+            return response.Any() is false
+                ? this.NoContent()
+                : this.Ok(response);
         }
 
         [HttpGet]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> AllFiltered(
             [FromQuery] bool? isCompletedStatus,
             [FromQuery] string? sortStatus,
@@ -51,15 +48,12 @@ namespace TaskTracker.Api.Controllers
         {
             IEnumerable<ChoreResponseModel> chores = await this.GetOrCacheTasks();
 
-            if (chores.Count() == 0)
-            {
-                return this.BadRequest();
-            }
-
             IEnumerable<ChoreResponseModel> response = this.choreService
                 .FilteredTasks(chores, isCompletedStatus, sortStatus!, filterStatus!);
 
-            return this.Ok(response);
+            return response.Any() is false
+                ? this.NoContent()
+                : this.Ok(response);
         }
 
         [HttpPost]
@@ -71,46 +65,45 @@ namespace TaskTracker.Api.Controllers
             string userId = this.User.GetId();
 
             if (await this.cache
-                .ShortCacheTaskNameByName(model.Name, userId, this.choreService) == true)
+                .ShortCacheTaskNameByName(model.Name, userId, this.choreService) is true)
             {
-                return BadRequest();
+                return this.BadRequest("You already have a task with this name.");
             }
 
             int id = await this.choreService.Create(model, userId);
 
             this.RemoveCachedTasks(userId);
 
-            return Created(nameof(this.Create), id);
+            return this.Created(nameof(this.Create), id);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
             string userId = this.User.GetId();
 
-            if (await this.choreService.DoesExist(id, userId) == false)
+            if (await this.choreService.DoesExist(id, userId) is false)
             {
-                return NotFound();
+                return this.NotFound("Task with such id was not found.");
             }
 
             await this.choreService.Delete(id, userId);
 
             this.RemoveCachedTasks(userId);
 
-            return Ok();
+            return this.Ok();
         }
 
         [HttpGet("{name}")]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> DoesExistByName([FromRoute] string name)
         {
-            if (string.IsNullOrWhiteSpace(name) == true)
+            if (string.IsNullOrWhiteSpace(name) is true)
             {
-                return this.BadRequest(true);
+                return this.BadRequest("You already have a task with this name.");
             }
 
             string userId = this.User.GetId();
@@ -118,12 +111,12 @@ namespace TaskTracker.Api.Controllers
             bool doesExist = await this.cache
                 .ShortCacheTaskNameByName(name, userId, this.choreService);
 
-            return doesExist == false
+            return doesExist is false
                     ? this.Ok(false)
-                    : this.BadRequest(true);
+                    : this.Ok(true);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Details([FromRoute] int id)
@@ -132,31 +125,31 @@ namespace TaskTracker.Api.Controllers
 
             ChoreResponseModel response = await this.choreService.Details(id, userId);
 
-            if (response == null)
+            if (response is null)
             {
-                return NotFound();
+                return this.NotFound("Task with such id was not found.");
             }
 
-            return Ok(response);
+            return this.Ok(response);
         }
 
-        [HttpPut("{id}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [HttpPut("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Edit([FromRoute] int id, [FromBody] ChoreEditModel model)
         {
             string userId = this.User.GetId();
 
-            if (await this.choreService.DoesExist(id, userId) == false)
+            if (await this.choreService.DoesExist(id, userId) is false)
             {
-                return BadRequest();
+                return this.NotFound("Task with such id was not found");
             }
 
             await this.choreService.Edit(id, model, userId);
 
             this.RemoveCachedTasks(userId);
 
-            return NoContent();
+            return this.Ok();
         }
 
         [NonAction]
