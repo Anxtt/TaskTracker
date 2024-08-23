@@ -1,11 +1,11 @@
-﻿using System.Text;
-
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 
 using Microsoft.EntityFrameworkCore;
 
 using Microsoft.IdentityModel.Tokens;
+
+using System.Text;
 
 using AspNetCoreRateLimit;
 
@@ -47,9 +47,18 @@ namespace TaskTracker.Api.Extensions
                 config.GetSection(nameof(AppSettings)),
                 options => options.BindNonPublicProperties = true);
 
-            string secret = config
-                .GetSection(nameof(AppSettings))
-                .GetValue<string>(nameof(AppSettings.Secret));
+            IConfigurationSection section = config
+                .GetSection(nameof(AppSettings));
+
+            string secret = section
+                .GetValue<string>(nameof(AppSettings.Secret))!;
+
+            string issuer = section
+                .GetValue<string>(nameof(AppSettings.Issuer))!;
+
+            string[] audience = section
+                .GetSection(nameof(AppSettings.Audience))
+                .Get<string[]>()!;
 
             byte[] key = Encoding.ASCII.GetBytes(secret);
 
@@ -61,19 +70,26 @@ namespace TaskTracker.Api.Extensions
                 })
                 .AddJwtBearer(bearer =>
                 {
-                    bearer.RequireHttpsMetadata = false;
+                    bearer.RequireHttpsMetadata = true;
                     bearer.SaveToken = true;
                     bearer.TokenValidationParameters = new TokenValidationParameters()
                     {
-                        ValidateAudience = false,
-                        ValidateIssuer = false,
+                        ValidateAudience = true,
+                        ValidAudiences = audience,
+
+                        ValidateIssuer = true,
+                        ValidIssuer = issuer,
+                        
+                        ValidateLifetime = true,
+                        ClockSkew = TimeSpan.Zero,
+                        
                         ValidateIssuerSigningKey = true,
                         IssuerSigningKey = new SymmetricSecurityKey(key)
                     };
 
                     bearer.Events = new JwtBearerEvents()
                     {
-                        OnMessageReceived = ctx =>
+                        OnMessageReceived = async ctx =>
                         {
                             HttpRequest request = ctx.HttpContext.Request;
                             IRequestCookieCollection cookies = request.Cookies;
@@ -83,7 +99,7 @@ namespace TaskTracker.Api.Extensions
                                 ctx.Token = token;
                             }
 
-                            return Task.CompletedTask;
+                            await Task.CompletedTask;
                         }
                     };
                 });
