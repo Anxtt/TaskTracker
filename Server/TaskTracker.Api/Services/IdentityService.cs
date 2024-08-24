@@ -31,8 +31,8 @@ namespace TaskTracker.Api.Services
             RefreshTokenModel refreshToken = this.jwtService.GenerateRefreshToken();
 
             user.RefreshToken = refreshToken.Token;
-            user.Created = DateTime.Now;
-            user.Expires = user.Created.AddMinutes(60);
+            user.Created = refreshToken.Created;
+            user.Expires = refreshToken.Expires;
 
             await this.db.SaveChangesAsync();
 
@@ -106,15 +106,15 @@ namespace TaskTracker.Api.Services
             .Select(x => x.UserName)
             .FirstAsync();
 
-        public async Task<ApplicationUser> GetUserByRefreshToken(string refreshToken, string accessToken)
+        public async Task<ApplicationUser> GetUserByRefreshToken(string refreshToken)
             => await this.db
             .Users
             .Where(x => x.RefreshToken == refreshToken)
             .FirstOrDefaultAsync();
 
-        public async Task<IdentityResponseModel> RefreshToken(string refreshToken, string accessToken)
+        public async Task<IdentityResponseModel> RefreshToken(string refreshToken)
         {
-            ApplicationUser user = await this.GetUserByRefreshToken(refreshToken, accessToken);
+            ApplicationUser user = await this.GetUserByRefreshToken(refreshToken);
 
             if (user is null || user.IsExpired is true || user.RefreshToken != refreshToken)
             {

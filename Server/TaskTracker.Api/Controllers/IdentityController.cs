@@ -153,7 +153,7 @@ namespace TaskTracker.Api.Controllers
 
             try
             {
-                model = await this.identityService.RefreshToken(refreshToken, accessToken);
+                model = await this.identityService.RefreshToken(refreshToken);
                 this.SetAuthCookies(model);
             }
             catch (Exception e)
@@ -194,7 +194,7 @@ namespace TaskTracker.Api.Controllers
                     return this.RedirectToAction(nameof(IdentityController.RefreshToken));
                 }
 
-                ApplicationUser user = await this.identityService.GetUserByRefreshToken(refreshToken, accessToken);
+                ApplicationUser user = await this.identityService.GetUserByRefreshToken(refreshToken);
 
                 if (user is null)
                 {

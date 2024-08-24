@@ -18,8 +18,8 @@ namespace TaskTracker.Api.Services.Contracts
 
         Task<string> GetUserNameById(string id);
 
-        Task<ApplicationUser> GetUserByRefreshToken(string refresh, string access);
+        Task<ApplicationUser> GetUserByRefreshToken(string refresh);
 
-        Task<IdentityResponseModel> RefreshToken(string refreshToken, string access);
+        Task<IdentityResponseModel> RefreshToken(string refreshToken);
     }
 }
