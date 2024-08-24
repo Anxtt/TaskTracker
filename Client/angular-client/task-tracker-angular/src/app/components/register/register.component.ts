@@ -59,7 +59,7 @@ export class RegisterComponent {
         }
     });
 
-    constructor(private authSerivce: AuthService, private messageService: MessageService, private router: Router) {}
+    constructor(private authSerivce: AuthService, private messageService: MessageService, private router: Router) { }
 
     // something() {
     //     console.log(this.registerForm.get("username")?.errors);
@@ -74,7 +74,10 @@ export class RegisterComponent {
             .subscribe({
                 next: x => x,
                 error: e => this.messageService.setErrorMessage(e),
-                complete: () => this.router.navigateByUrl('/login')
+                complete: () => {
+                    this.router.navigateByUrl('/login');
+                    this.messageService.setSuccessMessage({ body: "Registration was successful", show: true });
+                }
             });
     }
 }

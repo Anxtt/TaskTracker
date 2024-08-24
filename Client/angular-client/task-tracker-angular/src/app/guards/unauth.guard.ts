@@ -12,6 +12,7 @@ import { MessageService } from '../services/message.service';
 export class UnauthGuard implements CanActivate {
     constructor(private authService: AuthService, private messageService: MessageService, private router: Router) { }
 
+    // Prevents the user from accessing login and register when authenticated
     canActivate() {
         const isAuth = this.authService.getCurrentAuth();
 
@@ -23,7 +24,11 @@ export class UnauthGuard implements CanActivate {
         return this.authService.verifyUser()
                         .pipe(
                             catchError(x => {
-                                this.messageService.setErrorMessage(x);
+                                const state = (this.router.getCurrentNavigation()?.extras.state as any)?.["from"];
+
+                                if (state === "unauthorized") {
+                                    this.messageService.setErrorMessage(x);
+                                }
                                 return of({ userName: "", accessToken: "", refreshToken: "" })
                             }),
                             switchMap(x => {

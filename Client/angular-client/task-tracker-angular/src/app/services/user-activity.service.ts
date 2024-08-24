@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 
 import { AuthService } from './auth.service';
+import { MessageService } from './message.service';
 
 export enum IdleUserTimes {
     // IdleTime = 10000,
@@ -13,7 +14,7 @@ export enum IdleUserTimes {
 }
 
 @Injectable(
-    { providedIn: 'root'}
+    { providedIn: 'root' }
 )
 export class UserActivityService {
     private timeOutId: any;
@@ -22,7 +23,7 @@ export class UserActivityService {
 
     isActive: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
 
-    constructor(private authService: AuthService, private router: Router) {
+    constructor(private authService: AuthService, private messageService: MessageService, private router: Router) {
         this.reset();
         this.initListener();
     }
@@ -82,6 +83,8 @@ export class UserActivityService {
                     error: () => this.router.navigateByUrl("/login"),
                     complete: () => this.router.navigateByUrl("/login")
                 });
+
+                this.messageService.setSuccessMessage({ body: "You have been logged out due to inactivity.", show: true });
             }
         }, 1000)
     }

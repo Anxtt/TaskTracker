@@ -17,7 +17,7 @@ import { MessageService } from '../../services/message.service';
 })
 export class AddTaskComponent {
     taskNameExistValidator: TaskNameExistValidator = inject(TaskNameExistValidator);
-    currentDate: string;    
+    currentDate: string;
 
     constructor(private taskService: TaskService, private messageService: MessageService, private router: Router) {
         this.currentDate = new Date().toISOString().slice(0, 10);
@@ -33,8 +33,8 @@ export class AddTaskComponent {
                         Validators.minLength(4),
                         Validators.maxLength(16)
                     ],
-                    asyncValidators: this.taskNameExistValidator.validate.bind(this.taskNameExistValidator),
-                    updateOn: 'blur'
+                asyncValidators: this.taskNameExistValidator.validate.bind(this.taskNameExistValidator),
+                updateOn: 'blur'
             }
         ),
         deadline: new FormControl(null, [Validators.required])
@@ -51,7 +51,10 @@ export class AddTaskComponent {
                 error: x => {
                     this.messageService.setErrorMessage(x);
                 },
-                next: () => this.router.navigateByUrl('tasks')
+                next: () => {
+                    this.router.navigateByUrl('tasks')
+                    this.messageService.setSuccessMessage({ body: "Task was added successfully.", show: true });
+                }
             });
     };
 }

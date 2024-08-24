@@ -17,8 +17,8 @@
             <span class="col-sm-12">Task Name already exists.</span>
             }
             @else if ((createForm.getError('minlength', 'taskName') ||
-            createForm.getError('maxlength', 'taskName')
-            || createForm.getError('required', 'taskName')) &&
+            createForm.getError('maxlength', 'taskName') ||
+            createForm.getError('required', 'taskName')) &&
             (createForm.get('taskName')?.touched ||
             createForm.get('taskName')?.dirty)) {
             <span class="col-sm-12">Task Name is required and must be between 4 and 16 characters.</span>

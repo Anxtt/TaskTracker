@@ -1,7 +1,10 @@
 <app-header></app-header>
-@if (errorMessage.show === true) {
-<span class="text-center mt-2">{{errorMessage.message}}</span>
-}
+
+<dx-toast class="mt-3" [maxWidth]="400" [displayTime]="2000" [visible]="errorMessage.show || successMessage.show" [type]="messageType"
+    [message]="errorMessage.message || successMessage.message">
+    <dxo-position at="top right" offset="-240 110">
+    </dxo-position>
+</dx-toast>
 
 <div class="container">
     <!-- <dx-list [items]="tasks" itemTemplate="tasks">
@@ -36,25 +39,22 @@
         <dxi-column caption="Deadline" dataField="deadline" dataType="string"></dxi-column>
         <dxi-column caption="Name" dataField="name" dataType="string"></dxi-column>
     </dx-data-grid> -->
-    <style>
+
+    <!-- <style>
         .cardStyle {
-            /* color: #cfe2ff; */
             color: #43d6ee;
             font-family: "Lucida Console", "Courier New", Courier, monospace, Arial, Helvetica, sans-serif
         }
-    </style>
-
-    <dx-tile-view direction="horizontal" class="offset-md-1 col-md-12 col-sm-6" [height]="800"
+    
+        <dx-tile-view direction="vertical" class="offset-md-1" [height]="800"
     [baseItemHeight]="230"
     [baseItemWidth]="340"
-    width="100%">
+    [itemMargin]="10">
         @for(task of tasks; track task.id) {
-        <dxi-item class="col-md-12 col-sm-6">            
-            <div class="me-3 mb-3 cardStyle col-sm-6 col-md-12" style="border: 0.3rem solid #43d6ee; background: #fff">
-                <!-- <div class="card me-3 mb-3 col-md-8 col-lg-12 cardStyle" style="border: 0.3rem solid #a3cfbb; background: #0c0c0d"> -->
+        <dxi-item>            
+            <div class="cardStyle col-sm-12" style="border: 0.3rem solid #43d6ee; background: #fff; border-radius: 6px;">
                 <div>
                     <div style="border-bottom: 0.15rem solid #43d6ee">
-                        <!-- <div style="border-bottom: 0.15rem solid #a3cfbb"> -->
                         <p class="offset-md-1 mt-auto mx-auto cardStyle">{{task.name}}</p>
                         <span class="d-flex mx-auto mt-auto"
                             style="cursor: pointer; font-size: 24px">
@@ -68,7 +68,6 @@
                         <p class="card-text cardStyle">State: {{task.isCompleted === true ? 'Complete' : 'Incomplete' }}</p>
                     </div>
             
-                    <!-- <div class="cardStyle" style="border-top: 0.15rem solid #a3cfbb"> -->
                         <div class="cardStyle" style="border-top: 0.15rem solid #43d6ee">
                         <button class="btn btn-warning mt-1 mb-1 me-4 mx-auto d-inline-flex"
                             id="editButton">
@@ -84,7 +83,7 @@
             </div>
         </dxi-item>
         }
-    </dx-tile-view>
+    </dx-tile-view> -->
 
     <router-outlet></router-outlet>
 </div>

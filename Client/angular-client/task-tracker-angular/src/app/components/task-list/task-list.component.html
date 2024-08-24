@@ -1,6 +1,6 @@
 <div class="mx-auto row">
     @if(isAuth$ | async; as isAuth) {
-        <h1 class="pe-5">Hello, {{isAuth.userName}}</h1>
+    <h1 class="pe-5">Hello, {{isAuth.userName}}</h1>
     }
 
     <div class="mb-2 mx-auto row">
@@ -20,27 +20,25 @@
                 <option value="">Reset</option>
             </select>
 
-            <input
-                class="ms-3 mt-2 col-xxl-5 filterBox"
-                placeholder="Filter by name.."
-                name="filter"
-                [value]="filter"
-                (input)="setParam('filter', $event)"
-                (blur)="handleFiltering(isCompleted)"
-                />
+            <input class="ms-3 mt-2 col-xxl-5 filterBox" placeholder="Filter by name.." name="filter" [value]="filter"
+                (input)="setParam('filter', $event)" (blur)="handleFiltering(isCompleted)" />
         </div>
     </div>
 
     @if (tasks.length > 0) {
+    <dx-tile-view [activeStateEnabled]="false" direction="vertical" class="offset-lg-1 offset-md-3 offset-sm-2"
+        [height]="680" [baseItemHeight]="190" [baseItemWidth]="340" [itemMargin]="10">
         @for(task of tasks; track task.id) {
-            <app-task (taskDeleted)="onTaskDeleted($event)" (taskUpdated)="onTaskUpdated($event)"
-                [taskId]="task.id" [name]="task.name" [isCompleted]="task.isCompleted" [deadline]="task.deadline"
-                [createdOn]="task.createdOn" class="offset-md-1 mx-auto" style="flex-grow: 1; flex-shrink: 1; flex-basis: 30%;"
-            />
+        <dxi-item>
+            <app-task (taskDeleted)="onTaskDeleted($event)" (taskUpdated)="onTaskUpdated($event)" [taskId]="task.id"
+                [name]="task.name" [isCompleted]="task.isCompleted" [deadline]="task.deadline"
+                [createdOn]="task.createdOn" />
+        </dxi-item>
         }
+    </dx-tile-view>
     }
-    @else {
-        <h3 class="pt-5">You have no tasks currently</h3>
-        <h4>Create them at <a routerLink="/addTask">Add Task</a></h4>
+    @else if (tasks.length === 0 && noContent === false){
+    <h3 class="pt-5">You have no tasks currently</h3>
+    <h4>Create them at <a routerLink="/addTask">Add Task</a></h4>
     }
 </div>

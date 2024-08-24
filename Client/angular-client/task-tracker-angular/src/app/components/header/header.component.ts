@@ -5,6 +5,7 @@ import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { Observable } from 'rxjs';
 
 import { AuthService } from '../../services/auth.service';
+import { MessageService } from '../../services/message.service';
 
 import { IdentityResponseModel } from '../../models/IdentityResponseModel';
 
@@ -19,7 +20,7 @@ export class HeaderComponent implements OnInit {
     isAuth$: Observable<IdentityResponseModel>;
     // isAuth: IdentityResponseModel;
 
-    constructor(private authService: AuthService, private router: Router) {
+    constructor(private authService: AuthService, private messageService: MessageService, private router: Router) {
         this.isAuth$ = this.authService.getAuth();
         // this.isAuth = this.authService.getCurrentAuth();
     }
@@ -41,6 +42,7 @@ export class HeaderComponent implements OnInit {
             .subscribe(() => {
                 this.authService.setAuth({ accessToken: "", userName: "", refreshToken: "" });
                 this.router.navigateByUrl('/');
+                this.messageService.setSuccessMessage({ body: "Logged out successfully.", show: true });
         })
     }
 }

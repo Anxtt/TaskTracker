@@ -40,7 +40,10 @@ export class LoginComponent {
                     this.authService.setAuth(x.body!);
                 },
                 error: e => this.messageService.setErrorMessage(e),
-                complete: () => this.router.navigateByUrl('/tasks')
+                complete: () => {
+                    this.router.navigateByUrl('/tasks')
+                    this.messageService.setSuccessMessage({ body: "Login was successful.", show: true });
+                }
             });
     }
 }

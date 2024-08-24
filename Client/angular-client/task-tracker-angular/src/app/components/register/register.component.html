@@ -11,16 +11,17 @@
                     ? 'form-control-error' 
                     : 'form-control'" />
 
-                    <!-- <button (click)="something()" type="button">a</button> -->
+            <!-- <button (click)="something()" type="button">a</button> -->
 
             @if (this.registerForm.getError('error', 'username')) {
             <span class="col-sm-12">{{this.registerForm.getError('error', 'username')}}</span>
             }
-
-            @if (this.registerForm.getError('isUnique', 'username') === false) {
+            @else if (this.registerForm.getError('isUnique', 'username') === false) {
             <span class="col-sm-12">Username already exists.</span>
             }
-            @else if (registerForm.get('username')?.errors &&
+            @else if ((registerForm.getError('minlength', 'username') ||
+            registerForm.getError('maxlength', 'username') ||
+            registerForm.getError('required', 'username')) &&
             (registerForm.get('username')?.touched ||
             registerForm.get('username')?.dirty)) {
             <span class="col-sm-12">Username is required and must be between 4 and 16 characters.</span>
@@ -37,14 +38,15 @@
                 ? 'form-control-error' 
                 : 'form-control'" />
 
-            @if (this.registerForm.getError('error', 'email') !== "") {
+            @if (this.registerForm.getError('error', 'email')) {
             <span class="col-sm-12">{{this.registerForm.getError('error', 'email')}}</span>
             }
-
-            @if (this.registerForm.getError('isUnique', 'email') === false) {
+            @else if (this.registerForm.getError('isUnique', 'email') === false) {
             <span class="col-sm-12">E-mail already exists.</span>
             }
-            @else if (registerForm.get('email')?.errors &&
+            @else if ((registerForm.getError('minlength', 'email') ||
+            registerForm.getError('maxlength', 'email') ||
+            registerForm.getError('required', 'email')) &&
             (registerForm.get('email')?.touched ||
             registerForm.get('email')?.dirty)) {
             <span class="col-sm-12">E-mail is required and must be between 6 and 50 characters.</span>

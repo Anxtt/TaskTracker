@@ -4,12 +4,13 @@ import { RouterLink } from '@angular/router';
 
 import { Observable } from 'rxjs';
 
+import { DxTileViewModule } from 'devextreme-angular';
+
 import { TaskComponent } from '../task/task.component';
 
 import { AuthService } from '../../services/auth.service';
 import { TaskService } from '../../services/task.service';
 import { MessageService } from '../../services/message.service';
-import { UserActivityService } from '../../services/user-activity.service';
 
 import { IdentityResponseModel } from '../../models/IdentityResponseModel';
 import { TaskResponseModel } from '../../models/TaskResponseModel';
@@ -17,7 +18,7 @@ import { TaskResponseModel } from '../../models/TaskResponseModel';
 @Component({
     selector: 'app-task-list',
     standalone: true,
-    imports: [RouterLink, TaskComponent, CommonModule],
+    imports: [RouterLink, TaskComponent, CommonModule, DxTileViewModule],
     templateUrl: './task-list.component.html',
     styleUrls: ['./task-list.component.css', '../../styles/buttons.css', '../../styles/filters.css', '../../styles/form.css']
 })
@@ -25,7 +26,7 @@ export class TaskListComponent implements OnInit {
     isAuth$: Observable<IdentityResponseModel>;
     tasks: TaskResponseModel[];
 
-    isActive$: boolean;
+    noContent: boolean = false;
 
     isCompleted: boolean | string;
     dateSort: string;
@@ -34,18 +35,16 @@ export class TaskListComponent implements OnInit {
     constructor(
         private authService: AuthService,
         private taskService: TaskService,
-        private userActivityService: UserActivityService,
         private messageService: MessageService) {
         this.isAuth$ = this.authService.getAuth();
         this.tasks = [];
         this.isCompleted = "";
         this.dateSort = "";
         this.filter = "";
-        this.isActive$ = true;
     }
 
     ngOnInit(): void {
-       this.taskService.all()
+        this.taskService.all()
             .subscribe({
                 next: x => {
                     if (x.status === 204) {
@@ -55,6 +54,7 @@ export class TaskListComponent implements OnInit {
                     }
 
                     this.tasks = x.body!;
+                    this.noContent = false;
                 },
                 error: x => {
                     if (x.status === 429) {
@@ -65,19 +65,11 @@ export class TaskListComponent implements OnInit {
                     this.messageService.setErrorMessage(x);
                 }
             });
-
-        // направи това глобално?
-        this.userActivityService.isActive.subscribe(x => this.isActive$ = x);
-    }
-
-    reset() {
-        console.log("Reset idle timer");
-        this.isActive$ = true;
-        this.userActivityService.reset();
     }
 
     onTaskDeleted(id: number) {
         this.tasks = this.tasks.filter(x => x.id !== id);
+        this.messageService.setSuccessMessage({ body: "Task was deleted successfully.", show: true });
     }
 
     onTaskUpdated(task: any) {
@@ -86,6 +78,7 @@ export class TaskListComponent implements OnInit {
                 return x;
             }
 
+            this.messageService.setSuccessMessage({ body: "Task was updated successfully.", show: true });
             return task;
         })
     }
@@ -95,8 +88,15 @@ export class TaskListComponent implements OnInit {
             .allFiltered(isCompleted, this.dateSort, this.filter)
             .subscribe({
                 next: x => {
+                    this.noContent = false;
+                    
                     if (x.status === 204) {
                         this.tasks = [];
+                        
+                        if (this.filter !== "" || this.dateSort !== "" || this.isCompleted !== "") {
+                            this.noContent = true;
+                        }
+
                         this.messageService.setErrorMessage(x);
                         return;
                     }

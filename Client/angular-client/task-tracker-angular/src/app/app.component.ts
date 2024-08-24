@@ -1,21 +1,21 @@
 import { CommonModule } from '@angular/common';
-
 import { Component, OnInit, OnDestroy } from '@angular/core';
-
 import { RouterLink, RouterOutlet } from '@angular/router';
 
-import { DxDataGridModule, DxListModule, DxTemplateModule, DxTileViewModule } from "devextreme-angular";
+import { Subject, takeUntil } from 'rxjs';
+
+import { DxToastModule } from "devextreme-angular";
+import { DxoPositionModule } from 'devextreme-angular/ui/nested';
+import { ToastType } from 'devextreme/ui/toast';
 
 import { FooterComponent } from './components/footer/footer.component';
 import { HeaderComponent } from './components/header/header.component';
 
 import { AuthService } from './services/auth.service';
 import { UserActivityService } from './services/user-activity.service';
+import { MessageService } from './services/message.service';
 
 import { IdentityResponseModel } from './models/IdentityResponseModel';
-import { MessageService } from './services/message.service';
-import { TaskResponseModel } from './models/TaskResponseModel';
-import { Observable, Subject, takeUntil } from 'rxjs';
 
 @Component({
     selector: 'app-root',
@@ -26,70 +26,18 @@ import { Observable, Subject, takeUntil } from 'rxjs';
         FooterComponent,
         HeaderComponent,
         CommonModule,
-        DxTileViewModule,
-        DxListModule,
-        DxDataGridModule,
-        DxTemplateModule
+        DxToastModule,
+        DxoPositionModule
     ],
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.css', 'styles/form.css']
 })
 export class AppComponent implements OnInit, OnDestroy {
-    title = 'no';
     isActive: boolean;
     isAuth: IdentityResponseModel;
     errorMessage: { message: string, show: boolean };
     successMessage: { message: string, show: boolean };
-    tasks: TaskResponseModel[] = [
-        {
-            id: 1,
-            isCompleted: true,
-            createdOn: "a",
-            deadline: "a",
-            name: "a",
-            user: "a",
-        },
-        {
-            id: 2,
-            isCompleted: false,
-            createdOn: "b",
-            deadline: "b",
-            name: "b",
-            user: "b",
-        },
-        {
-            id: 3,
-            isCompleted: true,
-            createdOn: "c",
-            deadline: "c",
-            name: "c",
-            user: "c",
-        },
-        {
-            id: 4,
-            isCompleted: false,
-            createdOn: "d",
-            deadline: "d",
-            name: "d",
-            user: "d",
-        },
-        {
-            id: 5,
-            isCompleted: true,
-            createdOn: "e",
-            deadline: "e",
-            name: "e",
-            user: "e",
-        },
-        {
-            id: 6,
-            isCompleted: false,
-            createdOn: "f",
-            deadline: "f",
-            name: "f",
-            user: "f",
-        }
-    ]
+    messageType: ToastType = 'custom';
     destroyed$: Subject<void> = new Subject();
 
     constructor(
@@ -115,11 +63,15 @@ export class AppComponent implements OnInit, OnDestroy {
         this.messageService.getErrorMessage()
         .pipe(takeUntil(this.destroyed$))
         .subscribe(x => {
+            this.messageType = "error";
             this.errorMessage = x;
             this.showErrorMessage();
         });
 
-        this.messageService.getSuccessMessage().subscribe(x => {
+        this.messageService.getSuccessMessage()        
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe(x => {
+            this.messageType = "success";
             this.successMessage = x;
             this.showSuccessMessage();
         })
