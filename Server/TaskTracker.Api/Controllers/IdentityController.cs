@@ -57,9 +57,7 @@ namespace TaskTracker.Api.Controllers
             bool doesExist = await this.cache
                 .ShortCacheUserName(username, this.identityService);
 
-            return doesExist is false
-                        ? this.Ok(false)
-                        : this.Ok(true);
+            return this.Ok(doesExist);
         }
 
         [HttpGet("{email}")]
@@ -76,9 +74,7 @@ namespace TaskTracker.Api.Controllers
             bool doesExist = await this.cache
                 .ShortCacheEmail(email, this.identityService);
 
-            return doesExist is false
-                    ? this.Ok(false)
-                    : this.Ok(true);
+            return this.Ok(doesExist);
         }
 
         [HttpPost]

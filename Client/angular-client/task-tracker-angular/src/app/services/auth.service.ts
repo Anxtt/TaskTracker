@@ -30,10 +30,7 @@ export class AuthService {
     constructor(private http: HttpClient) { }
 
     login(loginForm: any): Observable<HttpResponse<IdentityResponseModel>> {
-        return this.http.post<IdentityResponseModel>(`${this.apiUrl}Identity/Login`, {
-            "userName": loginForm.value.username,
-            "password": loginForm.value.password
-        },
+        return this.http.post<IdentityResponseModel>(`${this.apiUrl}Identity/Login`, loginForm,
             {
                 observe: 'response',
                 headers: {
@@ -54,12 +51,7 @@ export class AuthService {
     }
 
     register(registerForm: any) {
-        return this.http.post(`${this.apiUrl}Identity/Register`, {
-            "userName": registerForm.value.username,
-            "email": registerForm.value.email,
-            "password": registerForm.value.password,
-            "confirmPassword": registerForm.value.confirmPassword
-        },
+        return this.http.post(`${this.apiUrl}Identity/Register`, registerForm,
             {
                 headers: {
                     Accept: "application/json",

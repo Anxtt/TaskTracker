@@ -111,9 +111,7 @@ namespace TaskTracker.Api.Controllers
             bool doesExist = await this.cache
                 .ShortCacheTaskNameByName(name, userId, this.choreService);
 
-            return doesExist is false
-                    ? this.Ok(false)
-                    : this.Ok(true);
+            return this.Ok(doesExist);
         }
 
         [HttpGet("{id:int}")]
@@ -143,6 +141,12 @@ namespace TaskTracker.Api.Controllers
             if (await this.choreService.DoesExist(id, userId) is false)
             {
                 return this.NotFound("Task with such id was not found");
+            }
+
+            if (DateTime.TryParse(model.Deadline, out DateTime result) is false ||
+                result < DateTime.Now.Date)
+            {
+                return this.BadRequest("Date is invalid");
             }
 
             await this.choreService.Edit(id, model, userId);

@@ -70,7 +70,7 @@ export class RegisterComponent {
 
     protected handleRegister() {
         this.authSerivce
-            .register(this.registerForm)
+            .register(this.registerForm.value)
             .subscribe({
                 next: x => x,
                 error: e => this.messageService.setErrorMessage(e),

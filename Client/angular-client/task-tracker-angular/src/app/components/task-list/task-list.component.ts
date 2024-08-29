@@ -14,6 +14,7 @@ import { MessageService } from '../../services/message.service';
 
 import { IdentityResponseModel } from '../../models/IdentityResponseModel';
 import { TaskResponseModel } from '../../models/TaskResponseModel';
+import { LoadingService } from '../../services/loading.service';
 
 @Component({
     selector: 'app-task-list',
@@ -35,7 +36,8 @@ export class TaskListComponent implements OnInit {
     constructor(
         private authService: AuthService,
         private taskService: TaskService,
-        private messageService: MessageService) {
+        private messageService: MessageService,
+        private loadingService: LoadingService) {
         this.isAuth$ = this.authService.getAuth();
         this.tasks = [];
         this.isCompleted = "";
@@ -44,6 +46,7 @@ export class TaskListComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.loadingService.setLoadingOn();
         this.taskService.all()
             .subscribe({
                 next: x => {
@@ -63,6 +66,9 @@ export class TaskListComponent implements OnInit {
                     }
 
                     this.messageService.setErrorMessage(x);
+                },
+                complete: () =>  {
+                    this.loadingService.setLoadingOff();
                 }
             });
     }

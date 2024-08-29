@@ -1,7 +1,7 @@
 <app-header></app-header>
 
-<dx-toast class="mt-3" [maxWidth]="400" [displayTime]="2000" [visible]="errorMessage.show || successMessage.show" [type]="messageType"
-    [message]="errorMessage.message || successMessage.message">
+<dx-toast class="mt-3" [maxWidth]="400" [displayTime]="2000" [visible]="errorMessage.show || successMessage.show"
+    [type]="messageType" [message]="errorMessage.message || successMessage.message">
     <dxo-position at="top right" offset="-240 110">
     </dxo-position>
 </dx-toast>
@@ -85,6 +85,7 @@
         }
     </dx-tile-view> -->
 
+    <app-loading-indicator></app-loading-indicator>
     <router-outlet></router-outlet>
 </div>
 

@@ -16,6 +16,7 @@ import { UserActivityService } from './services/user-activity.service';
 import { MessageService } from './services/message.service';
 
 import { IdentityResponseModel } from './models/IdentityResponseModel';
+import { LoadingIndicatorComponent } from './components/loading-indicator/loading-indicator.component';
 
 @Component({
     selector: 'app-root',
@@ -25,6 +26,7 @@ import { IdentityResponseModel } from './models/IdentityResponseModel';
         RouterOutlet,
         FooterComponent,
         HeaderComponent,
+        LoadingIndicatorComponent,
         CommonModule,
         DxToastModule,
         DxoPositionModule
@@ -61,20 +63,20 @@ export class AppComponent implements OnInit, OnDestroy {
         this.userActivityService.isActive.subscribe(x => this.isActive = x);
 
         this.messageService.getErrorMessage()
-        .pipe(takeUntil(this.destroyed$))
-        .subscribe(x => {
-            this.messageType = "error";
-            this.errorMessage = x;
-            this.showErrorMessage();
-        });
+            .pipe(takeUntil(this.destroyed$))
+            .subscribe(x => {
+                this.messageType = "error";
+                this.errorMessage = x;
+                this.showErrorMessage();
+            });
 
-        this.messageService.getSuccessMessage()        
-        .pipe(takeUntil(this.destroyed$))
-        .subscribe(x => {
-            this.messageType = "success";
-            this.successMessage = x;
-            this.showSuccessMessage();
-        })
+        this.messageService.getSuccessMessage()
+            .pipe(takeUntil(this.destroyed$))
+            .subscribe(x => {
+                this.messageType = "success";
+                this.successMessage = x;
+                this.showSuccessMessage();
+            })
     }
 
     showErrorMessage() {
