@@ -17,15 +17,12 @@
 
 #deleteButton {
     background: rgb(207, 226, 255);
-    /* border-Color: #a3cfbb; */
-    border-Color: #43d6ee;
-    /* color: #0c0c0d; */
-    color: #43d6ee;
+    border-Color: var(--delete-button-border-color);
+    color: var(--delete-button-color);
 }
 
 #deleteButton:hover {
-    /* background: #0c0c0d; */
-    background: #43d6ee;
+    background: var(--delete-button-hover-background-color);
     border-color: rgb(207, 226, 255);
     color: rgb(207, 226, 255);
 }
@@ -42,32 +39,25 @@
 } */
 
 #editButton {
-    /* background: #0c0c0d; */
-    background: #fff;
-    /* border-Color: #a3cfbb; */
-    border-Color: #43d6ee;
-    /* color: #a3cfbb; */
-    color: #43d6ee;
+    background: var(--edit-button-background);
+    border-Color: var(--edit-button-border-color); 
+    color: var(--edit-button-color); 
 }
 
 #editButton:hover {
-    /* background: #a3cfbb; */
-    background: #43d6ee;
+    background: var(--edit-button-hover-background);
     border-color: rgb(207, 226, 255);
-    /* color: #0c0c0d; */
-    color: #fff;
+    color: var(--edit-button-hover-color); 
 }
 
 #submitButton {
-    /* background: #a3cfbb; */
-    background: #43d6ee;
+    background: var(--submit-button-background);
     border-Color: #fff;
     color: #fff;
 }
 
 #submitButton:hover {
-    /* background: #59a683; */
-    background: #43a7ee;
+    background: var(--submit-button-hover-background);
     border-Color: #cfe2ff;
     color: #cfe2ff;
 }

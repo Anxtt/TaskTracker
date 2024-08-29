@@ -1,0 +1,83 @@
+[data-theme="light"] {
+    --background-color: #fff;
+    --border-color: #43d6ee;
+    --text-color: #43d6ee;
+    --headers-color: #43d6ee;
+    --placeholder-color: #43d6ee;
+    --option-color: #43d6ee;
+
+    --card-border-color:#43d6ee;
+    --card-background-color: #fff;
+    --card-text-color: #43d6ee;
+
+    --delete-button-color: #43d6ee;
+    --delete-button-border-color: #43d6ee;
+    --delete-button-hover-background-color: #43d6ee;
+
+    --edit-button-background: #fff;
+    --edit-button-hover-background: #43d6ee;
+    --edit-button-border-color: #43d6ee;
+    --edit-button-color: #43d6ee;
+    --edit-button-hover-color: #fff;
+
+    --submit-button-background: #43d6ee;
+    --submit-button-hover-background: #43a7ee;
+
+    --selectBox-color: #43d6ee;
+    --selectBox-background-color: linear-gradient(to left, #43d6ee 3em, rgb(207, 226, 255) 3em); 
+    --selectBox-border-color: #43d6ee;
+    --selectBox-option-color: rgb(207, 226, 255);
+
+    --stateButton-color: #43d6ee;
+    --stateButton-hover-color: rgb(207, 226, 255);
+
+    --filterBox-color: #43d6ee;
+    --filterBox-background-color: rgb(207, 226, 255);
+    --filterBox-border-color: #43d6ee;
+
+    --modal-border-color: #43d6ee; 
+    --modal-border-background-color: rgb(207, 226, 255);
+    --modal-invalid-form-border: #285495;
+  }
+  
+  [data-theme="dark"] {
+    --background-color: #0c0c0d;
+    --border-color: #a3cfbb;
+    --text-color: #a3cfbb;
+    --headers-color: #a3cfbb;
+    --placeholder-color: rgb(207, 226, 255);
+    --option-color: #a3cfbb;
+
+    --card-border-color: #a3cfbb;
+    --card-background-color: #0c0c0d;
+    --card-text-color: #cfe2ff;
+
+    --delete-button-color: #0c0c0d;
+    --delete-button-border-color: #a3cfbb;
+    --delete-button-hover-background-color: #0c0c0d;
+
+    --edit-button-background: #0c0c0d;
+    --edit-button-hover-background: #a3cfbb;
+    --edit-button-border-color: #a3cfbb;
+    --edit-button-color: #a3cfbb;
+    --edit-button-hover-color: #0c0c0d;
+
+    --submit-button-background: #a3cfbb;
+    --submit-button-hover-background: #59a683;
+
+    --selectBox-color: rgb(207, 226, 255);
+    --selectBox-background-color: linear-gradient(to left, #a3cfbb 3em, #0c0c0d 3em); 
+    --selectBox-border-color: #a3cfbb;
+    --selectBox-option-color: #0c0c0d;
+
+    --stateButton-color: rgb(207, 226, 255);;
+    --stateButton-hover-color: #a3cfbb;
+
+    --filterBox-color: rgb(207, 226, 255);;
+    --filterBox-background-color: #0c0c0d;
+    --filterBox-border-color: rgb(207, 226, 255);
+
+    --modal-border-color: #a3cfbb;
+    --modal-border-background-color: #0c0c0d;
+    --modal-invalid-form-border: #cfe2ff;
+  }

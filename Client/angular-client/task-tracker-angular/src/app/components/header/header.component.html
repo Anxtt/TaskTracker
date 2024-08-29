@@ -47,27 +47,12 @@
             </li>
         </ul>
         }
-        <!-- @if (isAuth.accessToken !== "") {
-        <ul class="authenticationUl">
-            <li class="authenticationLi">
-                <a (click)="logOut()" style="cursor: pointer;">Logout</a>
-            </li>
 
-            <li class="authenticationLi">
-                <a routerLink="/">{{isAuth.userName}}</a>
-            </li>
-        </ul>
-        }
-        @else {
-        <ul class="authenticationUl">
-            <li class="authenticationLi">
-                <a routerLink="/login">Login</a>
-            </li>
-
-            <li class="authenticationLi">
-                <a routerLink="/register">Register</a>
-            </li>
-        </ul>
-        } -->
+        <div class="d-inline-flex switchTheme">
+            <label>
+                <input type="checkbox" [checked]="isLightTheme" (change)="onThemeSwitchChange()" />
+                Switch theme
+            </label>
+        </div>
     </div>
 </nav>

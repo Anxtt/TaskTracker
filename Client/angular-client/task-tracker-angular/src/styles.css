@@ -1,10 +1,10 @@
+@import "../src/app/themes.css";
+
 html, body, app-root {
-    background-color: #fff;
-    /* background-color: #0c0c0d; */
+    background-color: var(--background-color);
     height: 100%;
     --arrow-icon: url(https://upload.wikimedia.org/wikipedia/commons/9/9d/Caret_down_font_awesome_whitevariation.svg);
-    /* --option-bg: #a3cfbb; */
-    --option-bg: #43d6ee;
+    --option-bg: var(--option-color);
 }
 
 app-root {

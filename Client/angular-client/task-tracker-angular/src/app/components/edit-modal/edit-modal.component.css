@@ -1,0 +1,17 @@
+.displayModal {
+    display: block;
+    background-Color: rgba(0, 0, 0, 0.8);
+}
+
+.modalBorder {
+    border: 0.3rem solid var(--modal-border-color);
+    background-Color: var(--modal-border-background-color);
+}
+
+.modalInvalidForm {
+    border: 3px solid var(--modal-invalid-form-border);
+}
+
+.modalLabel {
+    color: var(--modal-invalid-form-border);
+}

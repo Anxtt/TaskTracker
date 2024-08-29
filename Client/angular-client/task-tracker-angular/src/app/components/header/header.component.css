@@ -1,8 +1,7 @@
 nav {
     text-align: center;
     margin-top: 0.6rem;
-    /* border-bottom: 2px solid #a3cfbb; */
-    border-bottom: 2px solid #43d6ee;
+    border-bottom: 2px solid var(--border-color);
     width: 100%;
 }
 
@@ -17,10 +16,8 @@ nav {
 #dropdown-ul {
     text-decoration: none;
     font-family: 'Lucida Console', 'Courier New', Courier, monospace, Arial, Helvetica, sans-serif;
-    /* background-color: #0c0c0d;
-    border: 2px solid #a3cfbb; */
-    background-color: #fff;
-    border: 2px solid #43d6ee;
+    background-color: var(--background-color);
+    border: 2px solid var(--border-color);
 }
 
 #dropdown-ul.show {
@@ -31,16 +28,13 @@ nav {
 
 #dropdown-ul li:hover {
     text-decoration: none;
-    /* background-color: #0c0c0d; */
-    /* border: 2px solid #cfe2ff; */
-    background-color: #fff;
-    border: 2px solid #43d6ee;
+    background-color: var(--background-color);
+    border: 2px solid var(--border-color);
     transition: .15s;
 }
 
 nav ul li button {
-    /* color: #a3cfbb; */
-    color: #43d6ee;
+    color: var(--text-color);
     text-decoration: none;
     font-family: 'Lucida Console', 'Courier New', Courier, monospace, Arial, Helvetica, sans-serif;
     background-color: transparent;
@@ -48,8 +42,7 @@ nav ul li button {
 }
 
 nav ul li a {
-    /* color: #a3cfbb; */
-    color: #43d6ee;
+    color: var(--text-color);
     text-decoration: none;
     font-family: 'Lucida Console', 'Courier New', Courier, monospace, Arial, Helvetica, sans-serif;
 }
@@ -70,4 +63,11 @@ nav ul li a {
 
 .authenticationUl {
     display: inline;
+}
+
+.switchTheme {
+    color: var(--text-color);
+    position: relative;
+    float: right;
+    right: 1%;
 }

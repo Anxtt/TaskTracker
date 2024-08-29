@@ -1,7 +1,24 @@
 p{
-    /* font-weight: ; */
     font-family: 'Lucida Console', 'Courier New', Courier, monospace, Arial, Helvetica, sans-serif;
     text-align: center;
-    /* color: #a3cfbb; */
-    color: #43d6ee;
+    color: var(--text-color);
+}
+
+.myCard {
+    border: 0.3rem solid var(--card-border-color);
+    background: var(--card-background-color);
+    border-radius: 6px;
+}
+
+.cardHeader {
+    border-bottom: 0.15rem solid var(--card-border-color);
+}
+
+.cardFooter {
+    border-top: 0.15rem solid var(--card-border-color);
+}
+
+.cardStyle {
+    color: var(--card-text-color);
+    font-family: "Lucida Console", "Courier New", Courier, monospace, Arial, Helvetica, sans-serif
 }

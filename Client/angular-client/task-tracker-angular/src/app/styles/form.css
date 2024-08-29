@@ -5,8 +5,7 @@ span, .form-control-error {
 form{
     margin-top: 2rem;
     text-align: center;
-    /* color: #a3cfbb; */
-    color: #43d6ee;
+    color: var(--border-color);
 }
 
 form label{

@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, OnInit,  } from '@angular/core';
+import { Component, OnInit, } from '@angular/core';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 
 import { Observable } from 'rxjs';
@@ -20,6 +20,8 @@ export class HeaderComponent implements OnInit {
     isAuth$: Observable<IdentityResponseModel>;
     // isAuth: IdentityResponseModel;
 
+    isLightTheme: boolean = localStorage.getItem("theme") === "dark" ? false : true;
+
     constructor(private authService: AuthService, private messageService: MessageService, private router: Router) {
         this.isAuth$ = this.authService.getAuth();
         // this.isAuth = this.authService.getCurrentAuth();
@@ -27,13 +29,15 @@ export class HeaderComponent implements OnInit {
 
     ngOnInit(): void {
         // this.something();
-        // this.authService.getAuth().subscribe(x => this.isAuth$ = x);
+        // this.authService.getAuth().subscribe(x => this.isAuth$ = x);    
+        document.body.setAttribute(
+            'data-theme',
+            this.isLightTheme ? 'light' : 'dark'
+        );
     }
 
     // async something() {
-    //     this.authService.getAuth();
     //     const isAuth = await lastValueFrom(this.authService.getAuth());
-
     //     console.log(isAuth);
     // }
 
@@ -43,6 +47,17 @@ export class HeaderComponent implements OnInit {
                 this.authService.setAuth({ accessToken: "", userName: "", refreshToken: "" });
                 this.router.navigateByUrl('/');
                 this.messageService.setSuccessMessage({ body: "Logged out successfully.", show: true });
-        })
+            })
+    }
+
+    onThemeSwitchChange() {
+        this.isLightTheme = !this.isLightTheme;
+
+        localStorage.setItem("theme", this.isLightTheme === true ? "light" : "dark");
+
+        document.body.setAttribute(
+            'data-theme',
+            this.isLightTheme ? 'light' : 'dark'
+        );
     }
 }
