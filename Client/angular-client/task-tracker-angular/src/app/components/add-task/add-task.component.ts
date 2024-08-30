@@ -26,7 +26,7 @@ export class AddTaskComponent {
     ) { }
 
     createForm = new FormGroup({
-        taskName: new FormControl(
+        name: new FormControl(
             null,
             {
                 validators:
@@ -48,7 +48,7 @@ export class AddTaskComponent {
 
     handleCreate() {
         this.taskService
-            .createTask(this.createForm)
+            .createTask(this.createForm.value)
             .subscribe({
                 error: x => {
                     this.messageService.setErrorMessage(x);

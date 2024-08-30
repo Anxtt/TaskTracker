@@ -29,24 +29,6 @@ export class TaskService {
                 },
                 withCredentials: true
             })
-        // .subscribe({
-        //     next: x => {
-        //         if (x.ok === true) {
-        //             x.body?.forEach(t => {
-        //                 tasks.push(t);
-        //             })
-
-        //             tasks = x.body!;
-        //         }
-        //     },
-        // направи таймер 
-        //     error: x => {
-        //         console.log(x);
-        //         if (x.status === 401) {
-        //             this.authService.refreshToken().subscribe();
-        //         }
-        //     }
-        // });
     }
 
     allFiltered(isCompletedStatus: boolean | string, sortStatus: string, filterStatus: string) {
@@ -64,10 +46,7 @@ export class TaskService {
     }
 
     createTask(createForm: any) {
-        return this.http.post(`${this.apiUrl}Chore/Create`, {
-            name: createForm.value.taskName,
-            deadline: createForm.value.deadline
-        }, {
+        return this.http.post(`${this.apiUrl}Chore/Create`, createForm, {
             headers: {
                 Accept: "application/json",
                 "Content-Type": "application/json"
@@ -103,13 +82,12 @@ export class TaskService {
                 return null;
             }),
             catchError(x => {
-                if (x.status === 429) {
-                    this.messageService.setErrorMessage(x);
-                    return of({ slowDown: "Too many requests. You have exceeded your quota of 5 requests per 10 minutes." });
-                }
-
                 this.messageService.setErrorMessage(x);
-
+                
+                if (x.status === 429) {
+                    return of({ error: "Too many requests. You have exceeded your quota of 5 requests per 10 minutes." });
+                }
+                
                 return of();
             }),
         );
@@ -119,12 +97,8 @@ export class TaskService {
         // );
     }
 
-    editTask(id: number, name: string, deadline: string, isCompleted: boolean) {
-        return this.http.put(`${this.apiUrl}Chore/Edit/${id}`, {
-            name: name,
-            deadline: deadline,
-            isCompleted: isCompleted
-        }, {
+    editTask(editForm: any) {
+        return this.http.put(`${this.apiUrl}Chore/Edit/${editForm.id}`, editForm, {
             headers: {
                 Accept: "application/json",
                 "Content-Type": "application/json"

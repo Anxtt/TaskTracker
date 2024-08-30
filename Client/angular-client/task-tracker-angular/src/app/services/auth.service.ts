@@ -1,12 +1,14 @@
-import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { ValidationErrors } from '@angular/forms';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 
 import { BehaviorSubject, Observable, catchError, map, of } from 'rxjs';
+
+import { MessageService } from './message.service';
 
 import { IdentityResponseModel } from '../models/IdentityResponseModel';
 
 import { environment } from '../environments/environment';
-import { ValidationErrors } from '@angular/forms';
 
 @Injectable({
     providedIn: 'root'
@@ -27,7 +29,7 @@ export class AuthService {
         this.checkAuth$.next(state);
     }
 
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient, private messageService: MessageService) { }
 
     login(loginForm: any): Observable<HttpResponse<IdentityResponseModel>> {
         return this.http.post<IdentityResponseModel>(`${this.apiUrl}Identity/Login`, loginForm,
@@ -78,15 +80,16 @@ export class AuthService {
 
                 return null;
             }),
-            catchError(x => 
-                {
-                    if (x.status === 429) {
-                        return of({ error: "Too many requests. You have exceeded your quota of 5 requests per 10 minutes." })
-                    }
+            catchError(x => {
+                this.messageService.setErrorMessage(x);
 
-                    return of({ error: x.error });
-                })
-            );
+                if (x.status === 429) {
+                    return of({ error: "Too many requests. You have exceeded your quota of 5 requests per 10 minutes." })
+                }
+
+                return of({ error: x.error });
+            })
+        );
         // .pipe(
         //     map(() => null),
         //     catchError(() => of({ isUnique: false })),
@@ -109,14 +112,15 @@ export class AuthService {
 
                 return null;
             }),
-            catchError((x => 
-                {
-                    if (x.status === 429) {
-                        return of({ error: "Too many requests. You have exceeded your quota of 8 requests per 10 minutes." })
-                    }
+            catchError((x => {
+                this.messageService.setErrorMessage(x);
 
-                    return of({ error: x.error });
-                }))
+                if (x.status === 429) {
+                    return of({ error: "Too many requests. You have exceeded your quota of 8 requests per 10 minutes." })
+                }
+
+                return of({ error: x.error });
+            }))
         );
     }
 

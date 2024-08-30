@@ -4,23 +4,24 @@
             <label class="form-label">
                 Task Name:
             </label>
-            <input type="text" name="taskName" id="taskName" formControlName="taskName" placeholder="Your task..."
-                [ngClass]="createForm.get('taskName')?.errors &&
-            (createForm.get('taskName')?.touched ||
-            createForm.get('taskName')?.dirty) 
+            <input type="text" name="name" id="name" formControlName="name" placeholder="Your task..." [ngClass]="createForm.get('name')?.errors &&
+            (createForm.get('name')?.touched ||
+            createForm.get('name')?.dirty) 
                 ? 'form-control-error' 
                 : 'form-control'" />
 
             <!-- <button (click)="something()" type="button">a</button> -->
-
-            @if (this.createForm.getError('isUnique', 'taskName') === false) {
+            @if (this.createForm.getError('error', 'name')) {
+            <span class="col-sm-12">{{this.createForm.getError('error', 'name')}}</span>
+            }
+            @else if (this.createForm.getError('isUnique', 'name') === false) {
             <span class="col-sm-12">Task Name already exists.</span>
             }
-            @else if ((createForm.getError('minlength', 'taskName') ||
-            createForm.getError('maxlength', 'taskName') ||
-            createForm.getError('required', 'taskName')) &&
-            (createForm.get('taskName')?.touched ||
-            createForm.get('taskName')?.dirty)) {
+            @else if ((createForm.getError('minlength', 'name') ||
+            createForm.getError('maxlength', 'name') ||
+            createForm.getError('required', 'name')) &&
+            (createForm.get('name')?.touched ||
+            createForm.get('name')?.dirty)) {
             <span class="col-sm-12">Task Name is required and must be between 4 and 16 characters.</span>
             }
         </div>

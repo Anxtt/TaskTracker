@@ -143,7 +143,7 @@ namespace TaskTracker.Api.Controllers
                 return this.NotFound("Task with such id was not found");
             }
 
-            if (model.Deadline < DateTime.Now.Date)
+            if (model.Deadline.Date < DateTime.Now.Date)
             {
                return this.BadRequest("Date is invalid");
             }
