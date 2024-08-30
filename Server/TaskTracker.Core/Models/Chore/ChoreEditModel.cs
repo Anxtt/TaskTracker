@@ -9,7 +9,7 @@ namespace TaskTracker.Core.Models.Chore
         public string Name { get; set; }
 
         [Required]
-        public string Deadline { get; set; }
+        public DateTime Deadline { get; set; }
 
         public bool IsCompleted { get; set; }
     }

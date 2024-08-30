@@ -32,8 +32,8 @@ namespace TaskTracker.Core.Services
                     {
                         Id = x.Id,
                         Name = x.Name,
-                        CreatedOn = x.CreatedOn.Date.ToString("d-MM-yyyy"),
-                        Deadline = x.Deadline.Date.ToString("d-MM-yyyy"),
+                        CreatedOn = x.CreatedOn.Date,
+                        Deadline = x.Deadline.Date,
                         IsCompleted = x.IsCompleted,
                         User = x.User.UserName
                     })
@@ -54,7 +54,7 @@ namespace TaskTracker.Core.Services
             Chore chore = new Chore()
             {
                 Name = model.Name,
-                Deadline = DateTime.Parse(model.Deadline, null),
+                Deadline = model.Deadline,
                 UserId = userId
             };
 
@@ -95,8 +95,8 @@ namespace TaskTracker.Core.Services
                     {
                         Id = x.Id,
                         Name = x.Name,
-                        CreatedOn = x.CreatedOn.Date.ToString("d-MM-yyyy"),
-                        Deadline = x.Deadline.Date.ToString("d-MM-yyyy"),
+                        CreatedOn = x.CreatedOn.Date,
+                        Deadline = x.Deadline.Date,
                         IsCompleted = x.IsCompleted,
                         User = x.User.UserName
                     })
@@ -141,7 +141,7 @@ namespace TaskTracker.Core.Services
             Chore chore = await GetChoreByUser(id, userId);
 
             chore.Name = model.Name;
-            chore.Deadline = DateTime.Parse(model.Deadline);
+            chore.Deadline = model.Deadline;
             chore.IsCompleted = model.IsCompleted;
 
             await this.db.SaveChangesAsync();

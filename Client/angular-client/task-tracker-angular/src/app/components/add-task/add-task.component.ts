@@ -17,11 +17,13 @@ import { MessageService } from '../../services/message.service';
 })
 export class AddTaskComponent {
     taskNameExistValidator: TaskNameExistValidator = inject(TaskNameExistValidator);
-    currentDate: string;
+    currentDate: string = new Date().toISOString().slice(0, 10);;
 
-    constructor(private taskService: TaskService, private messageService: MessageService, private router: Router) {
-        this.currentDate = new Date().toISOString().slice(0, 10);
-    }
+    constructor(
+        private taskService: TaskService,
+        private messageService: MessageService,
+        private router: Router
+    ) { }
 
     createForm = new FormGroup({
         taskName: new FormControl(

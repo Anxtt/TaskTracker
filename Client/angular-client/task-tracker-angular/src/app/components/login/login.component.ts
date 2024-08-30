@@ -46,7 +46,11 @@ export class LoginComponent {
                     this.auth = x.body!
                     this.authService.setAuth(x.body!);
                 },
-                error: e => this.messageService.setErrorMessage(e),
+                error: e => 
+                {
+                    this.loadingService.setLoadingOff();
+                    this.messageService.setErrorMessage(e)
+                },
                 complete: () => {
                     this.loadingService.setLoadingOff();
                     this.router.navigateByUrl('/tasks')

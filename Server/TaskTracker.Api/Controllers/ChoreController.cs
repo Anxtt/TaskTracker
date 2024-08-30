@@ -143,10 +143,9 @@ namespace TaskTracker.Api.Controllers
                 return this.NotFound("Task with such id was not found");
             }
 
-            if (DateTime.TryParse(model.Deadline, out DateTime result) is false ||
-                result < DateTime.Now.Date)
+            if (model.Deadline < DateTime.Now.Date)
             {
-                return this.BadRequest("Date is invalid");
+               return this.BadRequest("Date is invalid");
             }
 
             await this.choreService.Edit(id, model, userId);

@@ -6,9 +6,9 @@
 
         public string Name { get; set; }
 
-        public string CreatedOn { get; set; }
+        public DateTime CreatedOn { get; set; }
 
-        public string Deadline { get; set; }
+        public DateTime Deadline { get; set; }
 
         public bool IsCompleted { get; set; }
 
