@@ -40,7 +40,7 @@
                     <span class="col-sm-12">Task Name is required and must be between 4 and 16 characters.</span>
                     }
                 </div>
-                <label class="pb-2 modalLabel">Current name: {{currentTaskName}}</label>
+                <label class="pb-2 modalLabel">Current name: {{name}}</label>
 
                 <div class="mx-auto col-sm-6 pb-2">
                     <label class="form-label">
@@ -60,7 +60,7 @@
                     <span class="col-sm-12">Deadline is required.</span>
                     }
                 </div>
-                <label class="pb-2 modalLabel">Current Deadline: {{currentDeadline}}</label>
+                <label class="pb-2 modalLabel">Current Deadline: {{ deadline | date: 'd MMMM yyyy' }}</label>
 
                 <div class="mt-3 mb-2 col-md-12">
                     <button id="submitButton" name="edit" class="btn mx-auto" type="submit"

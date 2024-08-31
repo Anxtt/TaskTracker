@@ -1,0 +1,25 @@
+<dx-popup [width]="600" [height]="420" [showTitle]="true" title="Edit Task" [dragEnabled]="false"
+    [hideOnOutsideClick]="true" (onHiding)="setShowModal(false)" [showCloseButton]="true" container=".dx-viewport"
+    [visible]="showModal">
+    <div>
+        <form (submit)="editTask($event)">
+            <dx-form id="editForm" [formData]="editForm" width="300" [showColonAfterLabel]="true" labelLocation="top"
+                labelMode="floating" [showValidationSummary]="true">
+                <dxi-item dataField="name" [editorOptions]="{ value: this.editForm?.name! }">
+                    <dxi-validation-rule type="stringLength" min="4" max="16"
+                        message="Task Name must be between 4 and 16 characters.">
+                    </dxi-validation-rule>
+                    <dxi-validation-rule type="async" [message]="taskNameErrorMessage"
+                        [validationCallback]="taskNameCheck" [ignoreEmptyValue]="true">
+                    </dxi-validation-rule>
+                    <dxi-validation-rule type="required"></dxi-validation-rule>
+                </dxi-item>
+                <dxi-item dataField="deadline" editorType="dxDateBox" [isRequired]="true"
+                    [editorOptions]="{ min: currentDate, value: this.editForm?.deadline! }">
+                </dxi-item>
+                <dxi-item itemType="button" [buttonOptions]="buttonOptions">
+                </dxi-item>
+            </dx-form>
+        </form>
+    </div>
+</dx-popup>

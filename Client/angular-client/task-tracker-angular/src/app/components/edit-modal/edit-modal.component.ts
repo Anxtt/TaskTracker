@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
@@ -18,22 +18,29 @@ import { TaskResponseModel } from '../../models/TaskResponseModel';
     styleUrls: ['./edit-modal.component.css', '../../styles/buttons.css', '../../styles/form.css']
 })
 export class EditModalComponent {
-    @Input() taskId: number;
-    @Input() isCompleted: boolean;
-    @Input() createdOn: string;
-    @Input() currentTaskName: string;
-    @Input() currentDeadline: string;
-    currentDate: string;
+    @Input() taskId: number = 0;
+    @Input() isCompleted: boolean = false;
+    @Input() createdOn: Date = new Date();
+    @Input() name: string;
+    @Input() deadline: Date = new Date();
+    currentDate: string = new Date().toISOString().slice(0, 10);
 
-    @Output() shouldShow = new EventEmitter<boolean>();
+    @Output() setShowModalEvent = new EventEmitter<boolean>();
     @Output() taskUpdated = new EventEmitter<TaskResponseModel>();
 
     invalidForm: string;
     
     taskNameExistValidator: TaskNameExistValidator = inject(TaskNameExistValidator);
 
+    constructor(private taskService: TaskService) {
+        this.invalidForm = "";
+        this.name = "";
+    }
+
     editForm = new FormGroup({
-        taskName: new FormControl(
+        id: new FormControl(this.taskId),
+        isCompleted: new FormControl(this.isCompleted),
+        name: new FormControl(
             null,
             {
                 validators:
@@ -48,29 +55,16 @@ export class EditModalComponent {
         deadline: new FormControl(null, [Validators.required])
     })
 
-    constructor(private taskService: TaskService) {
-        this.currentDate = new Date().toISOString().slice(0, 10);
-        this.invalidForm = "";
-        this.currentDeadline = "";
-        this.currentTaskName = "";
-        this.createdOn = ""
-        this.isCompleted = false;
-        this.taskId = 0;
-    }
-
-    closeModal() {
-        this.shouldShow.emit(false);
-    }
-
     editTask() {
+        this.editForm.controls.id.setValue(this.taskId);
+
         this.taskService
-            .editTask(this.taskId, this.editForm.value.taskName!, this.editForm.value.deadline!, this.isCompleted)
+            .editTask(this.editForm.value)
             .subscribe({
                 next: () => {
-                    this.shouldShow.emit(false);
                     this.taskUpdated.emit({
                         id: this.taskId,
-                        name: this.editForm.value.taskName!,
+                        name: this.editForm.value.name!,
                         deadline: this.editForm.value.deadline!,
                         isCompleted: this.isCompleted,
                         createdOn: this.createdOn,
@@ -79,5 +73,9 @@ export class EditModalComponent {
                 },
                 error: x => this.invalidForm = x.error
             });
+    }
+
+    closeModal() {
+        this.setShowModalEvent.emit(false);
     }
 }

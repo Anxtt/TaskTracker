@@ -25,14 +25,27 @@
         </div>
     </div>
 
+    @if (showModal === true) {
+    <app-dx-edit-modal (setShowModalEvent)="setShowModal($event)" (taskUpdated)="onTaskUpdated($event)"
+        [showModal]="showModal" [task]="taskToEdit">
+    </app-dx-edit-modal>
+
+    <!-- <app-edit-modal (setShowModalEvent)="setShowModal($event)" (taskUpdated)="onTaskUpdated($event)"
+        [taskId]="taskToEdit.id" [name]="taskToEdit.name" [isCompleted]="taskToEdit.isCompleted"
+        [deadline]="taskToEdit.deadline" [createdOn]="taskToEdit.createdOn">
+    </app-edit-modal> -->
+    }
+
     @if (tasks.length > 0) {
     <dx-tile-view [activeStateEnabled]="false" direction="vertical" class="offset-lg-1 offset-md-3 offset-sm-2"
         [height]="680" [baseItemHeight]="190" [baseItemWidth]="340" [itemMargin]="10">
         @for(task of tasks; track task.id) {
         <dxi-item>
-            <app-task (taskDeleted)="onTaskDeleted($event)" (taskUpdated)="onTaskUpdated($event)" [taskId]="task.id"
+            <app-task (setShowModal)="setShowModal($event)" (sendTaskData)="getTaskToEdit($event)"
+                (taskDeleted)="onTaskDeleted($event)" (taskUpdated)="onTaskUpdated($event)" [taskId]="task.id"
                 [name]="task.name" [isCompleted]="task.isCompleted" [deadline]="task.deadline"
-                [createdOn]="task.createdOn" />  <!--style="flex-grow: 1; flex-shrink: 1; flex-basis: 30%;"-->
+                [createdOn]="task.createdOn" />
+            <!--style="flex-grow: 1; flex-shrink: 1; flex-basis: 30%;"-->
         </dxi-item>
         }
     </dx-tile-view>

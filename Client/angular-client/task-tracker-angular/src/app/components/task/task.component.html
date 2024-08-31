@@ -1,16 +1,35 @@
-<style>
-    .cardStyle {
-        /* color: #cfe2ff; */
-        color: #43d6ee;
-        font-family: "Lucida Console", "Courier New", Courier, monospace, Arial, Helvetica, sans-serif
-    }
-</style>
-
-<div class="card me-3 mb-3 col-md-8 col-lg-12 cardStyle" style="border: 0.3rem solid #43d6ee; background: #fff">
-    <!-- <div class="card me-3 mb-3 col-md-8 col-lg-12 cardStyle" style="border: 0.3rem solid #a3cfbb; background: #0c0c0d"> -->
+<div class="myCard cardStyle col-sm-12">
     <div>
-        <div style="border-bottom: 0.15rem solid #43d6ee">
-            <!-- <div style="border-bottom: 0.15rem solid #a3cfbb"> -->
+        <div class="text-center cardHeader">
+            <p class="col-10 d-inline-flex mx-auto mt-auto cardStyle">{{name}}</p>
+            <span class="d-inline-flex col-1 mx-auto mt-auto" style="cursor: pointer; font-size: 24px"
+                (click)="updateIsComplete()">
+                &#x2705;
+            </span>
+        </div>
+
+        <div class="cardStyle text-center">
+            <p class="card-text cardStyle">Created on: {{createdOn | date: 'd MMMM yyyy' }}</p>
+            <p class="card-text cardStyle">Deadline: {{deadline | date: 'd MMMM yyyy' }}</p>
+            <p class="card-text cardStyle">State: {{isCompleted === true ? 'Complete' : 'Incomplete' }}</p>
+        </div>
+
+        <div class="cardStyle text-center cardFooter">
+            <button class="btn btn-warning mt-1 mb-1 me-4 mx-auto d-inline-flex" id="editButton"
+                (click)="showModal(true)">
+                Edit
+            </button>
+
+            <button class="btn btn-danger mt-1 mb-1 mx-auto d-inline-flex" id="deleteButton" (click)="deleteTask()">
+                Delete
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- <div class="card myCard me-3 mb-3 col-md-8 col-lg-12 cardStyle">
+    <div>
+        <div class="cardHeader">
             <p class="text-center col-9 mt-auto mx-auto d-inline-flex cardStyle">{{name}}</p>
             <span class="col-1 d-inline-flex mx-auto mt-auto"
                 style="cursor: pointer; font-size: 24px"
@@ -25,8 +44,7 @@
             <p class="card-text cardStyle">State: {{isCompleted === true ? 'Complete' : 'Incomplete' }}</p>
         </div>
 
-        <!-- <div class="cardStyle" style="border-top: 0.15rem solid #a3cfbb"> -->
-            <div class="cardStyle" style="border-top: 0.15rem solid #43d6ee">
+        <div class="cardStyle cardFooter">
             <button class="btn btn-warning mt-1 mb-1 me-4 mx-auto d-inline-flex"
                 id="editButton"
                 (click)="setShouldShow(true)">
@@ -47,4 +65,4 @@
             </button>
         </div>
     </div>
-</div>
+</div> -->

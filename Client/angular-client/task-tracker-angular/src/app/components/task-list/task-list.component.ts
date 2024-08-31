@@ -7,19 +7,21 @@ import { Observable } from 'rxjs';
 import { DxTileViewModule } from 'devextreme-angular';
 
 import { TaskComponent } from '../task/task.component';
+import { DxEditModalComponent } from '../dx-edit-modal/dx-edit-modal.component';
+import { EditModalComponent } from '../edit-modal/edit-modal.component';
 
 import { AuthService } from '../../services/auth.service';
 import { TaskService } from '../../services/task.service';
 import { MessageService } from '../../services/message.service';
+import { LoadingService } from '../../services/loading.service';
 
 import { IdentityResponseModel } from '../../models/IdentityResponseModel';
 import { TaskResponseModel } from '../../models/TaskResponseModel';
-import { LoadingService } from '../../services/loading.service';
 
 @Component({
     selector: 'app-task-list',
     standalone: true,
-    imports: [RouterLink, TaskComponent, CommonModule, DxTileViewModule],
+    imports: [RouterLink, TaskComponent, DxEditModalComponent, EditModalComponent, CommonModule, DxTileViewModule],
     templateUrl: './task-list.component.html',
     styleUrls: ['./task-list.component.css', '../../styles/buttons.css', '../../styles/filters.css', '../../styles/form.css']
 })
@@ -27,8 +29,10 @@ export class TaskListComponent implements OnInit {
     isAuth$: Observable<IdentityResponseModel>;
     tasks: TaskResponseModel[];
 
-    noContent: boolean = false;
+    showModal: boolean = false;
+    taskToEdit: any;
 
+    noContent: boolean = false;
     isCompleted: boolean | string;
     dateSort: string;
     filter: string;
@@ -67,7 +71,7 @@ export class TaskListComponent implements OnInit {
 
                     this.messageService.setErrorMessage(x);
                 },
-                complete: () =>  {
+                complete: () => {
                     this.loadingService.setLoadingOff();
                 }
             });
@@ -87,6 +91,8 @@ export class TaskListComponent implements OnInit {
             this.messageService.setSuccessMessage({ body: "Task was updated successfully.", show: true });
             return task;
         })
+
+        this.setShowModal(false);
     }
 
     handleFiltering(isCompleted: boolean | string) {
@@ -95,10 +101,10 @@ export class TaskListComponent implements OnInit {
             .subscribe({
                 next: x => {
                     this.noContent = false;
-                    
+
                     if (x.status === 204) {
                         this.tasks = [];
-                        
+
                         if (this.filter !== "" || this.dateSort !== "" || this.isCompleted !== "") {
                             this.noContent = true;
                         }
@@ -140,5 +146,13 @@ export class TaskListComponent implements OnInit {
         else {
             this.filter = target.value;
         }
+    }
+
+    getTaskToEdit(e: any) {
+        this.taskToEdit = { ...(this.tasks.find(x => x.id === e)) };
+    }
+
+    setShowModal(state: any) {
+        this.showModal = state;
     }
 }
