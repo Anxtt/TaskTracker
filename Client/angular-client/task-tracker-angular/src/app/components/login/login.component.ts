@@ -49,12 +49,12 @@ export class LoginComponent {
                 error: e => 
                 {
                     this.loadingService.setLoadingOff();
-                    this.messageService.setErrorMessage(e)
+                    this.messageService.setMessage(e)
                 },
                 complete: () => {
                     this.loadingService.setLoadingOff();
                     this.router.navigateByUrl('/tasks')
-                    this.messageService.setSuccessMessage({ body: "Login was successful.", show: true });
+                    this.messageService.setMessage({ body: "Login was successful." });
                 }
             });
     }

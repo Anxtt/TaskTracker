@@ -27,7 +27,7 @@ export class AuthGuard implements CanActivate {
         return this.authService.verifyUser()
             .pipe(
                 catchError(x => {
-                    this.messageService.setErrorMessage(x);
+                    this.messageService.setMessage(x);
                     return of({ userName: "", accessToken: "", refreshToken: "" })
                 }),
                 switchMap(x => {

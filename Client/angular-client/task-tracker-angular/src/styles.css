@@ -1,6 +1,8 @@
 @import "../src/app/themes.css";
 
-html, body, app-root {
+html,
+body,
+app-root {
     background-color: var(--background-color);
     height: 100%;
     --arrow-icon: url(https://upload.wikimedia.org/wikipedia/commons/9/9d/Caret_down_font_awesome_whitevariation.svg);
@@ -10,4 +12,6 @@ html, body, app-root {
 app-root {
     display: flex;
     flex-direction: column;
+    min-height: 100%;
+    overflow-y: auto;
 }

@@ -84,7 +84,7 @@ export class UserActivityService {
                     complete: () => this.router.navigateByUrl("/login")
                 });
 
-                this.messageService.setSuccessMessage({ body: "You have been logged out due to inactivity.", show: true });
+                this.messageService.setMessage({ body: "You have been logged out due to inactivity.", show: true });
             }
         }, 1000)
     }

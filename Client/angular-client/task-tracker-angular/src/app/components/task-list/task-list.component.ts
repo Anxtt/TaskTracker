@@ -56,7 +56,7 @@ export class TaskListComponent implements OnInit {
                 next: x => {
                     if (x.status === 204) {
                         this.tasks = [];
-                        this.messageService.setErrorMessage(x);
+                        this.messageService.setMessage(x);
                         return;
                     }
 
@@ -65,11 +65,11 @@ export class TaskListComponent implements OnInit {
                 },
                 error: x => {
                     if (x.status === 429) {
-                        this.messageService.setErrorMessage(x);
+                        this.messageService.setMessage(x);
                         return;
                     }
 
-                    this.messageService.setErrorMessage(x);
+                    this.messageService.setMessage(x);
                 },
                 complete: () => {
                     this.loadingService.setLoadingOff();
@@ -79,7 +79,7 @@ export class TaskListComponent implements OnInit {
 
     onTaskDeleted(id: number) {
         this.tasks = this.tasks.filter(x => x.id !== id);
-        this.messageService.setSuccessMessage({ body: "Task was deleted successfully.", show: true });
+        this.messageService.setMessage({ body: "Task was deleted successfully." });
     }
 
     onTaskUpdated(task: any) {
@@ -88,7 +88,7 @@ export class TaskListComponent implements OnInit {
                 return x;
             }
 
-            this.messageService.setSuccessMessage({ body: "Task was updated successfully.", show: true });
+            this.messageService.setMessage({ body: "Task was updated successfully.", show: true });
             return task;
         })
 
@@ -109,7 +109,7 @@ export class TaskListComponent implements OnInit {
                             this.noContent = true;
                         }
 
-                        this.messageService.setErrorMessage(x);
+                        this.messageService.setMessage(x);
                         return;
                     }
 
@@ -117,11 +117,11 @@ export class TaskListComponent implements OnInit {
                 },
                 error: x => {
                     if (x.status === 429) {
-                        this.messageService.setErrorMessage(x);
+                        this.messageService.setMessage(x);
                         return;
                     }
 
-                    this.messageService.setErrorMessage(x);
+                    this.messageService.setMessage(x);
                 }
             });
     }

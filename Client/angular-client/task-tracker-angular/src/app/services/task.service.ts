@@ -82,7 +82,7 @@ export class TaskService {
                 return null;
             }),
             catchError(x => {
-                this.messageService.setErrorMessage(x);
+                this.messageService.setMessage(x);
                 
                 if (x.status === 429) {
                     return of({ error: "Too many requests. You have exceeded your quota of 5 requests per 10 minutes." });

@@ -7,6 +7,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { DxToastModule } from "devextreme-angular";
 import { DxoPositionModule } from 'devextreme-angular/ui/nested';
 import { ToastType } from 'devextreme/ui/toast';
+import notify from 'devextreme/ui/notify';
 
 import { FooterComponent } from './components/footer/footer.component';
 import { HeaderComponent } from './components/header/header.component';
@@ -37,9 +38,7 @@ import { LoadingIndicatorComponent } from './components/loading-indicator/loadin
 export class AppComponent implements OnInit, OnDestroy {
     isActive: boolean;
     isAuth: IdentityResponseModel;
-    errorMessage: { message: string, show: boolean };
-    successMessage: { message: string, show: boolean };
-    messageType: ToastType = 'custom';
+    message: { message: string, show: boolean, type: ToastType };
     destroyed$: Subject<void> = new Subject();
 
     constructor(
@@ -48,8 +47,7 @@ export class AppComponent implements OnInit, OnDestroy {
         private messageService: MessageService) {
         this.isActive = true;
         this.isAuth = { accessToken: "", userName: "", refreshToken: "" };
-        this.errorMessage = { message: "", show: false };
-        this.successMessage = { message: "", show: false };
+        this.message = { message: "", show: false, type: "custom" };
     }
 
     ngOnDestroy(): void {
@@ -58,39 +56,39 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.authService.getAuth().subscribe(x => this.isAuth = x);
+        this.authService.getAuth()
+            .pipe(takeUntil(this.destroyed$))
+            .subscribe(x => this.isAuth = x);
 
-        this.userActivityService.isActive.subscribe(x => this.isActive = x);
+        this.userActivityService.isActive
+            .pipe(takeUntil(this.destroyed$))
+            .subscribe(x => this.isActive = x);
 
-        this.messageService.getErrorMessage()
+        this.messageService.getMessage()
             .pipe(takeUntil(this.destroyed$))
             .subscribe(x => {
-                this.messageType = "error";
-                this.errorMessage = x;
-                this.showErrorMessage();
+                this.message = x;
+                console.log(x);
+                notify({
+                    maxWidth: 400,
+                    displayTime: 2000,
+                    visible: this.message.show,
+                    type: this.message.type,
+                    message: this.message.message,
+                    show: {
+                        type: 'fade', duration: 400, from: 0, to: 1
+                    },
+                    hide: {
+                        type: 'fade', duration: 40, to: 0
+                    },
+                }, {
+                    direction: 'down-push',
+                    position: {
+                        top: 78,
+                        right: 10
+                    }
+                })
             });
-
-        this.messageService.getSuccessMessage()
-            .pipe(takeUntil(this.destroyed$))
-            .subscribe(x => {
-                this.messageType = "success";
-                this.successMessage = x;
-                this.showSuccessMessage();
-            })
-    }
-
-    showErrorMessage() {
-        setTimeout(() => {
-            this.messageService.setErrorMessage({ message: "", show: false });
-            this.errorMessage = { message: "", show: false };
-        }, 8000);
-    }
-
-    showSuccessMessage() {
-        setTimeout(() => {
-            this.messageService.setSuccessMessage({ message: "", show: false });
-            this.successMessage = { message: "", show: false };
-        }, 8000);
     }
 
     reset() {

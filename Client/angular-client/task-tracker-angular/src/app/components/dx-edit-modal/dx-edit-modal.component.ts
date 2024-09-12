@@ -43,7 +43,7 @@ export class DxEditModalComponent implements OnInit {
                 next: () => {
                     this.taskUpdated.emit(this.editForm)
                 },
-                error: x => this.messageService.setErrorMessage(x)
+                error: x => this.messageService.setMessage(x)
             });
     }
 
@@ -56,7 +56,7 @@ export class DxEditModalComponent implements OnInit {
             this.taskService.doesExistByName(value)
                 .subscribe((x: any) => {
                     if (x?.slowDown) {
-                        this.messageService.setErrorMessage(x);
+                        this.messageService.setMessage(x);
                         this.taskNameErrorMessage = "You have exceeded the API quota for this action. Try again later.";
                         return reject();
                     }

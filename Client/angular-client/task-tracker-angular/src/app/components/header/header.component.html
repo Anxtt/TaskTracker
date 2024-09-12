@@ -1,8 +1,12 @@
 <nav class="mx-auto">
     <div class="mx-auto">
+        <div style="float: left; left: 1%; position: relative;">
+            <a class="navigationAnchor" routerLink="/users">Users</a>
+        </div>
+        
         <ul style="display: inline;">
             <li class="navigation">
-                <a routerLink="/">Home</a>
+                <a routerLink="/" class="navigationAnchor">Home</a>
             </li>
             <li class="navigation mx-auto">
                 <div id="dropdown-div" class="mx-auto">
@@ -11,39 +15,39 @@
                     </button>
                     <ul id="dropdown-ul" class="dropdown-menu">
                         <li class="navigation dropdown-item mx-auto">
-                            <a routerLink="/tasks" id="dropdown-a">All Tasks</a>
+                            <a routerLink="/tasks" id="dropdown-a" class="navigationAnchor">All Tasks</a>
                         </li>
 
                         <li class="navigation dropdown-item mx-auto">
-                            <a routerLink="/addTask">Add Task</a>
+                            <a routerLink="/addTask" class="navigationAnchor">Add Task</a>
                         </li>
                     </ul>
                 </div>
             </li>
             <li class="navigation mx-auto">
-                <a routerLink="/about">About</a>
+                <a routerLink="/about" class="navigationAnchor">About</a>
             </li>
         </ul>
         @let isAuth = isAuth$ | async;
         @if (isAuth?.accessToken) {
         <ul class="authenticationUl">
             <li class="authenticationLi">
-                <a (click)="logOut()" style="cursor: pointer;">Logout</a>
+                <a (click)="logOut()" style="cursor: pointer;" class="navigationAnchor">Logout</a>
             </li>
 
             <li class="authenticationLi">
-                <a routerLink="/">{{isAuth?.userName}}</a>
+                <a routerLink="/" class="navigationAnchor">{{isAuth?.userName}}</a>
             </li>
         </ul>
         }
         @else {
         <ul class="authenticationUl">
             <li class="authenticationLi">
-                <a routerLink="/login">Login</a>
+                <a routerLink="/login" class="navigationAnchor">Login</a>
             </li>
 
             <li class="authenticationLi">
-                <a routerLink="/register">Register</a>
+                <a routerLink="/register" class="navigationAnchor">Register</a>
             </li>
         </ul>
         }

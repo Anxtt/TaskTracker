@@ -1,11 +1,5 @@
 <app-header></app-header>
 
-<dx-toast class="mt-3" [maxWidth]="400" [displayTime]="2000" [visible]="errorMessage.show || successMessage.show"
-    [type]="messageType" [message]="errorMessage.message || successMessage.message">
-    <dxo-position at="top right" offset="-240 110">
-    </dxo-position>
-</dx-toast>
-
 <div class="container">
     <!-- <dx-list [items]="tasks" itemTemplate="tasks">
         <div class="text-center col-lg-3 row" *dxTemplate="let task of 'tasks'; let index = index">
@@ -17,74 +11,6 @@
             {{task.name}}
         </div>
     </dx-list> -->
-
-    <!-- <dx-tile-view direction="horizontal">
-        <dxi-item *ngFor="let task of tasks; let index = index">
-            <div>
-                {{task.id}}
-                {{task.isCompleted}}
-                {{task.user}}
-                {{task.createdOn}}
-                {{task.deadline}}
-                {{task.name}}
-            </div>
-        </dxi-item>
-    </dx-tile-view> -->
-
-    <!-- <dx-data-grid [dataSource]="tasks" [showBorders]="true" [columnAutoWidth]="true">
-        <dxi-column caption="Id" dataField="id" dataType="number"></dxi-column>
-        <dxi-column caption="Is Completed" dataField="isCompleted" dataType="boolean"></dxi-column>
-        <dxi-column caption="User" dataField="user" dataType="string"></dxi-column>
-        <dxi-column caption="Created On" dataField="createdOn" dataType="string"></dxi-column>
-        <dxi-column caption="Deadline" dataField="deadline" dataType="string"></dxi-column>
-        <dxi-column caption="Name" dataField="name" dataType="string"></dxi-column>
-    </dx-data-grid> -->
-
-    <!-- <style>
-        .cardStyle {
-            color: #43d6ee;
-            font-family: "Lucida Console", "Courier New", Courier, monospace, Arial, Helvetica, sans-serif
-        }
-    
-        <dx-tile-view direction="vertical" class="offset-md-1" [height]="800"
-    [baseItemHeight]="230"
-    [baseItemWidth]="340"
-    [itemMargin]="10">
-        @for(task of tasks; track task.id) {
-        <dxi-item>            
-            <div class="cardStyle col-sm-12" style="border: 0.3rem solid #43d6ee; background: #fff; border-radius: 6px;">
-                <div>
-                    <div style="border-bottom: 0.15rem solid #43d6ee">
-                        <p class="offset-md-1 mt-auto mx-auto cardStyle">{{task.name}}</p>
-                        <span class="d-flex mx-auto mt-auto"
-                            style="cursor: pointer; font-size: 24px">
-                            &#x2705;
-                        </span>
-                    </div>
-            
-                    <div class="cardStyle text-center">
-                        <p class="card-text cardStyle">Created on: {{task.createdOn}}</p>
-                        <p class="card-text cardStyle">Deadline: {{task.deadline}}</p>
-                        <p class="card-text cardStyle">State: {{task.isCompleted === true ? 'Complete' : 'Incomplete' }}</p>
-                    </div>
-            
-                        <div class="cardStyle" style="border-top: 0.15rem solid #43d6ee">
-                        <button class="btn btn-warning mt-1 mb-1 me-4 mx-auto d-inline-flex"
-                            id="editButton">
-                            Edit
-                        </button>
-            
-                        <button class="btn btn-danger mt-1 mb-1 mx-auto d-inline-flex"
-                            id="deleteButton">
-                            Delete
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </dxi-item>
-        }
-    </dx-tile-view> -->
-
     <app-loading-indicator></app-loading-indicator>
     <router-outlet></router-outlet>
 </div>

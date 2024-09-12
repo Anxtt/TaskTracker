@@ -53,7 +53,7 @@ export class TaskComponent implements OnInit {
             .deleteTask(this.taskId)
             .subscribe({
                 next: () => this.taskDeleted.emit(this.taskId),
-                error: x => this.messageService.setErrorMessage(x)
+                error: x => this.messageService.setMessage(x)
             });
     }
 
@@ -72,12 +72,12 @@ export class TaskComponent implements OnInit {
                     user: ''
                 }),
                 error: x => {
-                    this.messageService.setErrorMessage(x)
+                    this.messageService.setMessage(x)
                 }
             });
     }
 
-    showModal(state: any) {
+    setShowModal(state: any) {
         this.sendTaskData.emit(this.taskId);
         this.setShowModalEvent.emit(state);
     }

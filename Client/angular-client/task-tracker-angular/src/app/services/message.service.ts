@@ -1,47 +1,41 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class MessageService {
-    private successMessage$: BehaviorSubject<any> = new BehaviorSubject({ message: "", show: false });
-    private errorMessage$: BehaviorSubject<any> = new BehaviorSubject({ message: "", show: false });
+export class MessageService implements OnDestroy {
+    private message$: BehaviorSubject<any> = new BehaviorSubject({ message: "", show: false, type: "" });
 
-    getSuccessMessage() {
-        return this.successMessage$.asObservable();
+    constructor() { }
+
+    ngOnDestroy(): void {
+        this.message$.complete();
     }
 
-    getCurrentSuccessMessage() {
-        return this.successMessage$.getValue();
+    getMessage() {
+        return this.message$.asObservable();
     }
 
-    setSuccessMessage(state: any) {
-        this.successMessage$.next({ message: state.body, show: true });
+    getCurrentMessage() {
+        return this.message$.getValue();
     }
 
-    getErrorMessage() {
-        return this.errorMessage$.asObservable();
-    }
-
-    getCurrentErrorMessage() {
-        return this.errorMessage$.getValue();
-    }
-
-    setErrorMessage(state: any) {
+    setMessage(state: any) {
         if (state.status === 500) {
-            this.errorMessage$.next({ message: state.error.message, show: true });
+            this.message$.next({ message: state.error.message, show: true, type: "error" });
         }
         else if (state.status === 400 || state.status === 401 ||  state.status === 404) {
-            this.errorMessage$.next({ message: state.error, show: true });
+            this.message$.next({ message: state.error, show: true, type: "error" });
         }
         else if (state.status === 429) {
-            this.errorMessage$.next({ message: "You have exceeded the API quota for this action. Try again later.", show: true });
+            this.message$.next({ message: "You have exceeded the API quota for this action. Try again later.", show: true, type: "error" });
         }
         else if (state.status === 204) {
-            this.errorMessage$.next({ message: "No tasks could be retrieved.", show: true });
+            this.message$.next({ message: "No tasks could be retrieved.", show: true, type: "success" });
+        }
+        else {
+            this.message$.next({ message: state.body, show: true, type: "success" });
         }
     }
-
-  constructor() { }
 }

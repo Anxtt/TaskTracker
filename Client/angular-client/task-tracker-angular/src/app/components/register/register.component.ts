@@ -73,10 +73,10 @@ export class RegisterComponent {
             .register(this.registerForm.value)
             .subscribe({
                 next: x => x,
-                error: e => this.messageService.setErrorMessage(e),
+                error: e => this.messageService.setMessage(e),
                 complete: () => {
                     this.router.navigateByUrl('/login');
-                    this.messageService.setSuccessMessage({ body: "Registration was successful", show: true });
+                    this.messageService.setMessage({ body: "Registration was successful" });
                 }
             });
     }

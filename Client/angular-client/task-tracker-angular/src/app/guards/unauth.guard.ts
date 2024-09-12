@@ -27,7 +27,7 @@ export class UnauthGuard implements CanActivate {
                                 const state = (this.router.getCurrentNavigation()?.extras.state as any)?.["from"];
 
                                 if (state === "unauthorized") {
-                                    this.messageService.setErrorMessage(x);
+                                    this.messageService.setMessage(x);
                                 }
                                 return of({ userName: "", accessToken: "", refreshToken: "" })
                             }),

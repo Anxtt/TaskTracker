@@ -41,7 +41,7 @@ nav ul li button {
     border: none;
 }
 
-nav ul li a {
+.navigationAnchor {
     color: var(--text-color);
     text-decoration: none;
     font-family: 'Lucida Console', 'Courier New', Courier, monospace, Arial, Helvetica, sans-serif;

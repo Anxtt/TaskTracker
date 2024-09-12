@@ -41,7 +41,7 @@
         [height]="680" [baseItemHeight]="190" [baseItemWidth]="340" [itemMargin]="10">
         @for(task of tasks; track task.id) {
         <dxi-item>
-            <app-task (setShowModal)="setShowModal($event)" (sendTaskData)="getTaskToEdit($event)"
+            <app-task (setShowModalEvent)="setShowModal($event)" (sendTaskData)="getTaskToEdit($event)"
                 (taskDeleted)="onTaskDeleted($event)" (taskUpdated)="onTaskUpdated($event)" [taskId]="task.id"
                 [name]="task.name" [isCompleted]="task.isCompleted" [deadline]="task.deadline"
                 [createdOn]="task.createdOn" />

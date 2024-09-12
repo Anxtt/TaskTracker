@@ -46,7 +46,7 @@ export class HeaderComponent implements OnInit {
             .subscribe(() => {
                 this.authService.setAuth({ accessToken: "", userName: "", refreshToken: "" });
                 this.router.navigateByUrl('/');
-                this.messageService.setSuccessMessage({ body: "Logged out successfully.", show: true });
+                this.messageService.setMessage({ body: "Logged out successfully." });
             })
     }
 
