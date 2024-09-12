@@ -11,13 +11,13 @@ import notify from 'devextreme/ui/notify';
 
 import { FooterComponent } from './components/footer/footer.component';
 import { HeaderComponent } from './components/header/header.component';
+import { LoadingIndicatorComponent } from './components/loading-indicator/loading-indicator.component';
 
 import { AuthService } from './services/auth.service';
-import { UserActivityService } from './services/user-activity.service';
 import { MessageService } from './services/message.service';
+import { UserActivityService } from './services/user-activity.service';
 
 import { IdentityResponseModel } from './models/IdentityResponseModel';
-import { LoadingIndicatorComponent } from './components/loading-indicator/loading-indicator.component';
 
 @Component({
     selector: 'app-root',
@@ -60,7 +60,7 @@ export class AppComponent implements OnInit, OnDestroy {
             .pipe(takeUntil(this.destroyed$))
             .subscribe(x => this.isAuth = x);
 
-        this.userActivityService.isActive
+        this.userActivityService.isActive$
             .pipe(takeUntil(this.destroyed$))
             .subscribe(x => this.isActive = x);
 
@@ -68,7 +68,7 @@ export class AppComponent implements OnInit, OnDestroy {
             .pipe(takeUntil(this.destroyed$))
             .subscribe(x => {
                 this.message = x;
-                console.log(x);
+                
                 notify({
                     maxWidth: 400,
                     displayTime: 2000,

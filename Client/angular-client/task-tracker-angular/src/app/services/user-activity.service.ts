@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 
 import { Router } from '@angular/router';
 
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject, take, takeUntil } from 'rxjs';
 
 import { AuthService } from './auth.service';
 import { MessageService } from './message.service';
@@ -16,16 +16,24 @@ export enum IdleUserTimes {
 @Injectable(
     { providedIn: 'root' }
 )
-export class UserActivityService {
+export class UserActivityService implements OnDestroy {
     private timeOutId: any;
     private countDownId: any;
     private countDownValue: number = IdleUserTimes.CountDownTime;
 
-    isActive: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
+    isActive$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
+    destroyed$: Subject<void> = new Subject();
 
     constructor(private authService: AuthService, private messageService: MessageService, private router: Router) {
         this.reset();
         this.initListener();
+    }
+
+    ngOnDestroy(): void {
+        this.isActive$.complete();
+
+        this.destroyed$.next();
+        this.destroyed$.complete();
     }
 
     initListener() {
@@ -74,11 +82,13 @@ export class UserActivityService {
 
                 console.log("User is inactive");
 
-                this.isActive.next(false);
+                this.isActive$.next(false);
 
                 this.authService.setAuth({ accessToken: "", userName: "", refreshToken: "" });
 
-                this.authService.logout().subscribe({
+                this.authService.logout()
+                .pipe(take(1))
+                .subscribe({
                     next: () => this.router.navigateByUrl("/login"),
                     error: () => this.router.navigateByUrl("/login"),
                     complete: () => this.router.navigateByUrl("/login")

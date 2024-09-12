@@ -1,5 +1,5 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 
 import { DxFormModule, DxPopupModule } from 'devextreme-angular';
 
@@ -7,6 +7,7 @@ import { TaskService } from '../../services/task.service';
 
 import { TaskResponseModel } from '../../models/TaskResponseModel';
 import { MessageService } from '../../services/message.service';
+import { Subject, take, takeUntil } from 'rxjs';
 
 @Component({
     selector: 'app-task',
@@ -15,7 +16,9 @@ import { MessageService } from '../../services/message.service';
     templateUrl: './task.component.html',
     styleUrls: ['./task.component.css', '../../styles/buttons.css']
 })
-export class TaskComponent implements OnInit {
+export class TaskComponent implements OnInit, OnDestroy {
+    destroyed$: Subject<void> = new Subject();
+
     @Input() createdOn: Date = new Date();
     @Input() deadline: Date = new Date();
     @Input() taskId: number = 0;
@@ -40,6 +43,11 @@ export class TaskComponent implements OnInit {
         this.setShowModalEvent = new EventEmitter<boolean>();
         this.sendTaskData = new EventEmitter<any>();
     }
+    
+    ngOnDestroy(): void {
+        this.destroyed$.next();
+        this.destroyed$.complete();
+    }
 
     ngOnInit(): void {
         this.editForm.name = this.name;
@@ -51,6 +59,7 @@ export class TaskComponent implements OnInit {
     deleteTask() {
         this.taskService
             .deleteTask(this.taskId)
+            .pipe(take(1))
             .subscribe({
                 next: () => this.taskDeleted.emit(this.taskId),
                 error: x => this.messageService.setMessage(x)
@@ -62,6 +71,7 @@ export class TaskComponent implements OnInit {
 
         this.taskService
             .editTask(this.editForm)
+            .pipe(take(1))
             .subscribe({
                 next: () => this.taskUpdated.emit({
                     id: this.taskId,

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 
 import { DxPopupModule, DxFormModule } from 'devextreme-angular';
 
@@ -8,6 +8,7 @@ import { TaskService } from '../../services/task.service';
 import { MessageService } from '../../services/message.service';
 
 import { TaskResponseModel } from '../../models/TaskResponseModel';
+import { Subject, take, takeUntil } from 'rxjs';
 
 @Component({
     selector: 'app-dx-edit-modal',
@@ -16,7 +17,9 @@ import { TaskResponseModel } from '../../models/TaskResponseModel';
     templateUrl: './dx-edit-modal.component.html',
     styleUrl: './dx-edit-modal.component.css'
 })
-export class DxEditModalComponent implements OnInit {
+export class DxEditModalComponent implements OnInit, OnDestroy {
+    destroyed$: Subject<void> = new Subject();
+
     @Input() showModal: boolean = false;
     @Input() task: TaskResponseModel | undefined;
 
@@ -30,6 +33,11 @@ export class DxEditModalComponent implements OnInit {
 
     constructor(private taskService: TaskService, private messageService: MessageService) { }
 
+    ngOnDestroy(): void {
+        this.destroyed$.next();
+        this.destroyed$.complete();
+    }
+
     ngOnInit(): void {
         this.editForm = this.task;
     }
@@ -39,6 +47,7 @@ export class DxEditModalComponent implements OnInit {
 
         this.taskService
             .editTask(this.editForm)
+            .pipe(takeUntil(this.destroyed$))
             .subscribe({
                 next: () => {
                     this.taskUpdated.emit(this.editForm)
@@ -54,6 +63,7 @@ export class DxEditModalComponent implements OnInit {
             }
 
             this.taskService.doesExistByName(value)
+                .pipe(take(1))
                 .subscribe((x: any) => {
                     if (x?.slowDown) {
                         this.messageService.setMessage(x);

@@ -1,5 +1,5 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, Output, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { TaskComponent } from '../task/task.component';
@@ -9,6 +9,7 @@ import { TaskService } from '../../services/task.service';
 import { TaskNameExistValidator } from '../../validators/TaskNameExistValidator';
 
 import { TaskResponseModel } from '../../models/TaskResponseModel';
+import { Subject, take, takeUntil } from 'rxjs';
 
 @Component({
     selector: 'app-edit-modal',
@@ -17,7 +18,9 @@ import { TaskResponseModel } from '../../models/TaskResponseModel';
     templateUrl: './edit-modal.component.html',
     styleUrls: ['./edit-modal.component.css', '../../styles/buttons.css', '../../styles/form.css']
 })
-export class EditModalComponent {
+export class EditModalComponent implements OnDestroy {
+    destroyed$: Subject<void> = new Subject();
+
     @Input() taskId: number = 0;
     @Input() isCompleted: boolean = false;
     @Input() createdOn: Date = new Date();
@@ -35,6 +38,11 @@ export class EditModalComponent {
     constructor(private taskService: TaskService) {
         this.invalidForm = "";
         this.name = "";
+    }
+
+    ngOnDestroy(): void {
+        this.destroyed$.next();
+        this.destroyed$.complete();
     }
 
     editForm = new FormGroup({
@@ -60,6 +68,7 @@ export class EditModalComponent {
 
         this.taskService
             .editTask(this.editForm.value)
+            .pipe(take(1))
             .subscribe({
                 next: () => {
                     this.taskUpdated.emit({

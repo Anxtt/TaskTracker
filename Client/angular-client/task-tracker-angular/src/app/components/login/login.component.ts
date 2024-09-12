@@ -1,7 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+
+import { Subject, take, takeUntil } from 'rxjs';
 
 import { AuthService } from '../../services/auth.service';
 import { MessageService } from '../../services/message.service';
@@ -18,7 +20,9 @@ import { LoadingService } from '../../services/loading.service';
     styleUrls: ['./login.component.css', '../../styles/buttons.css', '../../styles/form.css']
 })
 
-export class LoginComponent {
+export class LoginComponent implements OnDestroy {
+    destroyed$: Subject<void> = new Subject();
+
     auth: IdentityResponseModel;
     tasks: TaskResponseModel[];
 
@@ -36,11 +40,17 @@ export class LoginComponent {
         this.tasks = [];
     }
 
+    ngOnDestroy(): void {
+        this.destroyed$.next();
+        this.destroyed$.complete();
+    }
+
     protected handleLogin() {
         this.loadingService.setLoadingOn();
 
         this.authService
             .login(this.loginForm.value)
+            .pipe(take(1))
             .subscribe({
                 next: x => {
                     this.auth = x.body!

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, OnDestroy, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 
@@ -8,6 +8,7 @@ import { UserNameExistValidator } from '../../validators/UserNameExistValidator'
 import { MessageService } from '../../services/message.service';
 
 import { EmailExistValidator } from '../../validators/EmailExistValidator';
+import { Subject, take, takeUntil } from 'rxjs';
 
 @Component({
     selector: 'app-register',
@@ -17,7 +18,9 @@ import { EmailExistValidator } from '../../validators/EmailExistValidator';
     styleUrls: ['./register.component.css', '../../styles/buttons.css', '../../styles/form.css']
 })
 
-export class RegisterComponent {
+export class RegisterComponent implements OnDestroy {
+    destroyed$: Subject<void> = new Subject();
+
     passwordValidators = [Validators.required, Validators.minLength(6), Validators.maxLength(18)];
     emailValidator: EmailExistValidator = inject(EmailExistValidator);
     userNameValidator: UserNameExistValidator = inject(UserNameExistValidator);
@@ -61,6 +64,11 @@ export class RegisterComponent {
 
     constructor(private authSerivce: AuthService, private messageService: MessageService, private router: Router) { }
 
+    ngOnDestroy(): void {
+        this.destroyed$.next();
+        this.destroyed$.complete();
+    }
+
     // something() {
     //     console.log(this.registerForm.get("username")?.errors);
     //     this.registerForm.get("username")!.errors![""]
@@ -71,6 +79,7 @@ export class RegisterComponent {
     protected handleRegister() {
         this.authSerivce
             .register(this.registerForm.value)
+            .pipe(take(1))
             .subscribe({
                 next: x => x,
                 error: e => this.messageService.setMessage(e),

@@ -1,8 +1,8 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, OnInit, } from '@angular/core';
+import { Component, OnDestroy, OnInit, } from '@angular/core';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 
-import { Observable } from 'rxjs';
+import { Observable, Subject, take, takeUntil } from 'rxjs';
 
 import { AuthService } from '../../services/auth.service';
 import { MessageService } from '../../services/message.service';
@@ -16,8 +16,9 @@ import { IdentityResponseModel } from '../../models/IdentityResponseModel';
     templateUrl: './header.component.html',
     styleUrl: './header.component.css'
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
     isAuth$: Observable<IdentityResponseModel>;
+    destroyed$: Subject<void> = new Subject();
     // isAuth: IdentityResponseModel;
 
     isLightTheme: boolean = localStorage.getItem("theme") === "dark" ? false : true;
@@ -25,6 +26,10 @@ export class HeaderComponent implements OnInit {
     constructor(private authService: AuthService, private messageService: MessageService, private router: Router) {
         this.isAuth$ = this.authService.getAuth();
         // this.isAuth = this.authService.getCurrentAuth();
+    }
+    ngOnDestroy(): void {
+        this.destroyed$.next();
+        this.destroyed$.complete();
     }
 
     ngOnInit(): void {
@@ -43,6 +48,7 @@ export class HeaderComponent implements OnInit {
 
     logOut() {
         this.authService.logout()
+            .pipe(take(1))
             .subscribe(() => {
                 this.authService.setAuth({ accessToken: "", userName: "", refreshToken: "" });
                 this.router.navigateByUrl('/');

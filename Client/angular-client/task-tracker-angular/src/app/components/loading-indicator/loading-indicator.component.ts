@@ -2,7 +2,7 @@ import { AsyncPipe } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { RouteConfigLoadEnd, RouteConfigLoadStart, Router } from '@angular/router';
 
-import { Observable, tap } from 'rxjs';
+import { Observable, Subscription, finalize, tap } from 'rxjs';
 
 import { DxLoadIndicatorModule } from 'devextreme-angular';
 
@@ -26,7 +26,8 @@ export class LoadingIndicatorComponent implements OnInit {
 
     ngOnInit(): void {
         if (this.detectTransitions === true) {
-            this.router.events
+            const sub: Subscription = this.router.events
+            .pipe(finalize(() => sub.unsubscribe()))
             .pipe(
                 tap(e => {
                     if (e instanceof RouteConfigLoadStart) {

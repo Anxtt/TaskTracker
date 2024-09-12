@@ -1,11 +1,17 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
 })
-export class LoadingService {
+export class LoadingService implements OnDestroy {
     private isLoading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+
+    constructor() { }
+    
+    ngOnDestroy(): void {
+        this.isLoading$.complete();
+    }
 
     getIsLoading() {
         return this.isLoading$.asObservable();
@@ -22,6 +28,4 @@ export class LoadingService {
     setLoadingOff() {
         this.isLoading$.next(false);
     }
-
-    constructor() { }
 }

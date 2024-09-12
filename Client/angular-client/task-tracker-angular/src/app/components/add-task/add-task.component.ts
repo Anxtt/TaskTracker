@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, OnDestroy, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -7,6 +7,7 @@ import { TaskService } from '../../services/task.service';
 
 import { TaskNameExistValidator } from '../../validators/TaskNameExistValidator';
 import { MessageService } from '../../services/message.service';
+import { Subject, Subscription, finalize, take, takeUntil } from 'rxjs';
 
 @Component({
     selector: 'app-add-task',
@@ -15,7 +16,9 @@ import { MessageService } from '../../services/message.service';
     templateUrl: './add-task.component.html',
     styleUrls: ['./add-task.component.css', '../../styles/buttons.css', '../../styles/form.css']
 })
-export class AddTaskComponent {
+export class AddTaskComponent implements OnDestroy {
+    destroyed$: Subject<void> = new Subject();
+
     taskNameExistValidator: TaskNameExistValidator = inject(TaskNameExistValidator);
     currentDate: string = new Date().toISOString().slice(0, 10);;
 
@@ -24,6 +27,11 @@ export class AddTaskComponent {
         private messageService: MessageService,
         private router: Router
     ) { }
+
+    ngOnDestroy(): void {
+        this.destroyed$.next();
+        this.destroyed$.complete();
+    }
 
     createForm = new FormGroup({
         name: new FormControl(
@@ -46,17 +54,21 @@ export class AddTaskComponent {
     //     console.log(this.createForm.get('taskName')?.errors);
     // }
 
-    handleCreate() {
-        this.taskService
+    handleCreate() {        
+        const subs: Subscription = this.taskService
             .createTask(this.createForm.value)
+            // .pipe(take(1/2/3/4/5))
+            // .pipe(finalize(() => subs.unsubscribe())) // или complete долу
+            // .pipe(takeUntil(this.destroyed$))
             .subscribe({
                 error: x => {
-                    this.messageService.setErrorMessage(x);
+                    this.messageService.setMessage(x);
                 },
                 next: () => {
                     this.router.navigateByUrl('tasks')
-                    this.messageService.setSuccessMessage({ body: "Task was added successfully.", show: true });
-                }
+                    this.messageService.setMessage({ body: "Task was added successfully." });
+                },
+                complete: () => subs.unsubscribe()
             });
     };
 }

@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { Observable } from 'rxjs';
+import { Observable, Subject, take, takeUntil } from 'rxjs';
 
 import { DxTileViewModule } from 'devextreme-angular';
 
@@ -25,10 +25,11 @@ import { TaskResponseModel } from '../../models/TaskResponseModel';
     templateUrl: './task-list.component.html',
     styleUrls: ['./task-list.component.css', '../../styles/buttons.css', '../../styles/filters.css', '../../styles/form.css']
 })
-export class TaskListComponent implements OnInit {
+export class TaskListComponent implements OnInit, OnDestroy {
     isAuth$: Observable<IdentityResponseModel>;
-    tasks: TaskResponseModel[];
+    destroyed$: Subject<void> = new Subject();
 
+    tasks: TaskResponseModel[];
     showModal: boolean = false;
     taskToEdit: any;
 
@@ -49,9 +50,15 @@ export class TaskListComponent implements OnInit {
         this.filter = "";
     }
 
+    ngOnDestroy(): void {
+        this.destroyed$.next();
+        this.destroyed$.complete();
+    }
+
     ngOnInit(): void {
         this.loadingService.setLoadingOn();
         this.taskService.all()
+            .pipe(take(1))
             .subscribe({
                 next: x => {
                     if (x.status === 204) {
@@ -98,6 +105,7 @@ export class TaskListComponent implements OnInit {
     handleFiltering(isCompleted: boolean | string) {
         this.taskService
             .allFiltered(isCompleted, this.dateSort, this.filter)
+            .pipe(take(1))
             .subscribe({
                 next: x => {
                     this.noContent = false;
