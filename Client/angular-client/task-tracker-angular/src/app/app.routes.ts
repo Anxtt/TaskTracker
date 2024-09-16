@@ -9,6 +9,7 @@ import { TaskListComponent } from './components/task-list/task-list.component';
 import { ErrorComponent } from './components/error/error.component';
 import { UnauthGuard } from './guards/unauth.guard';
 import { AuthGuard } from './guards/auth.guard';
+import { UserStatisticsComponent } from './components/user-statistics/user-statistics.component';
 
 export const routes: Routes = [
     {
@@ -49,6 +50,12 @@ export const routes: Routes = [
         title: 'Add Task',
         component: AddTaskComponent,
         canActivate: [AuthGuard]
+    },
+
+    { 
+        path: 'users',
+        title: 'User Statistics',
+        component: UserStatisticsComponent
     },
 
     {

@@ -3,6 +3,7 @@
 using TaskTracker.Api.Services.Contracts;
 
 using TaskTracker.Core.Models;
+using TaskTracker.Core.Models.Chore;
 using TaskTracker.Core.Models.Identity;
 
 using TaskTracker.Data;
@@ -46,6 +47,16 @@ namespace TaskTracker.Api.Services
             return authenticated;
         }
 
+        public async Task DeleteUser(ApplicationUser user)
+        {
+            user.Expires = DateTime.Now.AddHours(-2);
+            user.RefreshToken = null;
+            //user.Chores.Clear();
+
+            this.db.Users.Remove(user);
+            await this.db.SaveChangesAsync();
+        }
+
         /// <summary>
         /// Checks if an <see cref="ApplicationUser"/> with the given <paramref name="email"/> exists.
         /// </summary>
@@ -82,6 +93,17 @@ namespace TaskTracker.Api.Services
             .Users
             .AnyAsync(x => x.UserName == username);
 
+        public async Task EditUser(ApplicationUser user, UserEditModel model)
+        {
+            user.UserName = model.UserName;
+            user.Email = model.Email;
+
+            user.NormalizedUserName = model.UserName.ToUpper();
+            user.NormalizedEmail = model.Email.ToUpper();
+
+            await this.db.SaveChangesAsync();
+        }
+
         /// <summary>
         /// Queries the first <see cref="ApplicationUser"/> with the given <paramref name="id"/>.
         /// </summary>
@@ -111,6 +133,40 @@ namespace TaskTracker.Api.Services
             .Users
             .Where(x => x.RefreshToken == refreshToken)
             .FirstOrDefaultAsync();
+
+        public async Task<IEnumerable<UserStatisticsResponseModel>> GetUsers()
+            => await this.db
+            .Users
+            //.AsNoTracking()
+            //.AsSplitQuery()
+            .Include(x => x.Chores)
+            .Select(x => new UserStatisticsResponseModel
+            {
+                Id = x.Id,
+                UserName = x.UserName,
+                Email = x.Email,
+                Tasks = x.Chores.Select(c => new ChoreResponseModel
+                {
+                    CreatedOn = c.CreatedOn,
+                    Deadline = c.Deadline,
+                    Id = c.Id,
+                    IsCompleted = c.IsCompleted,
+                    Name = c.Name,
+                    User = x.UserName
+                }).ToList(),
+                TaskCount = x.Chores.Count,
+                TaskCompleteCount = x.Chores.Where(x => x.IsCompleted == true).Count(),
+                TaskCompletePercent = (x.Chores.Count > 0
+                ? x.Chores
+                    .Where(t => t.IsCompleted == true).Count() * 100d / x.Chores.Count
+                : 0).ToString("f2"),
+                TaskIncompleteCount = x.Chores.Where(x => x.IsCompleted == false).Count(),
+                TaskIncompletePercent = (x.Chores.Count > 0
+                ? x.Chores
+                    .Where(t => t.IsCompleted == false).Count() * 100d / x.Chores.Count
+                : 0).ToString("f2"),
+            })
+            .ToListAsync();
 
         public async Task<IdentityResponseModel> RefreshToken(string refreshToken)
         {

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { ValidationErrors } from '@angular/forms';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 
@@ -13,9 +13,15 @@ import { environment } from '../environments/environment';
 @Injectable({
     providedIn: 'root'
 })
-export class AuthService {
+export class AuthService implements OnDestroy {
     private apiUrl = environment.apiUrl;
     private checkAuth$: BehaviorSubject<IdentityResponseModel> = new BehaviorSubject({ accessToken: "", userName: "", refreshToken: "" });
+
+    constructor(private http: HttpClient, private messageService: MessageService) { }
+
+    ngOnDestroy(): void {
+        this.checkAuth$.complete();
+    }
 
     getAuth(): Observable<IdentityResponseModel> {
         return this.checkAuth$.asObservable();
@@ -28,8 +34,6 @@ export class AuthService {
     setAuth(state: IdentityResponseModel) {
         this.checkAuth$.next(state);
     }
-
-    constructor(private http: HttpClient, private messageService: MessageService) { }
 
     login(loginForm: any): Observable<HttpResponse<IdentityResponseModel>> {
         return this.http.post<IdentityResponseModel>(`${this.apiUrl}Identity/Login`, loginForm,
@@ -64,6 +68,16 @@ export class AuthService {
         );
     }
 
+    deleteUser(data: any) {
+        return this.http.delete(`${this.apiUrl}Identity/Delete/${data.id}`, {
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json"
+            },
+            withCredentials: true
+        })
+    }
+
     doesExistByEmail(email: string): Observable<ValidationErrors | null> {
         return this.http.get(`${this.apiUrl}Identity/DoesExistByEmail/${email}`, {
             observe: "response",
@@ -81,7 +95,7 @@ export class AuthService {
                 return null;
             }),
             catchError(x => {
-                this.messageService.setErrorMessage(x);
+                this.messageService.setMessage(x);
 
                 if (x.status === 429) {
                     return of({ error: "Too many requests. You have exceeded your quota of 5 requests per 10 minutes." })
@@ -113,7 +127,7 @@ export class AuthService {
                 return null;
             }),
             catchError((x => {
-                this.messageService.setErrorMessage(x);
+                this.messageService.setMessage(x);
 
                 if (x.status === 429) {
                     return of({ error: "Too many requests. You have exceeded your quota of 8 requests per 10 minutes." })
@@ -122,6 +136,16 @@ export class AuthService {
                 return of({ error: x.error });
             }))
         );
+    }
+
+    editUser(userEditModel: any) {
+        return this.http.put(`${this.apiUrl}Identity/Edit/${userEditModel.id}`, userEditModel, {
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json"
+            },
+            withCredentials: true
+        })
     }
 
     refreshToken() {
@@ -137,6 +161,16 @@ export class AuthService {
 
     verifyUser() {
         return this.http.get<IdentityResponseModel>(`${this.apiUrl}Identity/VerifyUser`, {
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json"
+            },
+            withCredentials: true,
+        })
+    }
+
+    getUsers() {
+        return this.http.get(`${this.apiUrl}Identity/GetUsers`, {
             headers: {
                 Accept: "application/json",
                 "Content-Type": "application/json"

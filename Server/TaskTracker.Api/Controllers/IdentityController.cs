@@ -9,6 +9,7 @@ using System.Security.Claims;
 using TaskTracker.Api.Extensions;
 using TaskTracker.Api.Services.Contracts;
 
+using TaskTracker.Core.Models;
 using TaskTracker.Core.Models.Identity;
 using TaskTracker.Data.Models;
 
@@ -43,6 +44,29 @@ namespace TaskTracker.Api.Controllers
             this.jwtService = jwtService;
         }
 
+        //[Authorize]
+        [HttpDelete("{id}")]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> Delete([FromRoute] string id)
+        {
+            if (string.IsNullOrWhiteSpace(id) is true)
+            {
+                return this.BadRequest("Invalid user.");
+            }
+
+            ApplicationUser user = await this.userManager.FindByIdAsync(id);
+
+            //await this.identityService.DeleteUser(user);
+            await this.userManager.DeleteAsync(user);
+
+            //this.DeleteAuthCookies();
+
+            return this.Ok("User deleted successfully.");
+        }
+
         [HttpGet("{username}")]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -55,6 +79,7 @@ namespace TaskTracker.Api.Controllers
             }
 
             bool doesExist = await this.cache
+                // премести в IdentityService
                 .ShortCacheUserName(username, this.identityService);
 
             return this.Ok(doesExist);
@@ -77,26 +102,48 @@ namespace TaskTracker.Api.Controllers
             return this.Ok(doesExist);
         }
 
-        [HttpPost]
+        //[Authorize]
+        [HttpPut("{id}")]
         [ProducesDefaultResponseType]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Register([FromBody] IdentityRegisterModel model)
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> Edit([FromRoute] string id, [FromBody] UserEditModel model)
         {
-            ApplicationUser user = new ApplicationUser()
+            if (string.IsNullOrWhiteSpace(id) is true)
             {
-                UserName = model.UserName,
-                Email = model.Email
-            };
-
-            var result = await userManager.CreateAsync(user, model.Password);
-
-            if (result.Succeeded is false)
-            {
-                return this.BadRequest(result.Errors.Select(x => x.Description));
+                return this.BadRequest("Invalid user.");
             }
 
-            return this.Created(nameof(Register), user.Id);
+            ApplicationUser user = await this.userManager.FindByIdAsync(id);
+
+            if ((user.Email != model.Email && await this.cache
+                .ShortCacheEmail(model.Email, this.identityService)) ||
+                (user.UserName != model.UserName && await this.cache
+                .ShortCacheUserName(model.UserName, this.identityService)))
+            {
+                return this.BadRequest("User with such credentials already exists.");
+            }
+
+
+            //await this.identityService.EditUser(user, model);
+            await this.userManager.SetEmailAsync(user, model.Email);
+            await this.userManager.SetUserNameAsync(user, model.UserName);
+
+            await this.userManager.UpdateNormalizedEmailAsync(user);
+            await this.userManager.UpdateNormalizedUserNameAsync(user);
+
+            //await this.RefreshToken();
+
+            return this.Ok("User updated successfully.");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetUsers()
+        {
+            var users = await this.identityService.GetUsers();
+
+            return this.Ok(users);
         }
 
         [HttpPost]
@@ -162,6 +209,28 @@ namespace TaskTracker.Api.Controllers
             }
 
             return this.Ok(model);
+        }
+
+        [HttpPost]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Register([FromBody] IdentityRegisterModel model)
+        {
+            ApplicationUser user = new ApplicationUser()
+            {
+                UserName = model.UserName,
+                Email = model.Email
+            };
+
+            var result = await userManager.CreateAsync(user, model.Password);
+
+            if (result.Succeeded is false)
+            {
+                return this.BadRequest(result.Errors.Select(x => x.Description));
+            }
+
+            return this.Created(nameof(Register), user.Id);
         }
 
         [HttpGet]
