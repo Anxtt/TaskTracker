@@ -50,10 +50,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.authService.logout()
             .pipe(take(1))
             .subscribe(() => {
-                this.authService.setAuth({ accessToken: "", userName: "", refreshToken: "" });
+                this.authService.setAuth({ accessToken: "", userName: "", refreshToken: "", roles: [] });
                 this.router.navigateByUrl('/');
                 this.messageService.setMessage({ body: "Logged out successfully." });
             })
+    }
+
+    isAdmin(e: IdentityResponseModel | null) {
+        return e?.roles.some(r => r === "Admin");
     }
 
     onThemeSwitchChange() {

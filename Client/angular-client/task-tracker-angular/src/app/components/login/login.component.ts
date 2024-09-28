@@ -36,7 +36,7 @@ export class LoginComponent implements OnDestroy {
         private messageService: MessageService,
         private loadingService: LoadingService,
         private router: Router) {
-        this.auth = { accessToken: "", userName: "", refreshToken: "" };
+        this.auth = { accessToken: "", userName: "", refreshToken: "", roles: [] };
         this.tasks = [];
     }
 

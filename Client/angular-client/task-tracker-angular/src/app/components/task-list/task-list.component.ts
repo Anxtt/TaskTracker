@@ -95,11 +95,11 @@ export class TaskListComponent implements OnInit, OnDestroy {
                 return x;
             }
 
-            this.messageService.setMessage({ body: "Task was updated successfully.", show: true });
             return task;
         })
 
         this.setShowModal(false);
+        this.messageService.setMessage({ body: "Task was updated successfully." });
     }
 
     handleFiltering(isCompleted: boolean | string) {

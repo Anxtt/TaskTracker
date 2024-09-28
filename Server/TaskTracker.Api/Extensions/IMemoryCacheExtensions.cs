@@ -19,6 +19,7 @@ namespace TaskTracker.Api.Extensions
             string userId,
             string token,
             string refresh,
+            string[] roles,
             IIdentityService identityService)
                 => await cache.GetOrCreateAsync(
                     string.Format(AUTH_CACHE_KEY, userId),
@@ -32,7 +33,8 @@ namespace TaskTracker.Api.Extensions
                         {
                             UserName = userName,
                             AccessToken = token,
-                            RefreshToken = refresh
+                            RefreshToken = refresh,
+                            Roles = roles
                         };
                     });
 
@@ -54,6 +56,7 @@ namespace TaskTracker.Api.Extensions
             this IMemoryCache cache,
             string username,
             IIdentityService identityService)
+            // премести в IdentityService
                 => await cache.GetOrCreateAsync(
                     string.Format(USERNAME_CACHE_KEY, username),
                     async x =>

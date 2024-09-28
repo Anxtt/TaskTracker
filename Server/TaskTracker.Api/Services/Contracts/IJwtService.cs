@@ -8,7 +8,7 @@ namespace TaskTracker.Api.Services.Contracts
 {
     public interface IJwtService
     {
-        string GenerateToken(ApplicationUser user);
+        string GenerateToken(ApplicationUser user, string[] roles);
 
         RefreshTokenModel GenerateRefreshToken();
 

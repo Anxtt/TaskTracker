@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-
 using Microsoft.Extensions.Caching.Memory;
 
 using System.Security.Claims;
@@ -44,7 +43,7 @@ namespace TaskTracker.Api.Controllers
             this.jwtService = jwtService;
         }
 
-        //[Authorize]
+        [Authorize]
         [HttpDelete("{id}")]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -102,7 +101,7 @@ namespace TaskTracker.Api.Controllers
             return this.Ok(doesExist);
         }
 
-        //[Authorize]
+        [Authorize]
         [HttpPut("{id}")]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -139,9 +138,10 @@ namespace TaskTracker.Api.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetUsers()
         {
-            var users = await this.identityService.GetUsers();
+            var users = await this.identityService.GetUsers(this.User.GetId());
 
             return this.Ok(users);
         }
@@ -223,12 +223,14 @@ namespace TaskTracker.Api.Controllers
                 Email = model.Email
             };
 
-            var result = await userManager.CreateAsync(user, model.Password);
+            var result = await this.userManager.CreateAsync(user, model.Password);
 
             if (result.Succeeded is false)
             {
                 return this.BadRequest(result.Errors.Select(x => x.Description));
             }
+
+            await this.userManager.AddToRoleAsync(user, "Member");
 
             return this.Created(nameof(Register), user.Id);
         }
@@ -249,7 +251,10 @@ namespace TaskTracker.Api.Controllers
             {
                 if (accessToken is null && refreshToken is null)
                 {
-                    await this.Logout();
+                    this.DeleteAuthCookies();
+                    await this.signInManager.SignOutAsync();
+                    this.cache.Remove(string.Format(AUTH_CACHE_KEY, this.User.GetId()));
+
                     return this.Unauthorized("Your session has expired.");
                 }
 
@@ -266,8 +271,10 @@ namespace TaskTracker.Api.Controllers
                     return this.Unauthorized("Your session has expired.");
                 }
 
+                string[] roles = (await this.userManager.GetRolesAsync(user)).ToArray();
+
                 model = await this.cache
-                    .ShortCacheAuth(user.Id, accessToken, refreshToken, this.identityService);
+                    .ShortCacheAuth(user.Id, accessToken, refreshToken, roles, this.identityService);
             }
             catch (Exception e)
             {

@@ -1,5 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using System.Runtime.InteropServices;
 using TaskTracker.Api.Services.Contracts;
 
 using TaskTracker.Core.Models;
@@ -13,11 +14,14 @@ namespace TaskTracker.Api.Services
 {
     public class IdentityService : IIdentityService
     {
+        private readonly UserManager<ApplicationUser> userManager;
         private readonly TaskTrackerDbContext db;
         private readonly IJwtService jwtService;
 
-        public IdentityService(TaskTrackerDbContext db, IJwtService jwt)
-            => (this.db, this.jwtService) = (db, jwt);
+        public IdentityService(TaskTrackerDbContext db, IJwtService jwt, UserManager<ApplicationUser> userManager)
+        {
+            (this.db, this.jwtService, this.userManager) = (db, jwt, userManager);
+        }
 
         /// <summary>
         /// Creates a JWT and a Refresh Token for the given <see cref="ApplicationUser"/> <paramref name="user"/>.
@@ -28,7 +32,9 @@ namespace TaskTracker.Api.Services
         /// </returns>
         public async Task<IdentityResponseModel> Authenticate(ApplicationUser user)
         {
-            string accessToken = this.jwtService.GenerateToken(user);
+            string[] roles = (await this.userManager.GetRolesAsync(user)).ToArray();
+
+            string accessToken = this.jwtService.GenerateToken(user, roles);
             RefreshTokenModel refreshToken = this.jwtService.GenerateRefreshToken();
 
             user.RefreshToken = refreshToken.Token;
@@ -41,7 +47,8 @@ namespace TaskTracker.Api.Services
             {
                 UserName = user.UserName,
                 AccessToken = accessToken,
-                RefreshToken = refreshToken.Token
+                RefreshToken = refreshToken.Token,
+                Roles = roles
             };
 
             return authenticated;
@@ -134,12 +141,13 @@ namespace TaskTracker.Api.Services
             .Where(x => x.RefreshToken == refreshToken)
             .FirstOrDefaultAsync();
 
-        public async Task<IEnumerable<UserStatisticsResponseModel>> GetUsers()
+        public async Task<IEnumerable<UserStatisticsResponseModel>> GetUsers(string id)
             => await this.db
             .Users
             //.AsNoTracking()
             //.AsSplitQuery()
             .Include(x => x.Chores)
+            .Where(x => x.Id != id)
             .Select(x => new UserStatisticsResponseModel
             {
                 Id = x.Id,
@@ -152,7 +160,8 @@ namespace TaskTracker.Api.Services
                     Id = c.Id,
                     IsCompleted = c.IsCompleted,
                     Name = c.Name,
-                    User = x.UserName
+                    User = x.UserName,
+                    UserId = x.Id
                 }).ToList(),
                 TaskCount = x.Chores.Count,
                 TaskCompleteCount = x.Chores.Where(x => x.IsCompleted == true).Count(),

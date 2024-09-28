@@ -84,7 +84,7 @@ export class UserActivityService implements OnDestroy {
 
                 this.isActive$.next(false);
 
-                this.authService.setAuth({ accessToken: "", userName: "", refreshToken: "" });
+                this.authService.setAuth({ accessToken: "", userName: "", refreshToken: "", roles: [] });
 
                 this.authService.logout()
                 .pipe(take(1))

@@ -1,0 +1,28 @@
+<dx-data-grid [dataSource]="taskDataSource" (onRowUpdating)="onRowUpdating($event)"
+    (onEditingStart)="onEditingStart($event)" [showBorders]="true" [columnAutoWidth]="true">
+    <dxi-column dataField="name" dataType="string">
+        <dxi-validation-rule type="required"></dxi-validation-rule>
+        <dxi-validation-rule type="stringLength" min="4" max="16"
+            message="Task name must be between 4 and 16 characters.">
+        </dxi-validation-rule>
+        <dxi-validation-rule type="async" [message]="taskNameErrorMessage" [validationCallback]="taskNameCheck"
+            [ignoreEmptyValue]="true">
+        </dxi-validation-rule>
+    </dxi-column>
+
+    <dxi-column dataField="createdOn" dataType="date" [customizeText]="formatDate"></dxi-column>
+
+    <dxi-column dataField="deadline" dataType="date" [editorOptions]="{ min: minDate }" [customizeText]="formatDate">
+        <dxi-validation-rule type="required"></dxi-validation-rule>
+    </dxi-column>
+
+    <dxi-column dataField="isCompleted" dataType="boolean"></dxi-column>
+
+    <dxo-editing mode="form" [allowUpdating]="true" [allowDeleting]="true" [refreshMode]="'full'" [useIcons]="true">
+        <dxo-form>
+            <dxi-item dataField="name"></dxi-item>
+            <dxi-item dataField="deadline"></dxi-item>
+            <dxi-item dataField="isCompleted"></dxi-item>
+        </dxo-form>
+    </dxo-editing>
+</dx-data-grid>

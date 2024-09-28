@@ -41,6 +41,7 @@ namespace TaskTracker.Api.Extensions
                 options.Password.RequiredLength = 6;
                 options.User.RequireUniqueEmail = true;
             })
+            .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<TaskTrackerDbContext>();
 
             services.Configure<AppSettings>(

@@ -36,8 +36,13 @@ export class UnauthGuard implements CanActivate, OnDestroy {
 
                     if (state === "unauthorized") {
                         this.messageService.setMessage(x);
+                        this.router.navigateByUrl("/login", {
+                            state: {
+                                from: undefined
+                            }
+                        });
                     }
-                    return of({ userName: "", accessToken: "", refreshToken: "" })
+                    return of({ userName: "", accessToken: "", refreshToken: "", roles: [] })
                 }),
                 switchMap(x => {
                     this.authService.setAuth(x);

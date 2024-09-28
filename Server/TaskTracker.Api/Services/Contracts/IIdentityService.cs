@@ -23,7 +23,7 @@ namespace TaskTracker.Api.Services.Contracts
 
         Task<string> GetUserNameById(string id);
 
-        Task<IEnumerable<UserStatisticsResponseModel>> GetUsers();
+        Task<IEnumerable<UserStatisticsResponseModel>> GetUsers(string id);
 
         Task<ApplicationUser> GetUserByRefreshToken(string refresh);
 

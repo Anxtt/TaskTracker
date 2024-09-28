@@ -21,7 +21,7 @@ export class AuthGuard implements CanActivate, OnDestroy {
     // Prevents the user from accessing tasks and addTask when not authenticated
     canActivate() {
         const isAuth = this.authService.getCurrentAuth();
-
+        
         if (isAuth?.accessToken === "") {
             this.router.navigateByUrl("/login", {
                 state: {
@@ -30,13 +30,13 @@ export class AuthGuard implements CanActivate, OnDestroy {
             });
             return false;
         }
-
+        
         return this.authService.verifyUser()
             .pipe(takeUntil(this.destroyed$))
             .pipe(
                 catchError(x => {
                     this.messageService.setMessage(x);
-                    return of({ userName: "", accessToken: "", refreshToken: "" })
+                    return of({ userName: "", accessToken: "", refreshToken: "", roles: [] })
                 }),
                 switchMap(x => {
                     this.authService.setAuth(x);

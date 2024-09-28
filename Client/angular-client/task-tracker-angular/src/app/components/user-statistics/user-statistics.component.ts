@@ -3,18 +3,22 @@ import { Router } from '@angular/router';
 
 import { Subject, lastValueFrom, take, takeUntil } from 'rxjs';
 
-import { DxBulletModule, DxTemplateModule } from 'devextreme-angular';
+import { DxBulletModule, DxTemplateModule, DxTileViewModule } from 'devextreme-angular';
 import { DxDataGridModule, DxDataGridTypes } from 'devextreme-angular/ui/data-grid';
+import DataSource from 'devextreme/data/data_source';
+import CustomStore from 'devextreme/data/custom_store';
+
+import { DetailGridComponent } from '../detail-grid/detail-grid.component';
 
 import { AuthService } from '../../services/auth.service';
 import { MessageService } from '../../services/message.service';
-import DataSource from 'devextreme/data/data_source';
-import CustomStore from 'devextreme/data/custom_store';
+
+import { TaskResponseModel } from '../../models/TaskResponseModel';
 
 @Component({
     selector: 'app-user-statistics',
     standalone: true,
-    imports: [DxBulletModule, DxTemplateModule, DxDataGridModule],
+    imports: [DxBulletModule, DxTemplateModule, DxDataGridModule, DxTileViewModule, DetailGridComponent],
     templateUrl: './user-statistics.component.html',
     styleUrl: './user-statistics.component.css'
 })
@@ -33,6 +37,7 @@ export class UserStatisticsComponent implements OnInit, OnDestroy {
         store: new CustomStore({
             key: "id",
             load: (options) => {
+                console.log(options);
                 if (this.users?.length > 0) {
                     return Promise.resolve(this.users);
                 }
@@ -53,7 +58,7 @@ export class UserStatisticsComponent implements OnInit, OnDestroy {
                         return values;
                     })
 
-                    this.messageService.setMessage({ body: x, show: true })
+                    this.messageService.setMessage({ body: x })
                 });
             },
             remove: (key) => {
@@ -61,7 +66,12 @@ export class UserStatisticsComponent implements OnInit, OnDestroy {
                     this.users = this.users.filter(x => x.id !== key);
                 });
             },
-            // insert: () => {}
+            // insert: () => {},
+            // byKey: (key) => {
+            //     if (this.users?.length > 0) {
+            //         return this.users.find(x => x.id === key);
+            //     }
+            // }
         })
     });
 
@@ -75,17 +85,12 @@ export class UserStatisticsComponent implements OnInit, OnDestroy {
     ngOnInit(): void { }
 
     getData(model: DxDataGridTypes.EditingStartEvent) {
-        console.log("something");
-        console.log(model);
-
         this.email = model.data.email;
         this.userName = model.data.userName;
         this.visible = true;
     }
 
     async editUser(data: DxDataGridTypes.RowUpdatingEvent) {
-        console.log(data);
-
         for (let prop of Object.keys(data.oldData)) {
             // проверява дали пропъртито съществува в новия обект
             if (!data.newData.hasOwnProperty(prop)) {
@@ -93,6 +98,40 @@ export class UserStatisticsComponent implements OnInit, OnDestroy {
                 data.newData[prop] = data.oldData[prop];
             }
         }
+    }
+
+    async onTaskUpdated(e: TaskResponseModel) {
+        let user = this.users.find(x => x.id === e.userId);
+
+        if (!user) {
+            return;
+        }
+
+        user.tasks = user.tasks.map((t: TaskResponseModel) => {
+            if (t.id !== e.id) {
+                return t;
+            }
+
+            return e;
+        })
+
+        this.updateTaskCount(user);
+
+        await this.dataSource.reload();
+    }
+
+    async onTaskDeleted(e: { taskId: number; userId: string; }) {
+        let user = this.users.find(x => x.id === e.userId);
+
+        if (!user) {
+            return;
+        }
+
+        user.tasks = user.tasks.filter((x: any) => x.id !== e.taskId);
+
+        this.updateTaskCount(user);
+
+        await this.dataSource.reload();
     }
 
     emailCheck = (async ({ value, data }: any) => {
@@ -142,4 +181,12 @@ export class UserStatisticsComponent implements OnInit, OnDestroy {
                 })
         })
     }).bind(this);
+
+    private updateTaskCount(user: any) {
+        user.taskCount = user.tasks.length;
+        user.taskCompleteCount = user.tasks.filter((x: any) => x.isCompleted === true).length;
+        user.taskCompletePercent = (user.taskCompleteCount / user.taskCount * 100).toFixed(2);
+        user.taskIncompleteCount = user.tasks.filter((x: any) => x.isCompleted === false).length;
+        user.taskIncompletePercent = (user.taskIncompleteCount / user.taskCount * 100).toFixed(2);
+    }
 }

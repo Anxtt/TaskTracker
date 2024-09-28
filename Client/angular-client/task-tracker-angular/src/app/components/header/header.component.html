@@ -1,9 +1,12 @@
 <nav class="mx-auto">
     <div class="mx-auto">
+        @let isAuth = isAuth$ | async;
+        @if (isAdmin(isAuth) === true) {
         <div style="float: left; left: 1%; position: relative;">
             <a class="navigationAnchor" routerLink="/users">Users</a>
         </div>
-        
+        }
+
         <ul style="display: inline;">
             <li class="navigation">
                 <a routerLink="/" class="navigationAnchor">Home</a>
@@ -28,7 +31,7 @@
                 <a routerLink="/about" class="navigationAnchor">About</a>
             </li>
         </ul>
-        @let isAuth = isAuth$ | async;
+        
         @if (isAuth?.accessToken) {
         <ul class="authenticationUl">
             <li class="authenticationLi">

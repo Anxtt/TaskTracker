@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
 
 using Microsoft.IdentityModel.Tokens;
 
@@ -22,13 +23,13 @@ namespace TaskTracker.Api.Services
         private readonly ILogger<JwtService> logger;
         private readonly AppSettings appSettings;
 
-        public JwtService(IOptions<AppSettings> appSettings, ILogger<JwtService> logger)
+        public JwtService(IOptions<AppSettings> appSettings, ILogger<JwtService> logger, UserManager<ApplicationUser> userManager)
         {
             this.logger = logger;
             this.appSettings = appSettings.Value;
         }
 
-        public string GenerateToken(ApplicationUser user)
+        public string GenerateToken(ApplicationUser user, string[] roles)
         {
             byte[] key = Encoding.ASCII.GetBytes(this.appSettings.Secret);
 
@@ -48,6 +49,8 @@ namespace TaskTracker.Api.Services
                 Audience = this.appSettings.Audience[1],
                 SigningCredentials = signingCredentials
             };
+
+            this.AddRoles(descriptor.Subject, roles);
 
             JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
 
@@ -123,6 +126,14 @@ namespace TaskTracker.Api.Services
                 rng.GetBytes(randomNumber);
                 return Convert.ToBase64String(randomNumber);
             }
+        }
+
+        private void AddRoles(ClaimsIdentity subject, string[] roles)
+        {
+            IEnumerable<Claim> claims = roles
+                .Select(x => new Claim(ClaimTypes.Role, x));
+
+            subject.AddClaims(claims);
         }
     }
 }
