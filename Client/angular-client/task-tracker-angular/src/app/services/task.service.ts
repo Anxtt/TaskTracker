@@ -55,8 +55,8 @@ export class TaskService {
         })
     }
 
-    deleteTask(id: number) {
-        return this.http.delete(`${this.apiUrl}Chore/Delete/${id}`, {
+    deleteTask(id: number, userId: string) {
+        return this.http.delete(`${this.apiUrl}Chore/Delete/${id}?userId=${userId}`, {
             headers: {
                 Accept: "application/json",
                 "Content-Type": "application/json"

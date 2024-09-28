@@ -32,7 +32,7 @@
 
     <!-- <app-edit-modal (setShowModalEvent)="setShowModal($event)" (taskUpdated)="onTaskUpdated($event)"
         [taskId]="taskToEdit.id" [name]="taskToEdit.name" [isCompleted]="taskToEdit.isCompleted"
-        [deadline]="taskToEdit.deadline" [createdOn]="taskToEdit.createdOn">
+        [deadline]="taskToEdit.deadline" [createdOn]="taskToEdit.createdOn" [userId]="taskToEdit.userId">
     </app-edit-modal> -->
     }
 
@@ -44,7 +44,7 @@
             <app-task (setShowModalEvent)="setShowModal($event)" (sendTaskData)="getTaskToEdit($event)"
                 (taskDeleted)="onTaskDeleted($event)" (taskUpdated)="onTaskUpdated($event)" [taskId]="task.id"
                 [name]="task.name" [isCompleted]="task.isCompleted" [deadline]="task.deadline"
-                [createdOn]="task.createdOn" />
+                [createdOn]="task.createdOn" [userId]="task.userId" />
             <!--style="flex-grow: 1; flex-shrink: 1; flex-basis: 30%;"-->
         </dxi-item>
         }

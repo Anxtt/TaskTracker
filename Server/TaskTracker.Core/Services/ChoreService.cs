@@ -35,7 +35,8 @@ namespace TaskTracker.Core.Services
                         CreatedOn = x.CreatedOn.Date,
                         Deadline = x.Deadline.Date,
                         IsCompleted = x.IsCompleted,
-                        User = x.User.UserName
+                        User = x.User.UserName,
+                        UserId = x.UserId
                     })
                     .ToListAsync();
 
@@ -98,7 +99,8 @@ namespace TaskTracker.Core.Services
                         CreatedOn = x.CreatedOn.Date,
                         Deadline = x.Deadline.Date,
                         IsCompleted = x.IsCompleted,
-                        User = x.User.UserName
+                        User = x.User.UserName,
+                        UserId = x.UserId
                     })
                     .FirstOrDefaultAsync();
 

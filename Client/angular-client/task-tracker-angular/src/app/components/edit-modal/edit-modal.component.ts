@@ -26,6 +26,7 @@ export class EditModalComponent implements OnDestroy {
     @Input() createdOn: Date = new Date();
     @Input() name: string;
     @Input() deadline: Date = new Date();
+    @Input() userId: string = "";
     currentDate: string = new Date().toISOString().slice(0, 10);
 
     @Output() setShowModalEvent = new EventEmitter<boolean>();
@@ -60,11 +61,14 @@ export class EditModalComponent implements OnDestroy {
                     asyncValidators: this.taskNameExistValidator.validate.bind(this.taskNameExistValidator),
                     updateOn: 'blur'
             }),
-        deadline: new FormControl(null, [Validators.required])
+        deadline: new FormControl(null, [Validators.required]),
+        userId: new FormControl(this.userId)
     })
 
     editTask() {
+        // update the default values
         this.editForm.controls.id.setValue(this.taskId);
+        this.editForm.controls.userId.setValue(this.userId);
 
         this.taskService
             .editTask(this.editForm.value)
@@ -77,7 +81,8 @@ export class EditModalComponent implements OnDestroy {
                         deadline: this.editForm.value.deadline!,
                         isCompleted: this.isCompleted,
                         createdOn: this.createdOn,
-                        user: ''
+                        user: "",
+                        userId: this.userId
                     })
                 },
                 error: x => this.invalidForm = x.error

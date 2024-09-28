@@ -5,4 +5,5 @@ export interface TaskResponseModel {
     deadline: Date;
     isCompleted: boolean;
     user: string;
+    userId: string;
 }

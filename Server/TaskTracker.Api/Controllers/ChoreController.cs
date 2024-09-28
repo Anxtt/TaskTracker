@@ -80,10 +80,8 @@ namespace TaskTracker.Api.Controllers
         [HttpDelete("{id:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Delete([FromRoute] int id)
+        public async Task<IActionResult> Delete([FromRoute] int id, [FromQuery] string userId)
         {
-            string userId = this.User.GetId();
-
             if (await this.choreService.DoesExist(id, userId) is false)
             {
                 return this.NotFound("Task with such id was not found.");
@@ -136,21 +134,19 @@ namespace TaskTracker.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Edit([FromRoute] int id, [FromBody] ChoreEditModel model)
         {
-            string userId = this.User.GetId();
-
-            if (await this.choreService.DoesExist(id, userId) is false)
+            if (await this.choreService.DoesExist(id, model.UserId) is false)
             {
                 return this.NotFound("Task with such id was not found");
             }
 
-            if (model.Deadline.Date < DateTime.Now.Date)
-            {
-               return this.BadRequest("Date is invalid");
-            }
+            //if (model.Deadline.Date < DateTime.Now.Date)
+            //{
+            //   return this.BadRequest("Date is invalid");
+            //}
 
-            await this.choreService.Edit(id, model, userId);
+            await this.choreService.Edit(id, model, model.UserId);
 
-            this.RemoveCachedTasks(userId);
+            this.RemoveCachedTasks(model.UserId);
 
             return this.Ok();
         }

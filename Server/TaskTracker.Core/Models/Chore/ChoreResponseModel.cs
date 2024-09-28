@@ -13,5 +13,7 @@
         public bool IsCompleted { get; set; }
 
         public string User { get; set; }
+
+        public string UserId { get; set; }
     }
 }

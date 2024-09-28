@@ -24,6 +24,7 @@ export class TaskComponent implements OnInit, OnDestroy {
     @Input() taskId: number = 0;
     @Input() isCompleted = false;
     @Input() name: string = "";
+    @Input() userId: string = "";
 
     @Output() taskDeleted;
     @Output() taskUpdated;
@@ -34,7 +35,8 @@ export class TaskComponent implements OnInit, OnDestroy {
         id: this.taskId,
         name: this.name,
         deadline: new Date(),
-        isCompleted: this.isCompleted
+        isCompleted: this.isCompleted,
+        userId: this.userId
     };
 
     constructor(private taskService: TaskService, private messageService: MessageService) {
@@ -54,11 +56,12 @@ export class TaskComponent implements OnInit, OnDestroy {
         this.editForm.isCompleted = this.isCompleted;
         this.editForm.deadline = this.deadline;
         this.editForm.id = this.taskId;
+        this.editForm.userId = this.userId
     }
 
     deleteTask() {
         this.taskService
-            .deleteTask(this.taskId)
+            .deleteTask(this.taskId, this.userId)
             .pipe(take(1))
             .subscribe({
                 next: () => this.taskDeleted.emit(this.taskId),
@@ -79,7 +82,8 @@ export class TaskComponent implements OnInit, OnDestroy {
                     isCompleted: !this.isCompleted,
                     name: this.name,
                     createdOn: this.createdOn,
-                    user: ''
+                    user: '',
+                    userId: this.userId
                 }),
                 error: x => {
                     this.messageService.setMessage(x)
