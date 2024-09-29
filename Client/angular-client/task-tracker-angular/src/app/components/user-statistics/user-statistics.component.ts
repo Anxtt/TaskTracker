@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ValidationErrors } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { Subject, lastValueFrom, take, takeUntil } from 'rxjs';
@@ -14,6 +15,7 @@ import { AuthService } from '../../services/auth.service';
 import { MessageService } from '../../services/message.service';
 
 import { TaskResponseModel } from '../../models/TaskResponseModel';
+import { UserStatisticsResponseModel } from '../../models/UserStatisticsResponseModel';
 
 @Component({
     selector: 'app-user-statistics',
@@ -28,7 +30,7 @@ export class UserStatisticsComponent implements OnInit, OnDestroy {
 
     destroyed$: Subject<void> = new Subject();
 
-    users: any[] = [];
+    users: UserStatisticsResponseModel[] = [];
     usernameErrorMessage: string = "";
     emailErrorMessage: string = "";
     visible: boolean = false;
@@ -42,15 +44,15 @@ export class UserStatisticsComponent implements OnInit, OnDestroy {
                     return Promise.resolve(this.users);
                 }
 
-                return lastValueFrom(this.authService.getUsers()).then((x: any) => {
+                return lastValueFrom(this.authService.getUsers()).then((x: UserStatisticsResponseModel[]) => {
                     console.log(x);
                     this.users = x;
                     return x;
                 });
             },
-            update: (key, values) => {
+            update: (key, values: UserStatisticsResponseModel) => {
                 return lastValueFrom(this.authService.editUser(values)).then(x => {
-                    this.users = this.users.map((u: any) => {
+                    this.users = this.users.map((u: UserStatisticsResponseModel) => {
                         if (u.id !== values.id) {
                             return u;
                         }
@@ -61,8 +63,8 @@ export class UserStatisticsComponent implements OnInit, OnDestroy {
                     this.messageService.setMessage({ body: x })
                 });
             },
-            remove: (key) => {
-                return lastValueFrom(this.authService.deleteUser(key)).then((x: any) => {
+            remove: (key: string) => {
+                return lastValueFrom(this.authService.deleteUser(key)).then(() => {
                     this.users = this.users.filter(x => x.id !== key);
                 });
             },
@@ -84,13 +86,13 @@ export class UserStatisticsComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void { }
 
-    getData(model: DxDataGridTypes.EditingStartEvent) {
+    onEditingStart(model: DxDataGridTypes.EditingStartEvent) {
         this.email = model.data.email;
         this.userName = model.data.userName;
         this.visible = true;
     }
 
-    async editUser(data: DxDataGridTypes.RowUpdatingEvent) {
+    onRowUpdating(data: DxDataGridTypes.RowUpdatingEvent) {
         for (let prop of Object.keys(data.oldData)) {
             // проверява дали пропъртито съществува в новия обект
             if (!data.newData.hasOwnProperty(prop)) {
@@ -127,7 +129,7 @@ export class UserStatisticsComponent implements OnInit, OnDestroy {
             return;
         }
 
-        user.tasks = user.tasks.filter((x: any) => x.id !== e.taskId);
+        user.tasks = user.tasks.filter((x: TaskResponseModel) => x.id !== e.taskId);
 
         this.updateTaskCount(user);
 
@@ -142,10 +144,9 @@ export class UserStatisticsComponent implements OnInit, OnDestroy {
 
             this.authService.doesExistByEmail(value)
                 .pipe(take(1))
-                .subscribe((x: any) => {
-                    if (x?.slowDown) {
-                        this.messageService.setMessage(x);
-                        this.emailErrorMessage = "You have exceeded the API quota for this action. Try again later.";
+                .subscribe((x: ValidationErrors | null) => {
+                    if (x?.["error"]) {
+                        this.emailErrorMessage = x?.["error"];
                         return reject();
                     }
                     else if (x !== null) {
@@ -166,10 +167,9 @@ export class UserStatisticsComponent implements OnInit, OnDestroy {
 
             this.authService.doesExistByUserName(value)
                 .pipe(take(1))
-                .subscribe((x: any) => {
-                    if (x?.slowDown) {
-                        this.messageService.setMessage(x);
-                        this.usernameErrorMessage = "You have exceeded the API quota for this action. Try again later.";
+                .subscribe((x: ValidationErrors | null) => {
+                    if (x?.["error"]) {
+                        this.usernameErrorMessage = x?.["error"];
                         return reject();
                     }
                     else if (x !== null) {
@@ -182,11 +182,11 @@ export class UserStatisticsComponent implements OnInit, OnDestroy {
         })
     }).bind(this);
 
-    private updateTaskCount(user: any) {
+    private updateTaskCount(user: UserStatisticsResponseModel) {
         user.taskCount = user.tasks.length;
-        user.taskCompleteCount = user.tasks.filter((x: any) => x.isCompleted === true).length;
+        user.taskCompleteCount = user.tasks.filter((x: TaskResponseModel) => x.isCompleted === true).length;
         user.taskCompletePercent = (user.taskCompleteCount / user.taskCount * 100).toFixed(2);
-        user.taskIncompleteCount = user.tasks.filter((x: any) => x.isCompleted === false).length;
+        user.taskIncompleteCount = user.tasks.filter((x: TaskResponseModel) => x.isCompleted === false).length;
         user.taskIncompletePercent = (user.taskIncompleteCount / user.taskCount * 100).toFixed(2);
     }
 }

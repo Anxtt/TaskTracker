@@ -1,4 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { ValidationErrors } from '@angular/forms';
+import { Subject, take, takeUntil } from 'rxjs';
 
 import { DxPopupModule, DxFormModule } from 'devextreme-angular';
 
@@ -8,7 +10,6 @@ import { TaskService } from '../../services/task.service';
 import { MessageService } from '../../services/message.service';
 
 import { TaskResponseModel } from '../../models/TaskResponseModel';
-import { Subject, take, takeUntil } from 'rxjs';
 
 @Component({
     selector: 'app-dx-edit-modal',
@@ -44,7 +45,6 @@ export class DxEditModalComponent implements OnInit, OnDestroy {
 
     editTask(e: any) {
         e.preventDefault();
-
         this.taskService
             .editTask(this.editForm)
             .pipe(takeUntil(this.destroyed$))
@@ -62,12 +62,12 @@ export class DxEditModalComponent implements OnInit, OnDestroy {
                 return resolve();
             }
 
+            // send userId in a queryParam
             this.taskService.doesExistByName(value)
                 .pipe(take(1))
-                .subscribe((x: any) => {
-                    if (x?.slowDown) {
-                        this.messageService.setMessage(x);
-                        this.taskNameErrorMessage = "You have exceeded the API quota for this action. Try again later.";
+                .subscribe((x: ValidationErrors | null) => {
+                    if (x?.["error"]) {
+                        this.taskNameErrorMessage = x?.["error"];
                         return reject();
                     }
                     else if (x !== null) {

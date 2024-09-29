@@ -1,11 +1,15 @@
 import { Component, Input, AfterViewInit, Output, EventEmitter } from '@angular/core';
+import { ValidationErrors } from '@angular/forms';
+import { lastValueFrom, take } from 'rxjs';
+
 import { DxDataGridModule } from 'devextreme-angular';
+import { DxDataGridTypes } from 'devextreme-angular/ui/data-grid';
 import CustomStore from 'devextreme/data/custom_store';
 import DataSource from 'devextreme/data/data_source';
+
 import { TaskService } from '../../services/task.service';
 import { MessageService } from '../../services/message.service';
-import { lastValueFrom, take } from 'rxjs';
-import { DxDataGridTypes } from 'devextreme-angular/ui/data-grid';
+
 import { TaskResponseModel } from '../../models/TaskResponseModel';
 
 @Component({
@@ -18,7 +22,7 @@ import { TaskResponseModel } from '../../models/TaskResponseModel';
 export class DetailGridComponent implements AfterViewInit {
     private taskName: string = "";
 
-    @Input() tasks: any[] = [];
+    @Input() tasks: TaskResponseModel[] = [];
 
     @Output() taskUpdated: EventEmitter<TaskResponseModel> = new EventEmitter<TaskResponseModel>();
     @Output() taskDeleted: EventEmitter<{ taskId: number, userId: string }> = new EventEmitter<{ taskId: number, userId: string }>();
@@ -38,7 +42,7 @@ export class DetailGridComponent implements AfterViewInit {
                     return this.tasks;
                 },
                 update: (key, values) => {
-                    return lastValueFrom(this.taskService.editTask(values)).then(x => {
+                    return lastValueFrom(this.taskService.editTask(values)).then(() => {
                         this.tasks = this.tasks.map(t => {
                             if (t.id !== values.id) {
                                 return t;
@@ -52,9 +56,9 @@ export class DetailGridComponent implements AfterViewInit {
                     });
                 },
                 remove: (key) => {
-                    let userId = this.tasks.find(x => x.id === key).userId;
+                    let userId = this.tasks?.find(x => x.id === key)!.userId;
 
-                    return lastValueFrom(this.taskService.deleteTask(key, userId)).then(x => {
+                    return lastValueFrom(this.taskService.deleteTask(key, userId)).then(() => {
                         this.tasks = this.tasks.filter(x => x.id !== key);
 
                         this.taskDeleted.emit({ taskId: key, userId: userId });
@@ -91,10 +95,9 @@ export class DetailGridComponent implements AfterViewInit {
             // send userId in a queryParam
             this.taskService.doesExistByName(value)
                 .pipe(take(1))
-                .subscribe((x: any) => {
-                    if (x?.slowDown) {
-                        this.messageService.setMessage(x);
-                        this.taskNameErrorMessage = "You have exceeded the API quota for this action. Try again later.";
+                .subscribe((x: ValidationErrors | null) => {
+                    if (x?.["error"]) {
+                        this.taskNameErrorMessage = x?.["error"];
                         return reject();
                     }
                     else if (x !== null) {

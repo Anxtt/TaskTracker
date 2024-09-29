@@ -7,6 +7,7 @@ import { BehaviorSubject, Observable, catchError, map, of } from 'rxjs';
 import { MessageService } from './message.service';
 
 import { IdentityResponseModel } from '../models/IdentityResponseModel';
+import { UserStatisticsResponseModel } from '../models/UserStatisticsResponseModel';
 
 import { environment } from '../environments/environment';
 
@@ -68,8 +69,8 @@ export class AuthService implements OnDestroy {
         );
     }
 
-    deleteUser(data: any) {
-        return this.http.delete(`${this.apiUrl}Identity/Delete/${data.id}`, {
+    deleteUser(id: string) {
+        return this.http.delete(`${this.apiUrl}Identity/Delete/${id}`, {
             headers: {
                 Accept: "application/json",
                 "Content-Type": "application/json"
@@ -138,7 +139,7 @@ export class AuthService implements OnDestroy {
         );
     }
 
-    editUser(userEditModel: any) {
+    editUser(userEditModel: UserStatisticsResponseModel) {
         return this.http.put(`${this.apiUrl}Identity/Edit/${userEditModel.id}`, userEditModel, {
             headers: {
                 Accept: "application/json",
@@ -149,7 +150,7 @@ export class AuthService implements OnDestroy {
     }
 
     refreshToken() {
-        return this.http.get(`${this.apiUrl}Identity/RefreshToken`, {
+        return this.http.get<IdentityResponseModel>(`${this.apiUrl}Identity/RefreshToken`, {
             observe: "response",
             headers: {
                 Accept: "application/json",
@@ -170,7 +171,7 @@ export class AuthService implements OnDestroy {
     }
 
     getUsers() {
-        return this.http.get(`${this.apiUrl}Identity/GetUsers`, {
+        return this.http.get<UserStatisticsResponseModel[]>(`${this.apiUrl}Identity/GetUsers`, {
             headers: {
                 Accept: "application/json",
                 "Content-Type": "application/json"

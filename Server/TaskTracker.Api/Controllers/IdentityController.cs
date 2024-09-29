@@ -132,7 +132,7 @@ namespace TaskTracker.Api.Controllers
             await this.userManager.UpdateNormalizedEmailAsync(user);
             await this.userManager.UpdateNormalizedUserNameAsync(user);
 
-            //await this.RefreshToken();
+            // await this.RefreshToken();
 
             return this.Ok("User updated successfully.");
         }
@@ -141,7 +141,7 @@ namespace TaskTracker.Api.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetUsers()
         {
-            var users = await this.identityService.GetUsers(this.User.GetId());
+            IEnumerable<UserStatisticsResponseModel> users = await this.identityService.GetUsers(this.User.GetId());
 
             return this.Ok(users);
         }

@@ -62,7 +62,9 @@ export class EditModalComponent implements OnDestroy {
                     updateOn: 'blur'
             }),
         deadline: new FormControl(null, [Validators.required]),
-        userId: new FormControl(this.userId)
+        userId: new FormControl(this.userId),
+        createdOn: new FormControl(this.createdOn),
+        user: new FormControl("")
     })
 
     editTask() {

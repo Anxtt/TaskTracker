@@ -31,7 +31,7 @@ export class TaskListComponent implements OnInit, OnDestroy {
 
     tasks: TaskResponseModel[];
     showModal: boolean = false;
-    taskToEdit: any;
+    taskToEdit!: TaskResponseModel;
 
     noContent: boolean = false;
     isCompleted: boolean | string;
@@ -89,7 +89,7 @@ export class TaskListComponent implements OnInit, OnDestroy {
         this.messageService.setMessage({ body: "Task was deleted successfully." });
     }
 
-    onTaskUpdated(task: any) {
+    onTaskUpdated(task: TaskResponseModel) {
         this.tasks = this.tasks.map(x => {
             if (x.id !== task.id) {
                 return x;
@@ -156,11 +156,11 @@ export class TaskListComponent implements OnInit, OnDestroy {
         }
     }
 
-    getTaskToEdit(e: any) {
-        this.taskToEdit = { ...(this.tasks.find(x => x.id === e)) };
+    getTaskToEdit(e: number) {
+        this.taskToEdit = { ...(this.tasks.find(x => x.id === e))! };
     }
 
-    setShowModal(state: any) {
+    setShowModal(state: boolean) {
         this.showModal = state;
     }
 }

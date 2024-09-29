@@ -97,8 +97,8 @@ export class TaskService {
         // );
     }
 
-    editTask(editForm: any) {
-        return this.http.put(`${this.apiUrl}Chore/Edit/${editForm.id}`, editForm, {
+    editTask(editForm: TaskResponseModel | undefined | any) {
+        return this.http.put(`${this.apiUrl}Chore/Edit/${editForm!.id}`, editForm, {
             headers: {
                 Accept: "application/json",
                 "Content-Type": "application/json"

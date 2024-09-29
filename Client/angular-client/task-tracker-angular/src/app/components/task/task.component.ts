@@ -31,12 +31,14 @@ export class TaskComponent implements OnInit, OnDestroy {
     @Output() sendTaskData;
     @Output() setShowModalEvent;
 
-    editForm = {
+    editForm: TaskResponseModel = {
         id: this.taskId,
         name: this.name,
         deadline: new Date(),
         isCompleted: this.isCompleted,
-        userId: this.userId
+        userId: this.userId,
+        createdOn: this.createdOn,
+        user: ""
     };
 
     constructor(private taskService: TaskService, private messageService: MessageService) {
@@ -56,7 +58,8 @@ export class TaskComponent implements OnInit, OnDestroy {
         this.editForm.isCompleted = this.isCompleted;
         this.editForm.deadline = this.deadline;
         this.editForm.id = this.taskId;
-        this.editForm.userId = this.userId
+        this.editForm.userId = this.userId;
+        this.editForm.createdOn = this.createdOn;
     }
 
     deleteTask() {
@@ -76,22 +79,14 @@ export class TaskComponent implements OnInit, OnDestroy {
             .editTask(this.editForm)
             .pipe(take(1))
             .subscribe({
-                next: () => this.taskUpdated.emit({
-                    id: this.taskId,
-                    deadline: this.deadline,
-                    isCompleted: !this.isCompleted,
-                    name: this.name,
-                    createdOn: this.createdOn,
-                    user: '',
-                    userId: this.userId
-                }),
+                next: () => this.taskUpdated.emit(this.editForm),
                 error: x => {
                     this.messageService.setMessage(x)
                 }
             });
     }
 
-    setShowModal(state: any) {
+    setShowModal(state: boolean) {
         this.sendTaskData.emit(this.taskId);
         this.setShowModalEvent.emit(state);
     }
