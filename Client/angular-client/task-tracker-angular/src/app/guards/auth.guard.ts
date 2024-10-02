@@ -1,8 +1,8 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { CanActivate, Router } from '@angular/router';
+import { CanActivate, NavigationStart, Router } from '@angular/router';
+import { Subject, catchError, of, switchMap, takeUntil } from 'rxjs';
 
 import { AuthService } from '../services/auth.service';
-import { Subject, catchError, of, switchMap, takeUntil } from 'rxjs';
 import { MessageService } from '../services/message.service';
 
 @Injectable({
@@ -10,8 +10,19 @@ import { MessageService } from '../services/message.service';
 })
 export class AuthGuard implements CanActivate, OnDestroy {
     destroyed$: Subject<void> = new Subject();
+    pageReloaded: boolean = true;
 
-    constructor(private authService: AuthService, private messageService: MessageService, private router: Router) { }
+    constructor(private authService: AuthService,
+        private messageService: MessageService,
+        private router: Router) {
+        this.router.events
+            .pipe(takeUntil(this.destroyed$))
+            .subscribe(x => {
+                if (x instanceof NavigationStart) {
+                    this.pageReloaded = !this.router.navigated
+                }
+            });
+    }
 
     ngOnDestroy(): void {
         this.destroyed$.next();
@@ -21,26 +32,16 @@ export class AuthGuard implements CanActivate, OnDestroy {
     // Prevents the user from accessing tasks and addTask when not authenticated
     canActivate() {
         const isAuth = this.authService.getCurrentAuth();
-        
-        if (isAuth?.accessToken === "") {
-            this.router.navigateByUrl("/login", {
-                state: {
-                    from: "unauthorized"
-                }
-            });
-            return false;
-        }
-        
-        return this.authService.verifyUser()
+
+        if (this.pageReloaded === true && isAuth.accessToken === "") {
+            return this.authService.verifyUser()
             .pipe(takeUntil(this.destroyed$))
             .pipe(
                 catchError(x => {
                     this.messageService.setMessage(x);
-                    return of({ userName: "", accessToken: "", refreshToken: "", roles: [] })
+                    return of({ userName: "", accessToken: "", refreshToken: "", roles: [] });
                 }),
                 switchMap(x => {
-                    this.authService.setAuth(x);
-
                     if (x?.accessToken === "") {
                         this.router.navigateByUrl("/login", {
                             state: {
@@ -49,9 +50,25 @@ export class AuthGuard implements CanActivate, OnDestroy {
                         });
                         return of(false);
                     }
-                    
+
+                    this.authService.setAuth(x);
                     return of(true);
                 })
             );
+        }
+
+        if (isAuth?.accessToken === "") {
+            this.router.navigateByUrl("/login", {
+                state: {
+                    from: "unauthorized"
+                }
+            });
+            return false;
+        }
+        else if (isAuth?.accessToken !== "" && this.pageReloaded === false) {
+            return true;
+        }
+    
+        return true;
     }
 }

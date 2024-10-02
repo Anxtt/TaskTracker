@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 import { Observable, Subject, take, takeUntil } from 'rxjs';
 
@@ -42,7 +42,8 @@ export class TaskListComponent implements OnInit, OnDestroy {
         private authService: AuthService,
         private taskService: TaskService,
         private messageService: MessageService,
-        private loadingService: LoadingService) {
+        private loadingService: LoadingService,
+        private router: Router) {
         this.isAuth$ = this.authService.getAuth();
         this.tasks = [];
         this.isCompleted = "";
@@ -76,7 +77,10 @@ export class TaskListComponent implements OnInit, OnDestroy {
                         return;
                     }
 
-                    this.messageService.setMessage(x);
+                    this.router.navigateByUrl("/login");
+                    this.authService.setAuth({ accessToken: "", refreshToken: "", roles: [], userName: "" });
+                    this.messageService.setMessage({ error: "Your session has expired.", status: 401 });
+                    this.loadingService.setLoadingOff();
                 },
                 complete: () => {
                     this.loadingService.setLoadingOff();

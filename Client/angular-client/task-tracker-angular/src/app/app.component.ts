@@ -38,16 +38,13 @@ import { IdentityResponseModel } from './models/IdentityResponseModel';
 export class AppComponent implements OnInit, OnDestroy {
     isActive: boolean;
     isAuth: IdentityResponseModel;
-    message: { message: string, show: boolean, type: ToastType };
     destroyed$: Subject<void> = new Subject();
 
     constructor(
         private userActivityService: UserActivityService,
-        private authService: AuthService,
         private messageService: MessageService) {
         this.isActive = true;
-        this.isAuth = { accessToken: "", userName: "", refreshToken: "" };
-        this.message = { message: "", show: false, type: "custom" };
+        this.isAuth = { accessToken: "", userName: "", refreshToken: "", roles: [] };
     }
 
     ngOnDestroy(): void {
@@ -56,10 +53,6 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.authService.getAuth()
-            .pipe(takeUntil(this.destroyed$))
-            .subscribe(x => this.isAuth = x);
-
         this.userActivityService.isActive$
             .pipe(takeUntil(this.destroyed$))
             .subscribe(x => this.isActive = x);
@@ -67,14 +60,12 @@ export class AppComponent implements OnInit, OnDestroy {
         this.messageService.getMessage()
             .pipe(takeUntil(this.destroyed$))
             .subscribe(x => {
-                this.message = x;
-                
                 notify({
                     maxWidth: 400,
                     displayTime: 2000,
-                    visible: this.message.show,
-                    type: this.message.type,
-                    message: this.message.message,
+                    visible: x.show,
+                    type: x.type,
+                    message: x.message,
                     show: {
                         type: 'fade', duration: 400, from: 0, to: 1
                     },

@@ -7,60 +7,70 @@ import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { TaskListComponent } from './components/task-list/task-list.component';
 import { ErrorComponent } from './components/error/error.component';
-import { UnauthGuard } from './guards/unauth.guard';
-import { AuthGuard } from './guards/auth.guard';
 import { UserStatisticsComponent } from './components/user-statistics/user-statistics.component';
+
+import { AuthGuard } from './guards/auth.guard';
+import { LoggedAuthGuard } from './guards/loggedAuth.guard';
+import { AuthResolver } from './resolvers/auth.resolver';
 
 export const routes: Routes = [
     {
         path: '',
-        title: 'Task Tracker',
-        component: HomeComponent
-    },
+        // pathMatch: '',
+        resolve: { auth: AuthResolver },
+        // redirectTo: ,
+        children: [
+            {
+                path: '',
+                title: 'Task Tracker',
+                component: HomeComponent
+            },
 
-    {
-        path: 'about',
-        title: 'About',
-        component: AboutComponent
-    },
+            {
+                path: 'about',
+                title: 'About',
+                component: AboutComponent
+            },
 
-    {
-        path: 'login',
-        title: 'Login',
-        component: LoginComponent,
-        canActivate: [UnauthGuard]
-    },
+            {
+                path: 'login',
+                title: 'Login',
+                component: LoginComponent,
+                canActivate: [LoggedAuthGuard]
+            },
 
-    {
-        path: 'register',
-        title: 'Register',
-        component: RegisterComponent,
-        canActivate: [UnauthGuard]
-    },
-    
-    {
-        path: 'tasks',
-        title: 'Tasks',
-        component: TaskListComponent,
-        canActivate: [AuthGuard]
-    },
+            {
+                path: 'register',
+                title: 'Register',
+                component: RegisterComponent,
+                canActivate: [LoggedAuthGuard]
+            },
 
-    {
-        path: 'addTask',
-        title: 'Add Task',
-        component: AddTaskComponent,
-        canActivate: [AuthGuard]
-    },
+            {
+                path: 'tasks',
+                title: 'Tasks',
+                component: TaskListComponent,
+                canActivate: [AuthGuard]
+            },
 
-    { 
-        path: 'users',
-        title: 'User Statistics',
-        component: UserStatisticsComponent
-    },
+            {
+                path: 'addTask',
+                title: 'Add Task',
+                component: AddTaskComponent,
+                canActivate: [AuthGuard]
+            },
 
-    {
-        path: '**',
-        title: 'Error',
-        component: ErrorComponent
+            {
+                path: 'users',
+                title: 'User Statistics',
+                component: UserStatisticsComponent
+            },
+
+            {
+                path: '**',
+                title: 'Error',
+                component: ErrorComponent
+            }
+        ]
     }
 ];
