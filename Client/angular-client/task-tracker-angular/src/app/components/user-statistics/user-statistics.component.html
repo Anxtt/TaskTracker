@@ -48,10 +48,6 @@
 
     <dxi-column dataField="taskCompletePercent" caption="Completed %" cellTemplate="completeCountTemplate"
         dataType="number" [width]="160"></dxi-column>
-
-    <dxi-column dataField="taskIncompletePercent" caption="Incompleted %" cellTemplate="incompleteCountTemplate"
-        dataType="number" [width]="160"></dxi-column>
-
     <div *dxTemplate="let c of 'completeCountTemplate'">
         <div>
             <dx-bullet [showTarget]="false" [showZeroLevel]="true" [startScaleValue]="0"
@@ -70,6 +66,8 @@
         </div>
     </div>
 
+    <dxi-column dataField="taskIncompletePercent" caption="Incompleted %" cellTemplate="incompleteCountTemplate"
+        dataType="number" [width]="160"></dxi-column>
     <div *dxTemplate="let inc of 'incompleteCountTemplate'">
         <div>
             <dx-bullet [showTarget]="false" [showZeroLevel]="true" [startScaleValue]="0"

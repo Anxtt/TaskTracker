@@ -38,10 +38,10 @@ export class DetailGridComponent implements AfterViewInit {
         this.taskDataSource = new DataSource({
             store: new CustomStore({
                 key: "id",
-                load: (options) => {
+                load: async (options) => {
                     return this.tasks;
                 },
-                update: (key, values) => {
+                update: async (key, values) => {
                     return lastValueFrom(this.taskService.editTask(values)).then(() => {
                         this.tasks = this.tasks.map(t => {
                             if (t.id !== values.id) {
@@ -55,14 +55,14 @@ export class DetailGridComponent implements AfterViewInit {
                         this.messageService.setMessage({ body: "Task was updated successfully." });
                     });
                 },
-                remove: (key) => {
+                remove: async (key) => {
                     let userId = this.tasks?.find(x => x.id === key)!.userId;
 
                     return lastValueFrom(this.taskService.deleteTask(key, userId)).then(() => {
                         this.tasks = this.tasks.filter(x => x.id !== key);
 
                         this.taskDeleted.emit({ taskId: key, userId: userId });
-                        this.messageService.setMessage({ body: "Task was deleted successfully.", show: true });
+                        this.messageService.setMessage({ body: "Task was deleted successfully." });
                     });
                 }
             })

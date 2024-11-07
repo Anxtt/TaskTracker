@@ -38,7 +38,7 @@ export class UserStatisticsComponent implements OnInit, OnDestroy {
     dataSource: DataSource = new DataSource({
         store: new CustomStore({
             key: "id",
-            load: (options) => {
+            load: async (options) => {
                 console.log(options);
                 if (this.users?.length > 0) {
                     return Promise.resolve(this.users);
@@ -50,7 +50,7 @@ export class UserStatisticsComponent implements OnInit, OnDestroy {
                     return x;
                 });
             },
-            update: (key, values: UserStatisticsResponseModel) => {
+            update: async (key, values: UserStatisticsResponseModel) => {
                 return lastValueFrom(this.authService.editUser(values)).then(x => {
                     this.users = this.users.map((u: UserStatisticsResponseModel) => {
                         if (u.id !== values.id) {
@@ -63,9 +63,10 @@ export class UserStatisticsComponent implements OnInit, OnDestroy {
                     this.messageService.setMessage({ body: x })
                 });
             },
-            remove: (key: string) => {
-                return lastValueFrom(this.authService.deleteUser(key)).then(() => {
+            remove: async (key: string) => {
+                return lastValueFrom(this.authService.deleteUser(key)).then((x: any) => {
                     this.users = this.users.filter(x => x.id !== key);
+                    this.messageService.setMessage({ body: x });
                 });
             },
             // insert: () => {},
