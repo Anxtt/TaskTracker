@@ -1,0 +1,65 @@
+<dx-tree-list id="users" [dataSource]="dataSource" dataStructure="tree" keyExpr="id" parentIdxExpr="userId" itemsExpr="tasks"
+    [columnAutoWidth]="true" [wordWrapEnabled]="true" [showBorders]="true"
+    (onRowUpdating)="onRowUpdating($event)" (onEditingStart)="onEditingStart($event)" (onEditorPreparing)="onEditorPreparing($event)"
+    (onEditorPrepared)="onEditorPrepared($event)">
+
+    <dxo-column-chooser [enabled]="true"></dxo-column-chooser>
+    <dxo-search-panel [visible]="true" width="250"></dxo-search-panel>
+
+    <dxo-header-filter [visible]="true"></dxo-header-filter>
+    <dxo-filter-row [visible]="true"></dxo-filter-row>
+    <dxo-filter-panel [visible]="true"></dxo-filter-panel>
+
+    <dxo-scrolling mode="standard"></dxo-scrolling>
+    <dxo-paging [enabled]="true" [pageSize]="10"></dxo-paging>
+    <dxo-pager [visible]="true" [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20, 50, 100]"
+        [showNavigationButtons]="true" [showInfo]="true"></dxo-pager>
+
+    <dxi-column dataField="userName" caption="Username">
+        <dxi-validation-rule type="required" message="Username is required."></dxi-validation-rule>
+        <dxi-validation-rule type="stringLength" [min]="4" [max]="16"
+            message="Username must be between 4 and 16 characters."></dxi-validation-rule>
+            <dxi-validation-rule type="async" [validationCallback]="userStoreService.userNameCheck"
+            [ignoreEmptyValue]="true">
+        </dxi-validation-rule>
+    </dxi-column>
+    
+    <dxi-column dataField="email">
+        <dxi-validation-rule type="required" message="E-mail is required."></dxi-validation-rule>
+        <dxi-validation-rule type="stringLength" [min]="6" [max]="50"
+            message="E-mail must be between 6 and 50 characters."></dxi-validation-rule>
+        <dxi-validation-rule type="email" message="Invalid E-mail."></dxi-validation-rule>
+        <dxi-validation-rule type="async" [validationCallback]="userStoreService.emailCheck"
+            [ignoreEmptyValue]="true">
+        </dxi-validation-rule>
+    </dxi-column>
+
+    <dxi-column caption="Task(s)">
+        <dxi-column dataField="name"></dxi-column>
+        <dxi-column dataField="createdOn" dataType="date" [customizeText]="formatDate"
+            [allowHeaderFiltering]="false"></dxi-column>
+        <dxi-column dataField="deadline" dataType="date" [customizeText]="formatDate"
+            [allowHeaderFiltering]="false"></dxi-column>
+    </dxi-column>
+
+    <dxi-column dataField="taskCompleteCount" caption="Complete Count" [allowEditing]="false"></dxi-column>
+    <dxi-column dataField="taskCompletePercent" caption="Complete %" cellTemplate="completePercent"
+        [allowEditing]="false"></dxi-column>
+    <div *dxTemplate="let cp of 'completePercent'">
+        @if (cp.data.taskCompletePercent) {
+        <p>{{cp.data.taskCompletePercent}}%</p>
+        }
+    </div>
+
+    <dxi-column dataField="taskIncompleteCount" caption="Incomplete Count" [allowEditing]="false"></dxi-column>
+    <dxi-column dataField="taskIncompletePercent" caption="Incomplete %" cellTemplate="incompletePercent"
+        [allowEditing]="false"></dxi-column>
+    <div *dxTemplate="let icp of 'incompletePercent'">
+        @if (icp.data.taskIncompletePercent) {
+        <p>{{icp.data.taskIncompletePercent}}%</p>
+        }
+    </div>
+
+    <dxo-editing mode="row" [allowUpdating]="allowUpdating" [allowDeleting]="true" [refreshMode]="'full'" [useIcons]="true">
+    </dxo-editing>
+</dx-tree-list>

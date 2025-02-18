@@ -1,0 +1,22 @@
+<div id="pivotgrid-demo">
+                                                                        <!-- Harmony Light - alternate,
+                                                                             Pastel - extrapolate,
+                                                                             Material - alternate -->
+    <dx-chart id="tasks-chart" title="User Task Statistics" [rotated]="true" palette="Harmony Light" paletteExtensionMode="alternate">
+                                <!-- fullstackedline/stackedbar -->
+        <dxo-common-series-settings type="fullstackedbar">
+        </dxo-common-series-settings>
+        <dxo-size [height]="500"></dxo-size>
+        <dxo-adaptive-layout [height]="400" [width]="400"></dxo-adaptive-layout>
+        <dxo-tooltip [enabled]="true" [customizeTooltip]="customizeTooltip"></dxo-tooltip>
+        <dxo-legend [visible]="false"></dxo-legend>
+        <dxo-export [enabled]="true"></dxo-export>
+    </dx-chart>
+
+    <dx-pivot-grid id="pivotGrid" [dataSource]="dataSource" [showBorders]="true" [allowFiltering]="true"
+        [allowSortingBySummary]="true" [showRowTotals]="true" [showRowGrandTotals]="true" [showColumnTotals]="false"
+        [showColumnGrandTotals]="false">
+        <dxo-field-chooser [enabled]="true" [height]="400"></dxo-field-chooser>
+        <dxo-scrolling mode="virtual"></dxo-scrolling>
+    </dx-pivot-grid>
+</div>

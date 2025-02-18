@@ -151,7 +151,7 @@ export class TaskListComponent implements OnInit, OnDestroy {
 
     setParam(param: string, event: Event) {
         let target = event.currentTarget as HTMLInputElement;
-
+        
         if (param === 'dateSort') {
             this.dateSort = target.value;
         }

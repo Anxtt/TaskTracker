@@ -2,9 +2,28 @@
     <div class="mx-auto">
         @let isAuth = isAuth$ | async;
         @if (isAdmin(isAuth) === true) {
-        <div style="float: left; left: 1%; position: relative;">
-            <a class="navigationAnchor" routerLink="/users">Users</a>
-        </div>
+        <ul style="display: inline">
+            <li style="float: left; left: 0.5%; position: relative; list-style-type: none; font-size: medium;">
+                <div>
+                    <button id="dropdown-btn" data-bs-toggle="dropdown" aria-expanded="false">
+                        User Statistics
+                    </button>
+                    <ul id="dropdown-ul" class="dropdown-menu">
+                        <li class="navigation dropdown-item mx-auto">
+                            <a routerLink="/users" (click)="userStoreService.setType('dataGrid')" id="dropdown-a" class="navigationAnchor">Data Grid</a>
+                        </li>
+
+                        <li class="navigation dropdown-item mx-auto">
+                            <a routerLink="/users" (click)="userStoreService.setType('treeList')" id="dropdown-a" class="navigationAnchor">Tree List</a>
+                        </li>
+
+                        <li class="navigation dropdown-item mx-auto">
+                            <a routerLink="/users" (click)="userStoreService.setType('pivotGrid')" id="dropdown-a" class="navigationAnchor">Pivot Grid</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
         }
 
         <ul style="display: inline;">
@@ -31,7 +50,7 @@
                 <a routerLink="/about" class="navigationAnchor">About</a>
             </li>
         </ul>
-        
+
         @if (isAuth?.accessToken) {
         <ul class="authenticationUl">
             <li class="authenticationLi">

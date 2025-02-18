@@ -13,13 +13,13 @@ import { MessageService } from '../../services/message.service';
 import { TaskResponseModel } from '../../models/TaskResponseModel';
 
 @Component({
-    selector: 'app-detail-grid',
+    selector: 'app-task-detail-grid',
     standalone: true,
     imports: [DxDataGridModule],
-    templateUrl: './detail-grid.component.html',
-    styleUrl: './detail-grid.component.css'
+    templateUrl: './task-detail-grid.component.html',
+    styleUrl: './task-detail-grid.component.css'
 })
-export class DetailGridComponent implements AfterViewInit {
+export class TaskDetailGridComponent implements AfterViewInit {
     private taskName: string = "";
 
     @Input() tasks: TaskResponseModel[] = [];

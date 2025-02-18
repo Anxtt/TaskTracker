@@ -1,5 +1,6 @@
 <dx-data-grid [dataSource]="taskDataSource" (onRowUpdating)="onRowUpdating($event)"
     (onEditingStart)="onEditingStart($event)" [showBorders]="true" [columnAutoWidth]="true">
+    
     <dxi-column dataField="name" dataType="string">
         <dxi-validation-rule type="required"></dxi-validation-rule>
         <dxi-validation-rule type="stringLength" min="4" max="16"
@@ -18,7 +19,7 @@
 
     <dxi-column dataField="isCompleted" dataType="boolean"></dxi-column>
 
-    <dxo-editing mode="row" [allowUpdating]="true" [allowDeleting]="true" [refreshMode]="'full'" [useIcons]="true">
+    <dxo-editing mode="form" [allowUpdating]="true" [allowDeleting]="true" [refreshMode]="'full'" [useIcons]="true">
         <dxo-form>
             <dxi-item dataField="name"></dxi-item>
             <dxi-item dataField="deadline"></dxi-item>

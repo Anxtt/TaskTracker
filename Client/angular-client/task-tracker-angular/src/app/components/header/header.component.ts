@@ -8,6 +8,7 @@ import { AuthService } from '../../services/auth.service';
 import { MessageService } from '../../services/message.service';
 
 import { IdentityResponseModel } from '../../models/IdentityResponseModel';
+import { UserStoreService } from '../../services/user-store.service';
 
 @Component({
     selector: 'app-header',
@@ -23,7 +24,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     isLightTheme: boolean = localStorage.getItem("theme") === "dark" ? false : true;
 
-    constructor(private authService: AuthService, private messageService: MessageService, private router: Router) {
+    constructor(private authService: AuthService,
+        private messageService: MessageService,
+        private router: Router,
+        public userStoreService: UserStoreService) {
         this.isAuth$ = this.authService.getAuth();
         // this.isAuth = this.authService.getCurrentAuth();
     }
