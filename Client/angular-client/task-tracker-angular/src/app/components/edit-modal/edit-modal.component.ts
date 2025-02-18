@@ -10,6 +10,7 @@ import { TaskNameExistValidator } from '../../validators/TaskNameExistValidator'
 
 import { TaskResponseModel } from '../../models/TaskResponseModel';
 import { Subject, take, takeUntil } from 'rxjs';
+import { DateService } from '../../services/date.service';
 
 @Component({
     selector: 'app-edit-modal',
@@ -27,7 +28,7 @@ export class EditModalComponent implements OnDestroy {
     @Input() name: string;
     @Input() deadline: Date = new Date();
     @Input() userId: string = "";
-    currentDate: string = new Date().toISOString().slice(0, 10);
+    currentDate: string;
 
     @Output() setShowModalEvent = new EventEmitter<boolean>();
     @Output() taskUpdated = new EventEmitter<TaskResponseModel>();
@@ -36,9 +37,10 @@ export class EditModalComponent implements OnDestroy {
     
     taskNameExistValidator: TaskNameExistValidator = inject(TaskNameExistValidator);
 
-    constructor(private taskService: TaskService) {
+    constructor(private taskService: TaskService, private dateService: DateService) {
         this.invalidForm = "";
         this.name = "";
+        this.currentDate = this.dateService.currentDate;
     }
 
     ngOnDestroy(): void {
@@ -68,7 +70,7 @@ export class EditModalComponent implements OnDestroy {
     })
 
     editTask() {
-        // update the default values
+        // update default values
         this.editForm.controls.id.setValue(this.taskId);
         this.editForm.controls.userId.setValue(this.userId);
 

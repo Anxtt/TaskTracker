@@ -8,6 +8,7 @@ import { TaskService } from '../../services/task.service';
 import { TaskNameExistValidator } from '../../validators/TaskNameExistValidator';
 import { MessageService } from '../../services/message.service';
 import { Subject, Subscription, finalize, take, takeUntil } from 'rxjs';
+import { DateService } from '../../services/date.service';
 
 @Component({
     selector: 'app-add-task',
@@ -20,13 +21,16 @@ export class AddTaskComponent implements OnDestroy {
     destroyed$: Subject<void> = new Subject();
 
     taskNameExistValidator: TaskNameExistValidator = inject(TaskNameExistValidator);
-    currentDate: string = new Date().toISOString().slice(0, 10);;
+    currentDate: string;
 
     constructor(
         private taskService: TaskService,
         private messageService: MessageService,
-        private router: Router
-    ) { }
+        private router: Router,
+        private dateService: DateService
+    ) {
+        this.currentDate = this.dateService.currentDate;
+    }
 
     ngOnDestroy(): void {
         this.destroyed$.next();
@@ -54,7 +58,7 @@ export class AddTaskComponent implements OnDestroy {
     //     console.log(this.createForm.get('taskName')?.errors);
     // }
 
-    handleCreate() {        
+    handleCreate() {
         const subs: Subscription = this.taskService
             .createTask(this.createForm.value)
             // .pipe(take(1/2/3/4/5))

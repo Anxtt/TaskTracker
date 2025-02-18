@@ -4,14 +4,14 @@
             <p class="col-10 d-inline-flex mx-auto mt-auto cardStyle">{{name}}</p>
             <span class="d-inline-flex col-1 mx-auto mt-auto" style="cursor: pointer; font-size: 24px"
                 (click)="updateIsComplete()">
-                &#x2705;
+                {{ isCompleted === true ? '&#x2705;' : '&#x274C;' }}
             </span>
         </div>
 
         <div class="cardStyle text-center">
             <p class="card-text cardStyle">Created on: {{createdOn | date: 'd MMMM yyyy' }}</p>
             <p class="card-text cardStyle">Deadline: {{deadline | date: 'd MMMM yyyy' }}</p>
-            <p class="card-text cardStyle">State: {{isCompleted === true ? 'Complete' : 'Incomplete' }}</p>
+            <p class="card-text cardStyle" [style.color]="(isCompleted === true ? 'rgb(19, 255, 5)' : 'rgb(255, 0, 0)')">State: {{isCompleted === true ? 'Complete' : 'Incomplete' }}</p>
         </div>
 
         <div class="cardStyle text-center cardFooter">

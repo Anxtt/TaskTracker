@@ -10,6 +10,7 @@ import { TaskService } from '../../services/task.service';
 import { MessageService } from '../../services/message.service';
 
 import { TaskResponseModel } from '../../models/TaskResponseModel';
+import { DateService } from '../../services/date.service';
 
 @Component({
     selector: 'app-dx-edit-modal',
@@ -28,11 +29,13 @@ export class DxEditModalComponent implements OnInit, OnDestroy {
     @Output() taskUpdated: EventEmitter<TaskResponseModel> = new EventEmitter<TaskResponseModel>();
 
     editForm: TaskResponseModel | undefined;
-    currentDate: string = new Date().toISOString().slice(0, 10);
+    currentDate: string;
     taskNameErrorMessage: string = "";
     buttonOptions = { text: 'Edit', type: 'info', useSubmitBehavior: true };
 
-    constructor(private taskService: TaskService, private messageService: MessageService) { }
+    constructor(private taskService: TaskService, private messageService: MessageService, private dateService: DateService) {
+        this.currentDate = this.dateService.currentDate;
+    }
 
     ngOnDestroy(): void {
         this.destroyed$.next();
