@@ -1,8 +1,8 @@
 <dx-tree-list id="users" [dataSource]="dataSource" dataStructure="tree" keyExpr="id" parentIdxExpr="userId" itemsExpr="tasks"
     [columnAutoWidth]="true" [wordWrapEnabled]="true" [showBorders]="true"
     (onRowUpdating)="onRowUpdating($event)" (onEditingStart)="onEditingStart($event)" (onEditorPreparing)="onEditorPreparing($event)"
-    (onEditorPrepared)="onEditorPrepared($event)">
-
+    (onEditorPrepared)="onEditorPrepared($event)" [repaintChangesOnly]="true">
+    
     <dxo-column-chooser [enabled]="true"></dxo-column-chooser>
     <dxo-search-panel [visible]="true" width="250"></dxo-search-panel>
 
@@ -60,6 +60,7 @@
         }
     </div>
 
-    <dxo-editing mode="row" [allowUpdating]="allowUpdating" [allowDeleting]="true" [refreshMode]="'full'" [useIcons]="true">
+    <!-- https://js.devexpress.com/Angular/Documentation/ApiReference/UI_Components/dxTreeList/Configuration/editing/#refreshMode -->
+    <dxo-editing mode="row" [allowUpdating]="allowUpdating" [allowDeleting]="true" [refreshMode]="'reshape'" [useIcons]="true">
     </dxo-editing>
 </dx-tree-list>

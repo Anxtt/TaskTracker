@@ -1,6 +1,8 @@
 import { AsyncPipe } from '@angular/common';
 import { Component, OnDestroy, OnInit, } from '@angular/core';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
+import themes from "devextreme/ui/themes";
+import { refreshTheme } from "devextreme/viz/themes";
 
 import { Observable, Subject, take, takeUntil } from 'rxjs';
 
@@ -43,6 +45,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
             'data-theme',
             this.isLightTheme ? 'light' : 'dark'
         );
+
+        themes.current(this.isLightTheme ? "generic.softblue" : "generic.darkviolet");
+        refreshTheme();
     }
 
     // async something() {
@@ -73,5 +78,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
             'data-theme',
             this.isLightTheme ? 'light' : 'dark'
         );
+
+        themes.current(this.isLightTheme ? "generic.softblue" : "generic.darkviolet");
+        refreshTheme();
     }
 }

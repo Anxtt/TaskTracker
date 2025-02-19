@@ -51,13 +51,13 @@ export class UserTreeListComponent {
     }
 
     onEditorPrepared(event: DxTreeListTypes.EditorPreparedEvent) {
-        if (event.row?.node.hasChildren === true && this.tasks.length === 0) {
-            for (let task of event.row?.node.children!) {
-                this.tasks.push(task.data);
-            }
-        }
+        // if (event.row?.node.hasChildren === true && this.tasks.length === 0) {
+        //     for (let task of event.row?.node.children!) {
+        //         this.tasks.push(task.data);
+        //     }
+        // }
     }
-
+    
     allowUpdating(event: any) {
         if (event.row.data?.userName === undefined) {
             return false;
