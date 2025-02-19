@@ -72,12 +72,14 @@ namespace TaskTracker.Core.Services
         /// <param name="id"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public async Task Delete(int id, string userId)
+        public async Task<string> Delete(int id, string userId)
         {
             Chore chore = await GetChoreByUser(id, userId);
 
             this.db.Chores.Remove(chore);
             await this.db.SaveChangesAsync();
+
+            return chore.Name;
         }
 
         /// <summary>

@@ -8,7 +8,7 @@ namespace TaskTracker.Core.Services.Contracts
 
         Task<int> Create(ChoreRequestModel model, string userId);
 
-        Task Delete(int id, string userId);
+        Task<string> Delete(int id, string userId);
 
         Task<ChoreResponseModel> Details(int id, string userId);
 

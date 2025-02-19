@@ -73,6 +73,9 @@ namespace TaskTracker.Api.Controllers
             int id = await this.choreService.Create(model, userId);
 
             this.RemoveCachedTasks(userId);
+            this.cache.Set(
+                string.Format(TASK_NAME_CACHE_KEY, userId, model.Name),
+                true, TimeSpan.FromMinutes(1));
 
             return this.Created(nameof(this.Create), id);
         }
@@ -87,9 +90,12 @@ namespace TaskTracker.Api.Controllers
                 return this.NotFound("Task with such id was not found.");
             }
 
-            await this.choreService.Delete(id, userId);
+            string taskName = await this.choreService.Delete(id, userId);
 
             this.RemoveCachedTasks(userId);
+            this.cache.Set(
+                string.Format(TASK_NAME_CACHE_KEY, userId, taskName),
+                false);
 
             return this.Ok();
         }
@@ -147,6 +153,9 @@ namespace TaskTracker.Api.Controllers
             await this.choreService.Edit(id, model, model.UserId);
 
             this.RemoveCachedTasks(model.UserId);
+            this.cache.Set(
+                string.Format(TASK_NAME_CACHE_KEY, model.Name),
+                false);
 
             return this.Ok();
         }

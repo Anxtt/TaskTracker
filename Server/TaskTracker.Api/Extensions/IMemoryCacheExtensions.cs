@@ -95,7 +95,7 @@ namespace TaskTracker.Api.Extensions
                     {
                         x.AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(1);
                         x.SlidingExpiration = TimeSpan.FromSeconds(30);
-
+ 
                         return await choreService.DoesExist(taskId, userId);
                     });
 

@@ -63,6 +63,13 @@ namespace TaskTracker.Api.Controllers
 
             //this.DeleteAuthCookies();
 
+            this.cache.Set(
+                string.Format(EMAIL_CACHE_KEY, user.Email),
+                false);
+            this.cache.Set(
+                string.Format(USERNAME_CACHE_KEY, user.UserName),
+                false);
+
             return this.Ok("User deleted successfully.");
         }
 
@@ -78,7 +85,6 @@ namespace TaskTracker.Api.Controllers
             }
 
             bool doesExist = await this.cache
-                // премести в IdentityService
                 .ShortCacheUserName(username, this.identityService);
 
             return this.Ok(doesExist);
@@ -134,6 +140,13 @@ namespace TaskTracker.Api.Controllers
 
             // await this.RefreshToken();
 
+            this.cache.Set(
+                string.Format(EMAIL_CACHE_KEY, model.Email),
+                false);
+            this.cache.Set(
+                string.Format(USERNAME_CACHE_KEY, model.UserName),
+                false);
+
             return this.Ok("User updated successfully.");
         }
 
@@ -141,7 +154,15 @@ namespace TaskTracker.Api.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetUsers()
         {
-            IEnumerable<UserStatisticsResponseModel> users = await this.identityService.GetUsers(this.User.GetId());
+            string userId = this.User.GetId();
+            IEnumerable<UserStatisticsResponseModel> users = await this.identityService.GetUsers(userId);
+
+            //IEnumerable<UserStatisticsResponseModel> users = await this.cache
+            //.GetOrCreateAsync(string.Format("{0}:GetUsers", userId), async x =>
+            //{
+            //    x.AbsoluteExpiration = DateTime.Now.AddMinutes(2);
+            //    return await this.identityService.GetUsers(userId);
+            //});
 
             return this.Ok(users);
         }
@@ -231,6 +252,13 @@ namespace TaskTracker.Api.Controllers
             }
 
             await this.userManager.AddToRoleAsync(user, "Member");
+
+            this.cache.Set(
+                string.Format(EMAIL_CACHE_KEY, user.Email),
+                true, TimeSpan.FromMinutes(1));
+            this.cache.Set(
+                string.Format(USERNAME_CACHE_KEY, user.UserName),
+                true, TimeSpan.FromMinutes(1));
 
             return this.Created(nameof(Register), user.Id);
         }
