@@ -1,5 +1,5 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component, EventEmitter, Input, OnDestroy, Output, inject } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { TaskComponent } from '../task/task.component';
@@ -19,7 +19,7 @@ import { DateService } from '../../services/date.service';
     templateUrl: './edit-modal.component.html',
     styleUrls: ['./edit-modal.component.css', '../../styles/buttons.css', '../../styles/form.css']
 })
-export class EditModalComponent implements OnDestroy {
+export class EditModalComponent implements OnDestroy, OnInit {
     destroyed$: Subject<void> = new Subject();
 
     @Input() taskId: number = 0;
@@ -33,6 +33,7 @@ export class EditModalComponent implements OnDestroy {
     @Output() setShowModalEvent = new EventEmitter<boolean>();
     @Output() taskUpdated = new EventEmitter<TaskResponseModel>();
 
+    editForm!: any;
     invalidForm: string;
     
     taskNameExistValidator: TaskNameExistValidator = inject(TaskNameExistValidator);
@@ -48,7 +49,8 @@ export class EditModalComponent implements OnDestroy {
         this.destroyed$.complete();
     }
 
-    editForm = new FormGroup({
+    ngOnInit(): void {
+        this.editForm = new FormGroup({
         id: new FormControl(this.taskId),
         isCompleted: new FormControl(this.isCompleted),
         name: new FormControl(
@@ -66,8 +68,10 @@ export class EditModalComponent implements OnDestroy {
         deadline: new FormControl(null, [Validators.required]),
         userId: new FormControl(this.userId),
         createdOn: new FormControl(this.createdOn),
-        user: new FormControl("")
+        user: new FormControl(""),
+        oldName: new FormControl(this.name)
     })
+    }
 
     editTask() {
         // update default values
@@ -86,7 +90,8 @@ export class EditModalComponent implements OnDestroy {
                         isCompleted: this.isCompleted,
                         createdOn: this.createdOn,
                         user: "",
-                        userId: this.userId
+                        userId: this.userId,
+                        oldName: this.name
                     })
                 },
                 error: x => this.invalidForm = x.error

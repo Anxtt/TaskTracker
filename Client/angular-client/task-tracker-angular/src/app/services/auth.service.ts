@@ -16,7 +16,7 @@ import { environment } from '../environments/environment';
 })
 export class AuthService implements OnDestroy {
     private apiUrl = environment.apiUrl;
-    private checkAuth$ = new BehaviorSubject<IdentityResponseModel>({ accessToken: "", userName: "", refreshToken: "", roles: [] });
+    private checkAuth$ = new BehaviorSubject<IdentityResponseModel>({ accessToken: "", userName: "", id: "", refreshToken: "", roles: [] });
 
     constructor(private http: HttpClient, private messageService: MessageService) { }
 

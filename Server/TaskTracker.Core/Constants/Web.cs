@@ -15,7 +15,7 @@
         {
             public const string TASK_NAME_CACHE_KEY = $"DoesExistByName-{{0}}-{{1}}";
 
-            public const string USER_TASKS_CACHE_KEY = $"Tasks-User-{{0}}-Name-{{1}}";
+            public const string USER_TASKS_CACHE_KEY = $"Tasks-User-{{0}}";
         }
     }
 }

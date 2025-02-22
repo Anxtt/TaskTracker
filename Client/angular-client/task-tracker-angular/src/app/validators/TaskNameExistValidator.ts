@@ -11,6 +11,6 @@ export class TaskNameExistValidator implements AsyncValidator {
     
     validate(control: AbstractControl): Observable<ValidationErrors | null> {
         return this.taskService
-            .doesExistByName(control.value);
+            .doesExistByName(control.value, control.parent?.value.userId);
     }
 }

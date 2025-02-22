@@ -104,6 +104,6 @@
         <h2>{{user.data.userName}}'s Tasks:</h2>
         }
         <app-task-detail-grid (taskUpdated)="onTaskUpdated($event)" (taskDeleted)="onTaskDeleted($event)"
-            [tasks]="user.data.tasks"></app-task-detail-grid>
+            [tasks]="user.data.tasks" [userId]="user.data.id"></app-task-detail-grid>
     </div>
 </dx-data-grid>

@@ -62,19 +62,17 @@ namespace TaskTracker.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Create([FromBody] ChoreRequestModel model)
         {
-            string userId = this.User.GetId();
-
             if (await this.cache
-                .ShortCacheTaskNameByName(model.Name, userId, this.choreService) is true)
+                .ShortCacheTaskNameByName(model.Name, model.UserId, this.choreService) is true)
             {
                 return this.BadRequest("You already have a task with this name.");
             }
 
-            int id = await this.choreService.Create(model, userId);
+            int id = await this.choreService.Create(model, model.UserId);
 
-            this.RemoveCachedTasks(userId);
+            this.RemoveCachedTasks(model.UserId, null!, null!);
             this.cache.Set(
-                string.Format(TASK_NAME_CACHE_KEY, userId, model.Name),
+                string.Format(TASK_NAME_CACHE_KEY, model.UserId, model.Name),
                 true, TimeSpan.FromMinutes(1));
 
             return this.Created(nameof(this.Create), id);
@@ -92,10 +90,7 @@ namespace TaskTracker.Api.Controllers
 
             string taskName = await this.choreService.Delete(id, userId);
 
-            this.RemoveCachedTasks(userId);
-            this.cache.Set(
-                string.Format(TASK_NAME_CACHE_KEY, userId, taskName),
-                false);
+            this.RemoveCachedTasks(userId, taskName, null!);
 
             return this.Ok();
         }
@@ -103,14 +98,12 @@ namespace TaskTracker.Api.Controllers
         [HttpGet("{name}")]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> DoesExistByName([FromRoute] string name)
+        public async Task<IActionResult> DoesExistByName([FromRoute] string name, [FromQuery] string userId)
         {
             if (string.IsNullOrWhiteSpace(name) is true)
             {
                 return this.BadRequest("You already have a task with this name.");
             }
-
-            string userId = this.User.GetId();
 
             bool doesExist = await this.cache
                 .ShortCacheTaskNameByName(name, userId, this.choreService);
@@ -152,10 +145,7 @@ namespace TaskTracker.Api.Controllers
 
             await this.choreService.Edit(id, model, model.UserId);
 
-            this.RemoveCachedTasks(model.UserId);
-            this.cache.Set(
-                string.Format(TASK_NAME_CACHE_KEY, model.Name),
-                false);
+            this.RemoveCachedTasks(model.UserId, model.Name, model.OldName);
 
             return this.Ok();
         }
@@ -164,19 +154,26 @@ namespace TaskTracker.Api.Controllers
         private async Task<IEnumerable<ChoreResponseModel>> GetOrCacheTasks()
         {
             string userId = this.User.GetId();
-            string username = this.User.Identity!.Name!;
 
             return await this.cache
-                .ShortCacheTasksByUserId(userId, username, this.choreService);
+                .ShortCacheTasksByUserId(userId, this.choreService);
         }
 
         [NonAction]
-        private void RemoveCachedTasks(string userId)
+        private void RemoveCachedTasks(string userId, string taskName, string oldTaskName)
         {
-            string username = this.User.Identity!.Name!;
-
             this.cache.Remove(string.Format(
-                USER_TASKS_CACHE_KEY, userId, username));
+                USER_TASKS_CACHE_KEY, userId));
+
+            if (taskName is not null)
+            {
+                this.cache.Remove(string.Format(TASK_NAME_CACHE_KEY, userId, taskName));
+            }
+
+            if (oldTaskName is not null)
+            {
+                this.cache.Remove(string.Format(TASK_NAME_CACHE_KEY, userId, oldTaskName));
+            }
         }
     }
 }

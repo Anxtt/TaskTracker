@@ -8,6 +8,9 @@ namespace TaskTracker.Core.Models.Chore
         [StringLength(16, MinimumLength = 4)]
         public string Name { get; set; }
 
+        [StringLength(16, MinimumLength = 4)]
+        public string? OldName { get; set; }
+
         [Required]
         public DateTime Deadline { get; set; }
 

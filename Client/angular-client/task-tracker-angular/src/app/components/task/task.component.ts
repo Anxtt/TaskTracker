@@ -34,6 +34,7 @@ export class TaskComponent implements OnInit, OnDestroy {
     editForm: TaskResponseModel = {
         id: this.taskId,
         name: this.name,
+        oldName: this.name,
         deadline: new Date(),
         isCompleted: this.isCompleted,
         userId: this.userId,
@@ -55,6 +56,7 @@ export class TaskComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.editForm.name = this.name;
+        this.editForm.oldName = this.name;
         this.editForm.isCompleted = this.isCompleted;
         this.editForm.deadline = this.deadline;
         this.editForm.id = this.taskId;

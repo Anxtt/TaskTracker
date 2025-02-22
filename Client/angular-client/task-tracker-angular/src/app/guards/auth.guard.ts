@@ -39,7 +39,7 @@ export class AuthGuard implements CanActivate, OnDestroy {
             .pipe(
                 catchError(x => {
                     this.messageService.setMessage(x);
-                    return of({ userName: "", accessToken: "", refreshToken: "", roles: [] });
+                    return of({ userName: "", id: "", accessToken: "", refreshToken: "", roles: [] });
                 }),
                 switchMap(x => {
                     if (x?.accessToken === "") {

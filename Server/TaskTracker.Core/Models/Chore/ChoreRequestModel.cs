@@ -10,5 +10,8 @@ namespace TaskTracker.Core.Models.Chore
 
         [Required]
         public DateTime Deadline { get; set; }
+
+        [Required]
+        public string UserId { get; set; }
     }
 }

@@ -65,8 +65,8 @@ export class TaskService {
         })
     }
 
-    doesExistByName(name: string): Observable<ValidationErrors | null> {
-        return this.http.get(`${this.apiUrl}Chore/DoesExistByName/${name}`, {
+    doesExistByName(name: string, userId: string): Observable<ValidationErrors | null> {
+        return this.http.get(`${this.apiUrl}Chore/DoesExistByName/${name}?userId=${userId}`, {
             observe: "response",
             headers: {
                 Accept: "application/json",

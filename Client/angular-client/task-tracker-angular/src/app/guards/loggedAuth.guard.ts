@@ -46,7 +46,7 @@ export class LoggedAuthGuard implements CanActivate, OnDestroy {
                                 }
                             });
                         }
-                        return of({ userName: "", accessToken: "", refreshToken: "", roles: [] })
+                        return of({ userName: "", id: "", accessToken: "", refreshToken: "", roles: [] })
                     }),
                     switchMap(x => {
                         this.authService.setAuth(x);

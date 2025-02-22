@@ -44,6 +44,7 @@ export class DxEditModalComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.editForm = this.task;
+        this.editForm!.oldName = this.task?.name!;
     }
 
     editTask(e: any) {
@@ -65,8 +66,7 @@ export class DxEditModalComponent implements OnInit, OnDestroy {
                 return resolve();
             }
 
-            // send userId in a queryParam
-            this.taskService.doesExistByName(value)
+            this.taskService.doesExistByName(value, this.editForm?.userId!)
                 .pipe(take(1))
                 .subscribe((x: ValidationErrors | null) => {
                     if (x?.["error"]) {

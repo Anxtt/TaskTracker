@@ -23,6 +23,7 @@ export class TaskDetailGridComponent implements AfterViewInit {
     private taskName: string = "";
 
     @Input() tasks: TaskResponseModel[] = [];
+    @Input() userId!: string;
 
     @Output() taskUpdated: EventEmitter<TaskResponseModel> = new EventEmitter<TaskResponseModel>();
     @Output() taskDeleted: EventEmitter<{ taskId: number, userId: string }> = new EventEmitter<{ taskId: number, userId: string }>();
@@ -42,6 +43,7 @@ export class TaskDetailGridComponent implements AfterViewInit {
                     return this.tasks;
                 },
                 update: async (key, values) => {
+                    values.oldName = this.taskName;
                     return lastValueFrom(this.taskService.editTask(values)).then(() => {
                         this.tasks = this.tasks.map(t => {
                             if (t.id !== values.id) {
@@ -92,8 +94,7 @@ export class TaskDetailGridComponent implements AfterViewInit {
                 return resolve();
             }
 
-            // send userId in a queryParam
-            this.taskService.doesExistByName(value)
+            this.taskService.doesExistByName(value, this.userId)
                 .pipe(take(1))
                 .subscribe((x: ValidationErrors | null) => {
                     if (x?.["error"]) {

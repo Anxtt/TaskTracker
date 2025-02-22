@@ -32,6 +32,7 @@ namespace TaskTracker.Api.Extensions
                         return new IdentityResponseModel()
                         {
                             UserName = userName,
+                            Id = userId,
                             AccessToken = token,
                             RefreshToken = refresh,
                             Roles = roles
@@ -56,7 +57,6 @@ namespace TaskTracker.Api.Extensions
             this IMemoryCache cache,
             string username,
             IIdentityService identityService)
-            // премести в IdentityService
                 => await cache.GetOrCreateAsync(
                     string.Format(USERNAME_CACHE_KEY, username),
                     async x =>
@@ -102,10 +102,9 @@ namespace TaskTracker.Api.Extensions
         public static async Task<IEnumerable<ChoreResponseModel>> ShortCacheTasksByUserId(
             this IMemoryCache cache,
             string userId,
-            string username,
             IChoreService choreService)
                 => await cache.GetOrCreateAsync(
-                    string.Format(USER_TASKS_CACHE_KEY, userId, username),
+                    string.Format(USER_TASKS_CACHE_KEY, userId),
                     async x =>
                     {
                         x.AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(3);

@@ -46,6 +46,7 @@ namespace TaskTracker.Api.Services
             IdentityResponseModel authenticated = new IdentityResponseModel()
             {
                 UserName = user.UserName,
+                Id = user.Id,
                 AccessToken = accessToken,
                 RefreshToken = refreshToken.Token,
                 Roles = roles

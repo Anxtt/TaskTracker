@@ -78,7 +78,7 @@ export class TaskListComponent implements OnInit, OnDestroy {
                     }
 
                     this.router.navigateByUrl("/login");
-                    this.authService.setAuth({ accessToken: "", refreshToken: "", roles: [], userName: "" });
+                    this.authService.setAuth({ accessToken: "", refreshToken: "", roles: [], userName: "", id: "" });
                     this.messageService.setMessage({ error: "Your session has expired.", status: 401 });
                     this.loadingService.setLoadingOff();
                 },
