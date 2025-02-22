@@ -6,18 +6,14 @@ import { Subject, takeUntil } from 'rxjs';
 
 import { DxToastModule } from "devextreme-angular";
 import { DxoPositionModule } from 'devextreme-angular/ui/nested';
-import { ToastType } from 'devextreme/ui/toast';
 import notify from 'devextreme/ui/notify';
 
 import { FooterComponent } from './components/footer/footer.component';
 import { HeaderComponent } from './components/header/header.component';
 import { LoadingIndicatorComponent } from './components/loading-indicator/loading-indicator.component';
 
-import { AuthService } from './services/auth.service';
 import { MessageService } from './services/message.service';
 import { UserActivityService } from './services/user-activity.service';
-
-import { IdentityResponseModel } from './models/IdentityResponseModel';
 
 @Component({
     selector: 'app-root',
@@ -36,16 +32,11 @@ import { IdentityResponseModel } from './models/IdentityResponseModel';
     styleUrls: ['./app.component.css', 'styles/form.css']
 })
 export class AppComponent implements OnInit, OnDestroy {
-    isActive: boolean;
-    isAuth: IdentityResponseModel;
     destroyed$: Subject<void> = new Subject();
 
     constructor(
         private userActivityService: UserActivityService,
-        private messageService: MessageService) {
-        this.isActive = true;
-        this.isAuth = { accessToken: "", userName: "", refreshToken: "", roles: [] };
-    }
+        private messageService: MessageService) {}
 
     ngOnDestroy(): void {
         this.destroyed$.next();
@@ -53,10 +44,6 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.userActivityService.isActive$
-            .pipe(takeUntil(this.destroyed$))
-            .subscribe(x => this.isActive = x);
-
         this.messageService.getMessage()
             .pipe(takeUntil(this.destroyed$))
             .subscribe(x => {
@@ -80,11 +67,5 @@ export class AppComponent implements OnInit, OnDestroy {
                     }
                 })
             });
-    }
-
-    reset() {
-        console.log("Reset idle timer");
-        this.isActive = true;
-        this.userActivityService.reset();
     }
 }

@@ -32,8 +32,8 @@ export class UserTreeListComponent {
                 data.newData[props] = data.oldData[props];
             }
         }
-
-        data.newData["tasks"] = this.tasks;
+        
+        // data.newData["tasks"] = this.tasks;
     }
 
     onEditingStart(model: DxTreeListTypes.EditingStartEvent) {
