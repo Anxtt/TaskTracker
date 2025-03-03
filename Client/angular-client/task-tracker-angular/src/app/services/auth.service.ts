@@ -151,7 +151,6 @@ export class AuthService implements OnDestroy {
 
     refreshToken() {
         return this.http.get<IdentityResponseModel>(`${this.apiUrl}Identity/RefreshToken`, {
-            observe: "response",
             headers: {
                 Accept: "application/json",
                 "Content-Type": "application/json"

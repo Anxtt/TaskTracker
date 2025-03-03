@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpContext, HttpContextToken } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ValidationErrors } from '@angular/forms';
 
@@ -11,11 +11,14 @@ import { MessageService } from './message.service';
 
 import { TaskResponseModel } from '../models/TaskResponseModel';
 
+export const AUTHORIZE = new HttpContextToken<string>(() => "AUTHORIZE");
+
 @Injectable({
     providedIn: 'root'
 })
 export class TaskService {
     private apiUrl = environment.apiUrl;
+
 
     constructor(private http: HttpClient, private authService: AuthService, private messageService: MessageService) { }
 
@@ -27,7 +30,8 @@ export class TaskService {
                     Accept: "application/json",
                     "Content-Type": "application/json"
                 },
-                withCredentials: true
+                withCredentials: true,
+                context: new HttpContext().set(AUTHORIZE, "true")
             })
     }
 
@@ -41,7 +45,8 @@ export class TaskService {
                         Accept: "application/json",
                         "Content-Type": "application/json"
                     },
-                    withCredentials: true
+                    withCredentials: true,
+                    context: new HttpContext().set(AUTHORIZE, "true")
                 })
     }
 
@@ -51,7 +56,8 @@ export class TaskService {
                 Accept: "application/json",
                 "Content-Type": "application/json"
             },
-            withCredentials: true
+            withCredentials: true,
+            context: new HttpContext().set(AUTHORIZE, "true")
         })
     }
 
@@ -61,7 +67,8 @@ export class TaskService {
                 Accept: "application/json",
                 "Content-Type": "application/json"
             },
-            withCredentials: true
+            withCredentials: true,
+            context: new HttpContext().set(AUTHORIZE, "true")
         })
     }
 
@@ -72,7 +79,8 @@ export class TaskService {
                 Accept: "application/json",
                 "Content-Type": "application/json"
             },
-            withCredentials: true
+            withCredentials: true,
+            context: new HttpContext().set(AUTHORIZE, "true")
         }).pipe(
             map(x => {
                 if (x.body === true) {
@@ -103,7 +111,8 @@ export class TaskService {
                 Accept: "application/json",
                 "Content-Type": "application/json"
             },
-            withCredentials: true
+            withCredentials: true,
+            context: new HttpContext().set(AUTHORIZE, "true")
         })
     }
 }

@@ -11,13 +11,12 @@ import { UserStatisticsComponent } from './components/user-statistics/user-stati
 
 import { AuthGuard } from './guards/auth.guard';
 import { LoggedAuthGuard } from './guards/loggedAuth.guard';
-import { AuthResolver } from './resolvers/auth.resolver';
 
 export const routes: Routes = [
     {
         path: '',
         // pathMatch: '',
-        resolve: { auth: AuthResolver },
+        // resolve: { auth: AuthResolver },
         // redirectTo: ,
         children: [
             {
