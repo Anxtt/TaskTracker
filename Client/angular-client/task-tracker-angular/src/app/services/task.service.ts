@@ -1,4 +1,4 @@
-import { HttpClient, HttpContext, HttpContextToken } from '@angular/common/http';
+import { HttpClient, HttpContext } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ValidationErrors } from '@angular/forms';
 
@@ -6,12 +6,10 @@ import { Observable, catchError, map, of } from 'rxjs';
 
 import { environment } from '../environments/environment';
 
-import { AuthService } from './auth.service';
+import { AUTHORIZE } from './auth.service';
 import { MessageService } from './message.service';
 
 import { TaskResponseModel } from '../models/TaskResponseModel';
-
-export const AUTHORIZE = new HttpContextToken<string>(() => "AUTHORIZE");
 
 @Injectable({
     providedIn: 'root'
@@ -19,8 +17,7 @@ export const AUTHORIZE = new HttpContextToken<string>(() => "AUTHORIZE");
 export class TaskService {
     private apiUrl = environment.apiUrl;
 
-
-    constructor(private http: HttpClient, private authService: AuthService, private messageService: MessageService) { }
+    constructor(private http: HttpClient, private messageService: MessageService) { }
 
     all() {
         return this.http

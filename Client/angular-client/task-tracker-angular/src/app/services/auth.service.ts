@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { ValidationErrors } from '@angular/forms';
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpContext, HttpContextToken, HttpResponse } from '@angular/common/http';
 
 import { BehaviorSubject, Observable, catchError, map, of } from 'rxjs';
 
@@ -10,6 +10,8 @@ import { IdentityResponseModel } from '../models/IdentityResponseModel';
 import { UserStatisticsResponseModel } from '../models/UserStatisticsResponseModel';
 
 import { environment } from '../environments/environment';
+
+export const AUTHORIZE = new HttpContextToken<string>(() => "AUTHORIZE");
 
 @Injectable({
     providedIn: 'root'
@@ -176,6 +178,7 @@ export class AuthService implements OnDestroy {
                 "Content-Type": "application/json"
             },
             withCredentials: true,
+            context: new HttpContext().set(AUTHORIZE, "true")
         })
     }
 }

@@ -11,6 +11,7 @@ import { UserStatisticsComponent } from './components/user-statistics/user-stati
 
 import { AuthGuard } from './guards/auth.guard';
 import { LoggedAuthGuard } from './guards/loggedAuth.guard';
+import { AdminGuard } from './guards/admin.guard';
 
 export const routes: Routes = [
     {
@@ -62,7 +63,8 @@ export const routes: Routes = [
             {
                 path: 'users',
                 title: 'User Statistics',
-                component: UserStatisticsComponent
+                component: UserStatisticsComponent,
+                canActivate: [AdminGuard]
             },
 
             {
